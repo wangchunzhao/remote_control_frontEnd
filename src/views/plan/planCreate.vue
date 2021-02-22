@@ -1,63 +1,89 @@
 <template>
-  <div class="planCreate">
-    <div class="planCreate-content">
-      <div
-        v-loading="planLoading"
-        class="plan-wrap thin-scroll bg-fff"
-        element-loading-text="加载中..."
-      >
-        <el-button
-          type="primary"
-          class="preview-btn"
-          size="mini"
-          @click.native="
-            $router.back({
-              query: { mtid: currentNode.mtid, tabIndex: $route.query.tabIndex }
-            })
-          "
-        >
-          <c-svg name="save" />
-          保存
-        </el-button>
-        <el-button
-          type="primary"
-          class="delete-btn"
-          size="mini"
-          @click.native="deleteImg"
-        >
-          <i class="el-icon-delete" />
-          删除底图
-        </el-button>
-        <el-upload
-          :before-upload="beforeProImgUpload"
-          class="plan-bgupload"
-          action="2`333"
-          accept="image/png,image/jpg,image/jpeg"
-        >
-          <el-button type="primary" size="mini" style="padding: 5px;">
-            <c-svg name="cloud-upload" />
-            修改底图
+  <div>
+    <page-header class="planCreate-page-header" title="平面图编辑" showBack>
+      <template v-slot:right>
+        <div class="right-wrap">
+          <el-button
+            type="primary"
+            size="mini"
+            @click.native="
+              $router.back({
+                query: {
+                  mtid: currentNode.mtid,
+                  tabIndex: $route.query.tabIndex
+                }
+              })
+            "
+          >
+            <c-svg name="save" />
+            保存
           </el-button>
-        </el-upload>
-        <!-- 定义一个隐藏的div存放上传的图片（为了获取图片的长宽信息） -->
-        <div class="hidden-img-wrap" style="position:fixed;top:1000000000px" />
+          <el-button type="primary" size="mini" @click.native="deleteImg">
+            <i class="el-icon-delete" />
+            删除底图
+          </el-button>
+          <el-upload
+            :before-upload="beforeProImgUpload"
+            class="plan-bgupload"
+            action="2333"
+            accept="image/png,image/jpg,image/jpeg"
+          >
+            <el-button type="primary" size="mini" style="margin-left: 10px;">
+              <c-svg name="cloud-upload" />
+              修改底图
+            </el-button>
+          </el-upload>
+        </div>
+      </template>
+    </page-header>
+    <div class="planCreate">
+      <div class="planCreate-content">
         <div
-          class="target"
-          :style="{
-            'background-image': planBgImg
-              ? `url(${planBgImg})`
-              : `url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)`
-          }"
-        />
-      </div>
-      <div
-        v-loading="sourceLoading"
-        class="component-wrap bg-fff"
-        element-loading-text="加载中..."
-      >
-        <div class="title-wrap">
-          <h3>
-            <span class="text">可配置设备/点位</span>
+          v-loading="planLoading"
+          class="plan-wrap thin-scroll bg-fff"
+          element-loading-text="加载中..."
+        >
+          <!-- 定义一个隐藏的div存放上传的图片（为了获取图片的长宽信息） -->
+          <div
+            class="hidden-img-wrap"
+            style="position:fixed;top:1000000000px"
+          />
+          <div
+            class="target"
+            @dragover="targetWrapDragOver"
+            @drop="targetWrapDrop"
+            :style="{
+              'background-image': planBgImg
+                ? `url(${planBgImg})`
+                : `url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)`
+            }"
+          >
+            <a
+              v-for="item in targetData"
+              :key="item.Mtid + item.PointId"
+              :title="`${item.Area ? item.Area + '-' : ''}${item.Name}`"
+              :style="{ left: item.LocX, top: item.LocY, position: 'absolute' }"
+              class="drag-item"
+              draggable="true"
+              @dragstart="e => targetDargStart(e, item)"
+            >
+              <svg class="icon plan-device-icon" aria-hidden="true">
+                <use
+                  :xlink:href="`#icon-${getIcon(item, 'target')}`"
+                ></use></svg
+            ></a>
+          </div>
+        </div>
+        <div
+          v-loading="sourceLoading"
+          class="component-wrap bg-fff"
+          @dragover="componentWrapDragOver"
+          @dragenter="componentWrapDragEnter"
+          @drop="componentWrapDrop"
+          element-loading-text="加载中..."
+        >
+          <div class="title-wrap">
+            <span class="text">&nbsp;可配置设备/点位</span>
             <el-tooltip
               class="item"
               effect="dark"
@@ -66,23 +92,96 @@
             >
               <c-svg
                 name="what"
-                style="margin-left:10px;font-size:15px;color:#339999;"
+                style="margin-left:10px;font-size:15px;color:#1890FF;"
               />
             </el-tooltip>
-          </h3>
-        </div>
-        <div class="config-component-list thin-scroll" />
-        <div
-          v-if="!sourceData.length"
-          style="color:#5e7382;text-align:center;padding-top:30px;"
-        >
-          暂无可配置设备
-        </div>
-        <transition name="el-zoom-in-center">
-          <div v-if="delIconVisible" class="delete-icon">
-            <i class="el-icon-delete" />
           </div>
-        </transition>
+          <el-input
+            size="small"
+            clearable
+            style="margin: 6px 12px;width: auto;"
+            placeholder="搜索设备/点位"
+            suffix-icon="el-icon-search"
+            v-model="filterText"
+          >
+          </el-input>
+          <el-tabs v-model="tabActiveName">
+            <el-tab-pane label="设备" name="device">
+              <div class="config-component-list thin-scroll">
+                <el-tree
+                  ref="tree"
+                  :data="generateDeviceTree(deviceList)"
+                  node-key="mtid"
+                  :props="deviceTreeProps"
+                  :expand-on-click-node="false"
+                  default-expand-all
+                >
+                  <span
+                    @dragend="() => (delIconVisible = false)"
+                    slot-scope="{ node, data }"
+                    draggable
+                    @dragstart="
+                      e => {
+                        if (data.type !== 'groupNode') {
+                          sourceDargStart(e, data)
+                        }
+                      }
+                    "
+                    class="node-item"
+                  >
+                    <span>
+                      <c-svg
+                        v-if="data.type === 'groupNode'"
+                        :name="data.icon"
+                      ></c-svg>
+                      <span>{{ node.label }}</span>
+                    </span>
+                  </span>
+                </el-tree>
+                <div
+                  v-if="!sourceDeviceList.length"
+                  style="color:#5e7382;text-align:center;padding-top:30px;"
+                >
+                  暂无可选设备
+                </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="点位" name="point">
+              <div class="config-component-list thin-scroll">
+                <a
+                  v-for="item in pointList"
+                  :key="item.id + item.mtid"
+                  @dragstart="e => sourceDargStart(e, item)"
+                  @dragend="() => (delIconVisible = false)"
+                  :title="`${item.Area ? item.Area + '-' : ''}${item.name}`"
+                  class="drag-item"
+                  draggable="true"
+                >
+                  <span class="drag-icon">
+                    <svg class="icon temp-icon" aria-hidden="true">
+                      <use
+                        :xlink:href="`#icon-${getIcon(item, 'source')}`"
+                      /></svg
+                  ></span>
+                  <span class="text">{{
+                    `${item.Area ? item.Area + '-' : ''}${item.name}`
+                  }}</span>
+                </a>
+                <div
+                  v-if="!pointList.length"
+                  style="color:#5e7382;text-align:center;padding-top:30px;"
+                >
+                  暂无可选点位
+                </div>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+          <transition name="el-zoom-in-center">
+            <div v-if="delIconVisible" class="delete-icon">
+              <i class="el-icon-delete" />
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
   </div>
@@ -96,30 +195,49 @@ import {
   getDistr,
   deleteImg
 } from '@/api/planNew'
+import { randomString } from '@/utils/index'
 import { uploadFile } from '@/api/uploader'
-import { storageName } from '@/utils/index'
 
 export default {
   data() {
     return {
+      deviceTreeProps: {
+        children: 'children',
+        label: 'name'
+      },
       currentNode: {
         mtid: ''
       },
       planBgImg: '',
       planLoading: false,
       targetData: [],
+      tabActiveName: 'device',
+      filterText: '',
       sourceLoading: false,
-      sourceData: [],
+      sourcePointList: [],
+      sourceDeviceList: [],
       elDrag: null,
-      left: '',
-      top: '', // 记录鼠标点击位置相对触发事件元素左上角的位置
-      delIconVisible: false,
-      userId: JSON.parse(sessionStorage.getItem(storageName('userInfo'))).uid
+      delIconVisible: false
+    }
+  },
+  computed: {
+    deviceList() {
+      return this.sourceDeviceList.filter(v => {
+        return (
+          `${v.Area ? v.Area + '-' : ''}${v.name}`.indexOf(this.filterText) > -1
+        )
+      })
+    },
+    pointList() {
+      return this.sourcePointList.filter(v => {
+        return (
+          `${v.Area ? v.Area + '-' : ''}${v.name}`.indexOf(this.filterText) > -1
+        )
+      })
     }
   },
   mounted() {
     this.currentNode.mtid = this.$route.query.mtid
-    this.Drop()
     this.fetchPlan()
     this.fetchSource()
   },
@@ -192,118 +310,172 @@ export default {
           })
       })
     },
-    Drag() {
-      let elDrags = document.querySelectorAll('.drag-item')
-      for (let i = 0; i < elDrags.length; i++) {
-        elDrags[i].addEventListener(
-          'dragstart',
-          event => {
-            if (!this.planBgImg) {
-              this.$message('请先上传底图！')
-              return false
+    generateDeviceTree(deviceList) {
+      const tree = []
+      deviceList.forEach(v => {
+        let temp = tree.find(vv => vv.smallTypeId === v.SmallTypeId)
+        if (temp) {
+          temp.children.push(v)
+        } else {
+          tree.push({
+            type: 'groupNode',
+            smallTypeId: v.SmallTypeId,
+            mtid: randomString(10),
+            children: [],
+            name: v.SmallTypeName,
+            icon: v.icon
+          })
+        }
+      })
+      return tree
+    },
+    sourceDargStart(event, data) {
+      if (!this.planBgImg) {
+        this.$message('请先上传底图！')
+        return false
+      }
+      // 保存拖动元素的引用
+      this.elDrag = event.target
+      event.dataTransfer.effectAllowed = 'move' // 仅能在 dragstart 事件中设置该属性，其他事件中设置均无效。
+      event.dataTransfer.setData(
+        'payload',
+        JSON.stringify({
+          operationType: 'add',
+          deviceId: data.mtid,
+          pointId: data.id,
+          Name: data.name,
+          type: data.type,
+          icon: data.icon,
+          offsetX: event.offsetX,
+          // 记录鼠标点击位置相对触发事件元素左上角的位置
+          offsetY: event.offsetY
+        })
+      )
+    },
+    targetDargStart(event, data) {
+      if (!this.planBgImg) {
+        this.$message('请先上传底图！')
+        return false
+      }
+      // 保存拖动元素的引用
+      this.elDrag = event.target
+      event.dataTransfer.effectAllowed = 'move' // 仅能在 dragstart 事件中设置该属性，其他事件中设置均无效。
+      event.dataTransfer.setData(
+        'payload',
+        JSON.stringify({
+          operationType: 'update',
+          deviceId: data.Mtid,
+          pointId: data.PointId,
+          Name: (data.Area ? data.Area + '-' : '') + data.Name,
+          type: data.Type,
+          icon: data.Icon,
+          offsetX: event.offsetX,
+          // 记录鼠标点击位置相对触发事件元素左上角的位置
+          offsetY: event.offsetY
+        })
+      )
+    },
+    targetWrapDragOver(event) {
+      // 阻止默认动作
+      event.preventDefault()
+      return true
+    },
+    targetWrapDrop(event) {
+      // 调用 preventDefault() 来避免浏览器对数据的默认处理（drop 事件的默认行为是以链接形式打
+      event.preventDefault()
+      if (event.target.className === 'target') {
+        let wrap = document.querySelector('.plan-wrap .target')
+        const payload = JSON.parse(event.dataTransfer.getData('payload'))
+        const locX =
+          ((event.offsetX - payload.offsetX) /
+            ~~wrap.style.width.replace('px', '')) *
+            100 +
+          '%'
+        const locY = ((event.offsetY - payload.offsetY) / 768) * 100 + '%'
+        if (payload.operationType === 'add') {
+          // 新增操作
+          this.targetData.push({
+            Mtid: payload.deviceId,
+            PointId: payload.pointId,
+            Name: payload.name,
+            LocX: locX,
+            LocY: locY,
+            Type: payload.type,
+            Icon: payload.icon
+          })
+          let deviceList = []
+          let pointList = []
+          this.sourceDeviceList.forEach(v => {
+            if (v.mtid == payload.deviceId && v.id == payload.pointId) {
+              return
             }
-            this.left = event.offsetX
-            this.top = event.offsetY
-            // 保存拖动元素的引用(ref.)
-            this.elDrag = event.target
-            event.dataTransfer.effectAllowed = 'move' // 仅能在 dragstart 事件中设置该属性，其他事件中设置均无效。
-            event.dataTransfer.setData('text/plain', 'moveFromSource')
-          },
-          false
-        )
-        elDrags[i].addEventListener(
-          'dragend',
-          () => {
-            this.delIconVisible = false
-          },
-          false
-        )
+            deviceList.push(v)
+          })
+          this.sourcePointList.forEach(v => {
+            if (v.mtid == payload.deviceId && v.id == payload.pointId) {
+              return
+            }
+            pointList.push(v)
+          })
+          this.sourceDeviceList = deviceList
+          this.sourcePointList = pointList
+        } else if (payload.operationType === 'update') {
+          const index = this.targetData.findIndex(
+            v => v.Mtid === payload.deviceId && v.PointId === payload.pointId
+          )
+          this.targetData[index].LocX = locX
+          this.targetData[index].LocY = locY
+          this.$set(this.targetData, index, this.targetData[index])
+        }
+
+        let data = {}
+        data.mtid = payload.deviceId
+        // payload.type === 1 是设备，没有点位 id
+        data.point = payload.type === 1 ? undefined : payload.pointId
+        data.locX = locX
+        data.locY = locY
+        this.upDatePlan(data)
       }
     },
-    Drop() {
-      let target = document.querySelector('.target')
-      /* 只要元素正在合法的放置目标上拖动时，就执行脚本（对象是目标元素）*/
-      target.addEventListener(
-        'dragover',
-        event => {
-          // 阻止默认动作
-          event.preventDefault()
-          return true
-        },
-        false
-      )
-      // 将被拖拽元素放在目标元素内时运行脚本（对象是目标元素）只执行一次
-      target.addEventListener(
-        'drop',
-        event => {
-          // 调用 preventDefault() 来避免浏览器对数据的默认处理（drop 事件的默认行为是以链接形式打
-          event.preventDefault()
-          if (event.target.className === 'target') {
-            let wrap = document.querySelector('.plan-wrap .target')
-            this.elDrag.style.left =
-              ((event.offsetX - this.left) /
-                ~~wrap.style.width.replace('px', '')) *
-                100 +
-              '%'
-            this.elDrag.style.top =
-              ((event.offsetY - this.top) / 768) * 100 + '%'
-            this.elDrag.style.position = 'absolute'
-            let data = {}
-            data.mtid = this.elDrag.getAttribute('data-mtid')
-            data.point =
-              this.elDrag.getAttribute('data-type') === '1'
-                ? undefined
-                : parseInt(this.elDrag.getAttribute('data-id'))
-            data.locX = this.elDrag.style.left
-            data.locY = this.elDrag.style.top
-            event.target.appendChild(this.elDrag)
-            this.upDatePlan(data)
-          }
-        },
-        false
-      )
-      let deleteZone = document.querySelector('.component-wrap')
-      deleteZone.addEventListener(
-        'dragover',
-        event => {
-          event.preventDefault()
-          return true
-        },
-        false
-      )
-      deleteZone.addEventListener(
-        'dragenter',
-        () => {
-          if (deleteZone.contains(this.elDrag)) {
-            // 如果触发事件的元素是deleteZone的子元素，则不触发
-            return
-          }
-          this.delIconVisible = true
-        },
-        false
-      )
-      deleteZone.addEventListener(
-        'drop',
-        event => {
-          if (deleteZone.contains(this.elDrag)) {
-            // 如果触发事件的元素是deleteZone的子元素，则不触发
-            return
-          }
+    componentWrapDragOver(event) {
+      event.preventDefault()
+      return true
+    },
+    componentWrapDragEnter() {
+      const wrap = document.querySelector('.component-wrap')
+      if (wrap.contains(this.elDrag)) {
+        // 如果触发事件的元素是deleteZone的子元素，则不触发
+        return
+      }
+      this.delIconVisible = true
+    },
+    componentWrapDrop(event) {
+      const wrap = document.querySelector('.component-wrap')
+      if (wrap.contains(this.elDrag)) {
+        // 如果触发事件的元素是wrap的子元素，则不触发
+        return
+      }
+      try {
+        const payload = JSON.parse(event.dataTransfer.getData('payload'))
+        if (payload.operationType === 'update') {
           let data = {}
-          data.mtid = this.elDrag.getAttribute('data-mtid')
-          data.point =
-            this.elDrag.getAttribute('data-type') === '1'
-              ? undefined
-              : parseInt(this.elDrag.getAttribute('data-id'))
+          data.mtid = payload.deviceId
+          data.point = payload.type === 1 ? undefined : payload.pointId
           this.deletePalnItem(data)
-          if (event.target.className === 'component-wrap');
-          {
-            this.elDrag.parentNode.removeChild(this.elDrag)
-          }
+
+          let list = []
+          this.targetData.forEach(v => {
+            if (v.Mtid == payload.deviceId && v.PointId == payload.pointId) {
+              return
+            }
+            list.push(v)
+          })
+          this.targetData = list
           this.delIconVisible = false
-        },
-        false
-      )
+        }
+      } catch (err) {
+        console.error(err)
+      }
     },
     // 获取可配置设备列表
     fetchSource() {
@@ -311,13 +483,21 @@ export default {
       getUndistr(this.currentNode.mtid)
         .then(res => {
           if (res.data.Code === 200) {
-            this.sourceData = res.data.Data || []
-            document.querySelector(
-              '.config-component-list'
-            ).innerHTML = this.renderDragDom(this.sourceData)
-            this.Drag()
+            const data = res.data.Data || []
+            let deviceList = []
+            let pointList = []
+            data.forEach(v => {
+              if (v.type === 1) {
+                deviceList.push(v)
+              } else {
+                pointList.push(v)
+              }
+            })
+            this.sourceDeviceList = deviceList
+            this.sourcePointList = pointList
           } else {
-            this.sourceData = []
+            this.sourceDeviceList = []
+            this.sourcePointList = []
           }
         })
         .catch(err => {
@@ -345,11 +525,6 @@ export default {
               : ''
             if (data.List.length) {
               this.targetData = data.List
-              document.querySelector(
-                '.target'
-              ).innerHTML = this.renderTargetDom(this.targetData)
-
-              this.Drag()
             } else {
               this.targetData = []
             }
@@ -403,45 +578,22 @@ export default {
           this.$message.error('删除失败')
         })
     },
-    renderTargetDom(data) {
-      let domText = ''
-      data.forEach(item => {
-        let icon = item.Icon
+    getIcon(data, type = 'source') {
+      let icon = ''
+      if (type === 'source') {
+        icon = data.icon
+        if (data.icon === 'default') {
+          data.type === 2 && (icon = 'point')
+          data.type === 1 && (icon = 'cube1')
+        }
+      } else {
+        icon = data.Icon
         if (icon === 'default' || icon === '') {
-          item.Type === 2 && (icon = 'point')
-          item.Type === 1 && (icon = 'cube1')
+          data.Type === 2 && (icon = 'point')
+          data.Type === 1 && (icon = 'cube1')
         }
-        domText += `<a title="${item.Area ? item.Area + '-' : ''}${
-          item.Name
-        }" style="left: ${item.LocX}; top: ${
-          item.LocY
-        }; position: absolute" data-mtid="${item.Mtid}" data-id="${
-          item.PointId
-        }" data-type="${item.Type}" class="drag-item" draggable="true">
-                    <svg class="icon plan-device-icon" aria-hidden="true"><use xlink:href="#icon-${icon}"></use></svg></a>`
-      })
-      return domText
-    },
-    renderDragDom(data) {
-      let domText = ''
-      data.forEach(item => {
-        let icon = item.icon
-        if (item.icon === 'default') {
-          item.type === 2 && (icon = 'point')
-          item.type === 1 && (icon = 'cube1')
-        }
-        let id = item.type === 2 ? item.id : '0'
-        domText += `<a title="${item.Area ? item.Area + '-' : ''}${
-          item.name
-        }" data-mtid="${
-          item.mtid
-        }" data-id="${id}" class="drag-item" draggable="true">
-                    <span class="drag-icon"><svg class="icon temp-icon" aria-hidden="true"><use xlink:href="#icon-${icon}"></use></svg><span>
-                    <span class="text">${
-                      item.name
-                    }</span><svg class="icon plan-device-icon" aria-hidden="true"><use xlink:href="#icon-${icon}"></use></svg></a>`
-      })
-      return domText
+      }
+      return icon
     },
     initPlanWrapSize(bgWidth, bgHeight) {
       let wrap = document.querySelector('.plan-wrap .target')
@@ -451,6 +603,21 @@ export default {
 }
 </script>
 <style lang="scss">
+.planCreate-page-header {
+  .right-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .plan-bgupload {
+    .el-upload--text {
+      width: auto;
+      height: auto;
+      border: none;
+    }
+  }
+}
 .planCreate {
   -moz-user-select: none;
   /* 为了拖拽的体验，禁止用户选中文字 */
@@ -459,145 +626,118 @@ export default {
   -khtml-user-select: none;
   user-select: none;
   margin: 20px;
-  @at-root {
-    .planCreate-content {
-      display: flex;
-      .struct-wrap {
-        flex: 0 0 300px;
-        overflow: hidden;
+}
+.planCreate-content {
+  display: flex;
+  .struct-wrap {
+    flex: 0 0 300px;
+    overflow: hidden;
+  }
+  .component-wrap {
+    flex: 0 0 220px;
+    .el-tabs__item {
+      width: 50%;
+      text-align: center;
+    }
+    .el-tabs__nav {
+      float: none;
+    }
+    .title-wrap {
+      font-size: 16px;
+      padding: 12px;
+    }
+  }
+  .struct-wrap,
+  .component-wrap {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .component-wrap {
+    position: relative;
+    .config-component-list {
+      height: 620px;
+      padding-left: 4px;
+      overflow-y: auto;
+      &:empty {
+        height: 0;
       }
-      .struct-content {
-        height: 725px;
-        padding: 15px 10px;
-        overflow: auto;
-        .el-tree {
-          border: none;
-          .icon {
-            font-size: 16px;
-            margin-right: 5px;
-            color: #20a0ff;
-          }
-        }
-      }
-      .component-wrap {
-        flex: 0 0 200px;
-      }
-      .struct-wrap,
-      .component-wrap {
-        border-radius: 4px;
-        overflow: hidden;
-      }
-      .component-wrap {
-        position: relative;
-        .config-component-list {
-          height: 755px;
-          padding-left: 4px;
-          overflow-y: auto;
-          &:empty {
-            height: 0;
-          }
-        }
-        .drag-item {
-          display: block;
-          font-size: 14px;
-          padding: 6px 0;
-          background-color: #fff;
-          border-bottom: 1px solid #ddd;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
-        .icon {
-          font-size: 20px;
-          color: #339999;
-          margin-right: 5px;
-        }
-        .drag-icon {
-          cursor: move;
-        }
-        .delete-icon {
-          display: none;
-          position: absolute;
-          top: 0;
-          right: 0;
-          left: 0;
-          bottom: 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: #eff2f7;
-          i {
-            font-size: 60px;
-            text-shadow: 0 0 5px #fff;
-            color: #ff4949;
-          }
-        }
-        .plan-device-icon {
-          display: none;
-        }
-      }
-      .plan-wrap {
+      .node-item {
         flex: 1;
-        position: relative;
-        margin: 0 10px;
-        border-radius: 4px;
-        overflow: auto;
-        .target {
-          width: 1366px;
-          position: relative;
-          margin: auto;
-          height: 768px;
-          background-repeat: no-repeat;
-          background-position-x: center;
-          background-size: auto 768px;
-        }
-        .drag-item {
-          position: relative;
-          cursor: move;
-          .point {
-            width: 15px;
-            height: 15px;
-            display: inline-block;
-            border-radius: 50%;
-            background: #82d0ea;
-          }
-          .text {
-            display: none;
-          }
-        }
-        .plan-device-icon {
-          font-size: 24px;
-          color: #339999;
-        }
-        .temp-icon {
-          display: none;
-        }
+        padding: 5 0;
+        cursor: move;
       }
-      .delete-btn {
-        position: absolute;
-        top: 10px;
-        left: 84px;
-        z-index: 10;
-        padding: 5px;
+    }
+    .drag-item {
+      display: block;
+      font-size: 14px;
+      padding: 6px 0;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .icon {
+      font-size: 20px;
+      color: #1890ff;
+      margin-right: 5px;
+    }
+    .drag-icon {
+      cursor: move;
+    }
+    .delete-icon {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #eff2f7;
+      i {
+        font-size: 60px;
+        text-shadow: 0 0 5px #fff;
+        color: #ff4949;
       }
-      .preview-btn {
-        position: absolute;
-        top: 10px;
-        left: 180px;
-        z-index: 10;
-        padding: 5px;
+    }
+  }
+  .plan-wrap {
+    flex: 1;
+    position: relative;
+    margin: 0 10px;
+    border-radius: 4px;
+    overflow: auto;
+    .target {
+      width: 1366px;
+      position: relative;
+      margin: auto;
+      height: 768px;
+      background-repeat: no-repeat;
+      background-position-x: center;
+      background-size: auto 768px;
+    }
+    .drag-item {
+      position: relative;
+      cursor: move;
+      .point {
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        border-radius: 50%;
+        background: #82d0ea;
       }
-      .plan-bgupload {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        z-index: 10;
-        .el-upload--text {
-          width: auto;
-          height: auto;
-          border: none;
-        }
+      .text {
+        display: none;
       }
+    }
+    .plan-device-icon {
+      font-size: 24px;
+      color: #1890ff;
+    }
+    .temp-icon {
+      display: none;
     }
   }
 }

@@ -707,14 +707,23 @@ const monitor = {
       path: 'planShow',
       component: _import('plan/planShow'),
       name: 'planShow',
-      meta: { title: '平面图', projectPermissionId: [27], industry: [2, 3, 4] }
+      meta: {
+        title: '平面图',
+        projectPermissionId: [27],
+        industry: [2, 3, 4],
+        customHeader: true
+      }
     },
     {
       path: 'planCreate',
       component: _import('plan/planCreate'),
       name: 'planCreate',
       hidden: true,
-      meta: { title: '平面图编辑', projectPermissionId: [32] }
+      meta: {
+        title: '平面图编辑',
+        projectPermissionId: [32],
+        customHeader: true
+      }
     }
   ]
 }

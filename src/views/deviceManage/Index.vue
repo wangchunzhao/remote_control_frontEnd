@@ -2,7 +2,7 @@
   <div class="device-manage content-box">
     <el-popover
       v-model="cascaderVisible"
-      placement="bottom-end"
+      placement="bottom-start"
       trigger="click"
     >
       <el-cascader-panel

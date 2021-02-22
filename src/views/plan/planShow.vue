@@ -1,89 +1,96 @@
 <template>
-  <div class="planShow">
-    <div v-loading="planLoading" class="planShow-content">
-      <div style="display:flex;">
-        <div :class="{ close: treeVisible }" class="struct-wrap bg-fff">
-          <div class="title-wrap">
-            <h3>
-              <c-svg name="tree" class-name="title-icon" />
-              <span class="text">结构信息</span>
-            </h3>
-            <div style="float: right;">
-              <el-button
-                @click.native="handleAddArea"
-                v-permission="[32]"
-                style="padding: 4px 0 0 0;"
-                type="text"
-                >添加区域</el-button
-              >
-              <el-button
-                type="text"
-                style="padding: 4px 0 0 0;"
-                @click.native="toggleTree"
-              >
-                隐藏
-              </el-button>
-            </div>
-          </div>
-          <div
-            v-loading="structLoading"
-            class="struct-content thin-scroll"
-            element-loading-text="加载中..."
+  <div>
+    <page-header class="planShow-page-header" title="平面图">
+      <template v-slot:right>
+        <div class="right-wrap">
+          <el-popover
+            v-model="structTreeVisible"
+            placement="bottom-end"
+            trigger="click"
+            popper-class="planShow-sturctTree-popover"
           >
-            <el-tree
-              ref="tree"
-              :data="structData"
-              highlight-current
-              node-key="mtid"
-              :current-node-key="currentNode.mtid"
-              :props="structTreeProps"
-              :expand-on-click-node="false"
-              :default-expanded-keys="
-                structData.length ? [structData[0].mtid] : []
-              "
-              @node-click="handleNodeClick"
+            <div
+              v-loading="structLoading"
+              class="struct-content thin-scroll"
+              element-loading-text="加载中..."
             >
-              <span slot-scope="{ node, data }" class="node-item">
-                <span>
-                  <c-svg name="ceng"></c-svg>
-                  <span>{{ node.label }}</span>
+              <div style="margin-bottom: 10px;text-align: right;">
+                <el-button
+                  @click.native="handleAddArea"
+                  v-permission="[32]"
+                  style="padding: 0;"
+                  type="text"
+                  >添加区域</el-button
+                >
+              </div>
+
+              <el-tree
+                ref="tree"
+                :data="structData"
+                highlight-current
+                node-key="mtid"
+                :current-node-key="currentNode.mtid"
+                :props="structTreeProps"
+                :expand-on-click-node="false"
+                :default-expanded-keys="
+                  structData.length ? [structData[0].mtid] : []
+                "
+                @node-click="handleNodeClick"
+              >
+                <span slot-scope="{ node, data }" class="node-item">
+                  <span>
+                    <c-svg name="ceng"></c-svg>
+                    &nbsp;
+                    <span>{{ node.label }}</span>
+                  </span>
+                  <span class="node-btn-wrap">
+                    <el-button
+                      type="text"
+                      v-permission="[32]"
+                      v-if="node.level > 1"
+                      @click.native.stop="handleEditArea(data)"
+                    >
+                      <i class="el-icon-setting" />
+                    </el-button>
+                    <el-button
+                      type="text"
+                      v-permission="[32]"
+                      v-if="node.level > 1"
+                      class="btn-danger"
+                      @click.native.stop="removeArea(data)"
+                    >
+                      <i class="el-icon-delete" />
+                    </el-button>
+                    <i v-if="data.exist === true" class="el-icon-picture"></i>
+                  </span>
                 </span>
-                <span class="node-btn-wrap">
-                  <el-button
-                    type="text"
-                    v-permission="[32]"
-                    v-if="node.level > 1"
-                    @click.native.stop="handleEditArea(data)"
-                  >
-                    <i class="el-icon-setting" />
-                  </el-button>
-                  <el-button
-                    type="text"
-                    v-permission="[32]"
-                    v-if="node.level > 1"
-                    class="btn-danger"
-                    @click.native.stop="removeArea(data)"
-                  >
-                    <i class="el-icon-delete" />
-                  </el-button>
-                  <i v-if="data.exist === true" class="el-icon-picture"></i>
-                </span>
-              </span>
-            </el-tree>
-          </div>
-        </div>
-        <div
-          class="plan-wrap thin-scroll bg-fff"
-          element-loading-text="加载中..."
-        >
-          <div v-show="treeVisible" class="tree-toggle" @click="toggleTree">
-            <c-svg name="right1" />
-          </div>
-          <div v-show="planBgImg.url">
+              </el-tree>
+            </div>
+
+            <div slot="reference" class="structTree-trigger">
+              {{ currentNode.mname }}
+              <i class="el-icon-caret-bottom" style="font-size: 10px;"></i>
+            </div>
+          </el-popover>
+          <div>
+            <el-select
+              v-model="childSystems"
+              multiple
+              size="mini"
+              placeholder="按类型筛选"
+              class="filter-select"
+              @visible-change="filterPlan"
+            >
+              <el-option
+                v-for="item in childSystemOptions"
+                :key="item.ID"
+                :label="item.TypeName"
+                :value="item.ID"
+              />
+            </el-select>
             <el-button
               v-permission="[32]"
               type="primary"
-              class="plan-edit-btn"
               size="mini"
               @click.native="
                 $router.push({
@@ -98,17 +105,11 @@
               <i class="el-icon-edit" />
               编辑
             </el-button>
-            <el-button
-              type="primary"
-              class="plan-view-btn"
-              size="mini"
-              @click.native="showAll"
-            >
+            <el-button type="primary" size="mini" @click.native="showAll">
               <i class="el-icon-view" />
               {{ isShowAll ? '关闭' : '展开' }}
             </el-button>
             <el-button
-              class="screenfull-btn"
               type="primary"
               size="mini"
               @click.native="screenFull($event)"
@@ -116,343 +117,334 @@
               <c-svg name="quanping" />
               {{ fullScreenStatus ? '退出' : '全屏' }}
             </el-button>
-            <el-select
-              v-model="childSystems"
-              popper-class="plan-filter-select"
-              multiple
-              size="mini"
-              placeholder="按类型筛选"
-              class="filter-select"
-              @visible-change="filterPlan"
-            >
-              <el-option
-                v-for="item in childSystemOptions"
-                :key="item.ID"
-                :label="item.TypeName"
-                :value="item.ID"
-              />
-            </el-select>
-            <div
-              class="plan-content"
-              :style="{
-                'background-image': planBgImg.url
-                  ? `url(${planBgImg.url})`
-                  : `url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)`
-              }"
-            >
+          </div>
+        </div>
+      </template>
+    </page-header>
+    <div class="planShow">
+      <div v-loading="planLoading || structLoading" class="planShow-content">
+        <div style="display:flex;">
+          <div
+            class="plan-wrap thin-scroll bg-fff"
+            element-loading-text="加载中..."
+          >
+            <div v-show="treeVisible" class="tree-toggle" @click="toggleTree">
+              <c-svg name="right1" />
+            </div>
+            <div v-show="planBgImg.url" style="background-color: #fff;">
               <div
-                v-for="(item, index) in deviceList"
-                :key="index"
+                class="plan-content"
                 :style="{
-                  left: item.LocX,
-                  top: item.LocY,
-                  position: 'absolute'
+                  'background-image': planBgImg.url
+                    ? `url(${planBgImg.url})`
+                    : `url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)`
                 }"
-                :data-mtid="item.Mtid"
-                :data-id="item.Id"
-                class="device-item"
               >
-                <!-- 摄像头 -->
-                <el-tooltip
-                  v-if="!item.Child && item.Camera"
-                  :value="item.show"
-                  effect="dark"
-                  :content="item.Area + ': ' + item.Name"
-                  placement="top"
-                  popper-class="plan-tooltip"
+                <div
+                  v-for="(item, index) in deviceList"
+                  :key="index"
+                  :style="{
+                    left: item.LocX,
+                    top: item.LocY,
+                    position: 'absolute'
+                  }"
+                  :data-mtid="item.Mtid"
+                  :data-id="item.Id"
+                  class="device-item"
                 >
-                  <a
-                    :class="{
-                      inline: item.Status === 1,
-                      'off-line': item.Status === 0,
-                      alarm: item.Status === -1
-                    }"
-                    class="icon-wrap"
-                    href="javascript:;"
-                    :title="item.Area + ': ' + item.Name"
-                    @click.stop="openVideoDialog(item)"
+                  <!-- 摄像头 -->
+                  <el-tooltip
+                    v-if="!item.Child && item.Camera"
+                    :value="item.show"
+                    effect="light"
+                    :content="item.Area + ': ' + item.Name"
+                    placement="top"
+                    popper-class="plan-tooltip"
                   >
-                    <c-svg :name="handleIcon(item)" />
-                  </a>
-                </el-tooltip>
-                <!-- 点位 -->
-                <el-tooltip
-                  v-if="!item.Child && !item.Camera"
-                  :value="item.show"
-                  effect="dark"
-                  :content="item.Name"
-                  placement="top"
-                  popper-class="plan-tooltip"
-                >
-                  <a
-                    :class="{
-                      inline: item.Status === 1 || item.Valit === '开',
-                      'off-line': item.Status === 0 || item.Valit === '关',
-                      alarm: item.Status === -1
-                    }"
-                    class="icon-wrap point-icon-wrap"
-                    href="javascript:;"
-                    :title="item.Name"
-                    @click.stop="showHistoryChart([item.PointId], item.Mtid)"
+                    <a
+                      :class="{
+                        inline: item.Status === 1,
+                        'off-line': item.Status === 0,
+                        alarm: item.Status === -1
+                      }"
+                      class="icon-wrap"
+                      href="javascript:;"
+                      :title="item.Area + ': ' + item.Name"
+                      @click.stop="openVideoDialog(item)"
+                    >
+                      <c-svg :name="handleIcon(item)" />
+                    </a>
+                  </el-tooltip>
+                  <!-- 点位 -->
+                  <el-tooltip
+                    v-if="!item.Child && !item.Camera"
+                    :value="item.show"
+                    :content="item.Name"
+                    placement="top"
+                    effect="light"
+                    popper-class="plan-tooltip"
                   >
-                    <c-svg :name="handleIcon(item)" />
-                    <span class="point-value">{{ item.Valit }}</span>
-                  </a>
-                </el-tooltip>
-                <!-- 设备，没有一级参数 -->
-                <el-tooltip
-                  v-if="item.Child && !item.Child.length"
-                  :value="item.show"
-                  effect="dark"
-                  :content="item.Name"
-                  placement="top"
-                  popper-class="plan-tooltip"
-                >
-                  <a
-                    :class="{
-                      inline: item.Status === 1,
-                      'off-line': item.Status === 0,
-                      alarm: item.Status === -1
-                    }"
-                    class="icon-wrap"
-                    href="javascript:;"
-                    :title="item.Name"
-                    @click.stop="
-                      openDialog(
-                        item.Mtid,
-                        item.Child,
-                        item.Status,
-                        item.Name,
-                        item.PointId
-                      )
-                    "
+                    <a
+                      :class="{
+                        inline: item.Status === 1 || item.Valit === '开',
+                        'off-line': item.Status === 0 || item.Valit === '关',
+                        alarm: item.Status === -1
+                      }"
+                      class="icon-wrap"
+                      href="javascript:;"
+                      :title="item.Name"
+                      @click.stop="showHistoryChart([item.PointId], item.Mtid)"
+                    >
+                      <c-svg :name="handleIcon(item)" />
+                      <span class="point-value">{{ item.Valit }}</span>
+                    </a>
+                  </el-tooltip>
+                  <!-- 设备，没有一级参数 -->
+                  <el-tooltip
+                    v-if="item.Child && !item.Child.length"
+                    :value="item.show"
+                    effect="light"
+                    :content="item.Name"
+                    placement="top"
+                    popper-class="plan-tooltip"
                   >
-                    <c-svg :name="handleIcon(item)" />
-                  </a>
-                </el-tooltip>
-                <!-- 设备，带有一级参数 -->
-                <div v-if="item.Child && item.Child.length" class="plan-device">
-                  <a
-                    slot="reference"
-                    :class="{
-                      inline: item.Status === 1,
-                      'off-line': item.Status === 0,
-                      alarm: item.Status === -1
-                    }"
-                    class="icon-wrap"
-                    href="javascript:;"
-                    :title="item.Name"
-                    @mouseout="handleMouseOut(item)"
-                    @mouseover="handleMouseOver(item)"
-                    @click.prevent="
-                      openDialog(
-                        item.Mtid,
-                        item.Child,
-                        item.Status,
-                        item.Name,
-                        item.PointId
-                      )
-                    "
-                  >
-                    <c-svg :name="handleIcon(item)" />
-                  </a>
+                    <a
+                      :class="{
+                        inline: item.Status === 1,
+                        'off-line': item.Status === 0,
+                        alarm: item.Status === -1
+                      }"
+                      class="icon-wrap"
+                      href="javascript:;"
+                      :title="item.Name"
+                      @click.stop="
+                        openDialog(
+                          item.Mtid,
+                          item.Child,
+                          item.Status,
+                          item.Name,
+                          item.PointId
+                        )
+                      "
+                    >
+                      <c-svg :name="handleIcon(item)" />
+                    </a>
+                  </el-tooltip>
+                  <!-- 设备，带有一级参数 -->
                   <div
-                    v-show="item.show"
-                    class="device-popover"
-                    @click="item.show = false"
+                    v-if="item.Child && item.Child.length"
+                    class="plan-device"
                   >
-                    <div
-                      style="padding-bottom: 3px;font-weight: bold;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: block;"
+                    <a
+                      slot="reference"
+                      :class="{
+                        inline: item.Status === 1,
+                        'off-line': item.Status === 0,
+                        alarm: item.Status === -1
+                      }"
+                      class="icon-wrap"
+                      href="javascript:;"
+                      :title="item.Name"
+                      @mouseout="handleMouseOut(item)"
+                      @mouseover="handleMouseOver(item)"
+                      @click.prevent="
+                        openDialog(
+                          item.Mtid,
+                          item.Child,
+                          item.Status,
+                          item.Name,
+                          item.PointId
+                        )
+                      "
                     >
-                      {{ item.Name }}
-                    </div>
+                      <c-svg :name="handleIcon(item)" />
+                    </a>
                     <div
-                      v-for="(item2, index) in item.Child"
-                      :key="index"
-                      style="white-space: nowrap;"
-                    >
-                      <span style="font-size: 12px;"
-                        >{{ item2.Name }}：&nbsp;</span
-                      >
-                      <span
-                        :class="{
-                          inline: item2.Status === 1,
-                          'off-line': item2.Status === 0,
-                          alarm: item2.Status === -1
-                        }"
-                        >{{ item2.Valit }}</span
-                      >
-                    </div>
-                    <div
-                      class="mask"
-                      style="position: absolute;top: 0;right: 0;bottom: 0; left: 0;z-index: 100;cursor: pointer"
+                      v-show="item.show"
+                      class="device-popover"
                       @click="item.show = false"
-                      @mousemove="popoverMouseOver($event)"
-                      @mouseout="popoverMouseOut($event)"
-                    />
+                    >
+                      <div class="device-name">
+                        {{ item.Name }}
+                      </div>
+                      <div
+                        v-for="(item2, index) in item.Child"
+                        :key="index"
+                        style="white-space: nowrap;padding: 0 8px;"
+                      >
+                        <span>{{ item2.Name }}：&nbsp;</span>
+                        <span
+                          :class="{
+                            inline: item2.Status === 1,
+                            'off-line': item2.Status === 0,
+                            alarm: item2.Status === -1
+                          }"
+                          >{{ item2.Valit }}</span
+                        >
+                      </div>
+                      <div
+                        class="mask"
+                        style="position: absolute;top: 0;right: 0;bottom: 0; left: 0;z-index: 100;cursor: pointer"
+                        @click="item.show = false"
+                        @mousemove="popoverMouseOver($event)"
+                        @mouseout="popoverMouseOut($event)"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            v-show="!planBgImg.url"
-            style="text-align:center;margin-top: 250px;"
-          >
-            <c-svg name="cloud-upload" style="font-size: 60px;color: #999;" />
-            <div style="font-size: 16px;color: #999;margin-top: 15px;">
-              还没有创建平面图？马上
-              <a
-                href="javascript:;"
-                style="color: #339999;font-size: 16px;"
-                @click="handleCreatePlan"
-                >创建
-              </a>
-            </div>
-          </div>
-          <el-dialog
-            v-loading="dialogLoading"
-            :visible.sync="dialogVisible"
-            :show-close="false"
-            element-loading-text="加载中..."
-            custom-class="planShow-dialog"
-            @close="dialogClose"
-          >
-            <div style="display: flex">
-              <div class="planDialog-basic-info">
-                <div class="icon-wrap">
-                  <img
-                    :src="
-                      basicInfo.imgUrl
-                        ? BASE_URI + basicInfo.imgUrl
-                        : 'https://cdn.sinocold.net/images/monitorDashboard/device_no_image_placeholder.svg'
-                    "
-                  />
-                </div>
-                <div class="device-name">
-                  {{ currentSelect.name }}
-                </div>
-                <div
-                  :class="{
-                    inline: currentSelect.status === 1,
-                    'off-line': currentSelect.status === 0,
-                    alarm: currentSelect.status === -1
-                  }"
-                  class="device-status"
-                >
-                  {{
-                    currentSelect.status === -1
-                      ? '报警中'
-                      : currentSelect.status === 0
-                      ? '停机'
-                      : currentSelect.status === 1
-                      ? '运行中'
-                      : ''
-                  }}
-                </div>
-                <ul class="basic-info-list">
-                  <li>
-                    <span class="label">序列号：</span>
-                    <span class="value">{{ basicInfo.sn }}</span>
-                  </li>
-                  <li>
-                    <span class="label">品牌：</span>
-                    <span class="value">{{ basicInfo.brand }}</span>
-                  </li>
-                  <li>
-                    <span class="label">型号：</span>
-                    <span class="value">{{ basicInfo.type }}</span>
-                  </li>
-                  <li>
-                    <span class="label">规格：</span>
-                    <span class="value">{{ basicInfo.spec }}</span>
-                  </li>
-                  <li>
-                    <span class="label">质保期：</span>
-                    <span class="value">{{ basicInfo.exp }}</span>
-                  </li>
-                  <li>
-                    <span class="label">制造日期：</span>
-                    <span class="value">{{
-                      basicInfo.mfg ? basicInfo.mfg : ''
-                    }}</span>
-                  </li>
-                  <li>
-                    <span class="label">维护周期：</span>
-                    <span class="value">{{
-                      basicInfo.maintainCycle === '0'
-                        ? ''
-                        : basicInfo.maintainCycle
-                    }}</span>
-                  </li>
-                  <li>
-                    <span class="label">安装日期：</span>
-                    <span class="value">{{
-                      basicInfo.installdate ? basicInfo.installdate : ''
-                    }}</span>
-                  </li>
-                  <li>
-                    <span class="label">厂家名称：</span>
-                    <span class="value">{{ basicInfo.vendorname }}</span>
-                  </li>
-                  <li>
-                    <span class="label">集团名称：</span>
-                    <span class="value">{{ basicInfo.cname }}</span>
-                  </li>
-                </ul>
-              </div>
-              <div class="planDialog-level-info">
-                <div class="level-radio">
-                  <el-radio-group v-model="level">
-                    <el-radio-button label="1">
-                      一级参数
-                    </el-radio-button>
-                    <el-radio-button label="2">
-                      二级参数
-                    </el-radio-button>
-                    <el-radio-button label="3">
-                      三级参数
-                    </el-radio-button>
-                  </el-radio-group>
-                </div>
-                <div style="padding: 10px 6px;overflow: auto">
-                  <el-table
-                    :data="tableData"
-                    style="width: 720px;"
-                    height="390"
-                  >
-                    <el-table-column prop="name" sortable label="名称" />
-                    <el-table-column prop="area" sortable label="区域" />
-                    <el-table-column prop="valit" sortable label="当前值" />
-                    <el-table-column label="操作" width="70">
-                      <template slot-scope="scope">
-                        <el-button
-                          type="text"
-                          @click.native="
-                            showHistoryChart(
-                              [scope.row.pointId],
-                              scope.row.mtid
-                            )
-                          "
-                        >
-                          <c-svg name="chart" />
-                        </el-button>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </div>
+            <div
+              v-show="!planBgImg.url"
+              style="text-align:center;margin-top: 250px;"
+            >
+              <c-svg name="cloud-upload" style="font-size: 60px;color: #999;" />
+              <div style="font-size: 16px;color: #999;margin-top: 15px;">
+                还没有创建平面图？马上
+                <a
+                  href="javascript:;"
+                  style="color: #339999;font-size: 16px;"
+                  @click="handleCreatePlan"
+                  >创建
+                </a>
               </div>
             </div>
-          </el-dialog>
-          <HistoryDialog
-            ref="historyDialog"
-            :point-ids="history.point"
-            :device-id="history.deviceId"
-          />
+            <el-dialog
+              v-loading="dialogLoading"
+              :visible.sync="dialogVisible"
+              :show-close="false"
+              element-loading-text="加载中..."
+              custom-class="planShow-dialog"
+              @close="dialogClose"
+            >
+              <div style="display: flex">
+                <div class="planDialog-basic-info">
+                  <div class="device-name">
+                    {{ currentSelect.name }}
+                    <el-tag
+                      size="mini"
+                      :type="
+                        basicInfo.EConnectStatus === -1
+                          ? 'info'
+                          : basicInfo.EConnectStatus === 0
+                          ? 'success'
+                          : 'danger'
+                      "
+                    >
+                      {{
+                        basicInfo.EConnectStatus === -1
+                          ? '离线'
+                          : basicInfo.EConnectStatus === 0
+                          ? '在线'
+                          : '报警'
+                      }}
+                    </el-tag>
+                  </div>
+                  <ul class="basic-info-list">
+                    <li>
+                      <span class="label">设备编号：</span>
+                      <span class="value">{{
+                        basicInfo.assets_code || '-'
+                      }}</span>
+                    </li>
+                    <li>
+                      <span class="label">设备类型：</span>
+                      <span class="value">{{ basicInfo.type || '-' }}</span>
+                    </li>
+                    <li>
+                      <span class="label">关联区域：</span>
+                      <span class="value">{{
+                        basicInfo.LocationTreeName || '-'
+                      }}</span>
+                    </li>
+                    <li>
+                      <span class="label">SN 号：</span>
+                      <span class="value">{{ basicInfo.sn || '-' }}</span>
+                    </li>
+                    <li>
+                      <span class="label">品牌：</span>
+                      <span class="value">{{ basicInfo.brand || '-' }}</span>
+                    </li>
+
+                    <li
+                      v-for="item in basicInfo.ModelTreePropertyList"
+                      :key="item.key"
+                    >
+                      <span class="label">{{ item.Key }}：</span>
+                      <span class="value">{{ item.Value }}</span>
+                    </li>
+                    <li>
+                      <span class="label">安装日期：</span>
+                      <span class="value">{{
+                        basicInfo.installdate ? basicInfo.installdate : ''
+                      }}</span>
+                    </li>
+                    <li>
+                      <span class="label">出产日期：</span>
+                      <span class="value">{{ basicInfo.MFG || '-' }}</span>
+                    </li>
+                    <li
+                      v-for="item in (basicInfo.Tag || '').split(';')"
+                      :key="item"
+                    >
+                      <span class="label">设备标签：</span>
+                      <el-tag v-if="item" size="mini">{{ item }}</el-tag>
+                    </li>
+                  </ul>
+                </div>
+                <div class="planDialog-level-info">
+                  <div class="level-radio">
+                    <el-radio-group v-model="level">
+                      <el-radio-button label="1">
+                        一级参数
+                      </el-radio-button>
+                      <el-radio-button label="2">
+                        二级参数
+                      </el-radio-button>
+                      <el-radio-button label="3">
+                        三级参数
+                      </el-radio-button>
+                    </el-radio-group>
+                  </div>
+                  <div style="padding: 10px 6px;overflow: auto">
+                    <el-table
+                      :data="tableData"
+                      style="width: 720px;"
+                      height="390"
+                    >
+                      <el-table-column prop="name" sortable label="名称" />
+                      <el-table-column prop="area" sortable label="区域" />
+                      <el-table-column prop="valit" sortable label="当前值" />
+                      <el-table-column label="操作" width="70">
+                        <template slot-scope="scope">
+                          <el-button
+                            type="text"
+                            @click.native="
+                              showHistoryChart(
+                                [scope.row.pointId],
+                                scope.row.mtid
+                              )
+                            "
+                          >
+                            <c-svg name="chart" />
+                          </el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
+                </div>
+              </div>
+            </el-dialog>
+            <HistoryDialog
+              ref="historyDialog"
+              :point-ids="history.point"
+              :device-id="history.deviceId"
+            />
+          </div>
         </div>
       </div>
+      <VideoPlayer :video="currentVideo" ref="videoPlayer" />
     </div>
-    <VideoPlayer :video="currentVideo" ref="videoPlayer" />
   </div>
 </template>
 <script>
@@ -463,7 +455,6 @@ import HistoryDialog from '@/components/HistoryDialog'
 import { getTypeList, getPlanItems } from '@/api/planNew'
 import { addModel, deleteModel, updateModel } from '@/api/locationTree'
 import VideoPlayer from '@/components/VideoPlayer'
-import { storageName } from '@/utils/index'
 import { checkPermission } from '@/utils/permissions'
 import { getPlanStructTree } from '@/api/planNew'
 
@@ -474,6 +465,7 @@ export default {
   },
   data() {
     return {
+      structTreeVisible: false,
       structData: [],
       chartImgUrl: '',
       treeVisible: false,
@@ -485,7 +477,8 @@ export default {
       innerVisible: false,
       treeMtids: [],
       currentNode: {
-        mtid: ''
+        mtid: '',
+        mname: '-'
       },
       planLoading: false,
       planBgImg: {
@@ -522,8 +515,7 @@ export default {
       },
       unit: '',
       currentVideo: {},
-      dialogVisible: false,
-      userId: JSON.parse(sessionStorage.getItem(storageName('userInfo'))).uid
+      dialogVisible: false
     }
   },
   computed: {
@@ -675,9 +667,11 @@ export default {
     // 树结点点击事件
     handleNodeClick(obj, node) {
       this.currentNode.mtid = node.data.mtid
+      this.currentNode.mname = node.data.mname
       this.planBgImg.url = ''
       this.fetchPlan()
       this.isShowAll = false
+      this.structTreeVisible = false
     },
     handleCreatePlan() {
       if (!checkPermission([32])) {
@@ -889,6 +883,7 @@ export default {
           if (data.success) {
             this.structData = data.plist
             this.currentNode.mtid = this.structData[0].mtid
+            this.currentNode.mname = this.structData[0].mname
             this.$nextTick(() => {
               this.$refs.tree.setCurrentKey(this.currentNode.mtid)
               this.fetchPlan()
@@ -954,32 +949,255 @@ export default {
 }
 </script>
 <style lang="scss">
+.planShow-page-header {
+  .right-wrap {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .structTree-trigger {
+    border-radius: 2px;
+    padding: 5px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-left: 15px;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.65);
+  }
+  .filter-select {
+    margin-right: 10px;
+    .el-tag__close {
+      display: none;
+    }
+  }
+}
 .planShow {
   border-radius: 4px;
   margin: 20px;
-  .title-wrap {
+
+  .plan-wrap {
+    flex: 1;
+    height: 700px;
+    margin-left: 15px;
+
+    border-radius: 4px;
     position: relative;
-    padding: 9px 15px;
-    border-bottom: 2px solid #dedfe0;
-    background: #fff;
-    h3 {
-      font-size: 16px;
-      font-weight: 400;
-      display: inline-block;
-      margin: 0;
+    .tree-toggle {
+      position: absolute;
+      top: 50%;
+      left: -30px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      padding: 5px;
+      svg {
+        color: #339999;
+        font-size: 20px;
+      }
     }
-    .icon {
-      vertical-align: middle;
-      margin-right: 5px;
-      width: 20px;
-      height: 20px;
+    .plan-content {
+      position: relative;
+      width: 1366px;
+      height: 768px;
+      margin: auto;
+      //   overflow: hidden;
+      background-repeat: no-repeat;
+      background-position-x: center;
+      background-size: auto 768px;
+    }
+    .device-item {
+      position: relative;
+      .device-popover {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 45px;
+        min-width: 100px;
+        border-radius: 4px;
+        color: #606266;
+        line-height: 1.5;
+        font-size: 14px;
+        background: #fff;
+        z-index: 1000;
+        cursor: pointer;
+        padding-bottom: 6px;
+        box-shadow: 0px 9px 28px 8px rgba(0, 0, 0, 0.05),
+          0px 6px 16px 0px rgba(0, 0, 0, 0.08),
+          0px 3px 6px -4px rgba(0, 0, 0, 0.12);
+        .device-name {
+          padding: 5px 8px;
+          font-weight: bold;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          display: block;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+          margin-bottom: 6px;
+        }
+        &:after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          bottom: -13px;
+          transform: translateX(-50%);
+          border: 7px solid transparent;
+          border-top-color: #fff;
+        }
+      }
+      .icon-wrap {
+        position: relative;
+        color: #fff;
+        line-height: 30px;
+        min-width: 10px;
+        height: 30px;
+        background: #394c67;
+        box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
+        opacity: 0.8;
+        border-radius: 6px;
+        padding: 0 10px;
+        text-align: center;
+        .point-value {
+          font-size: 14px;
+          color: #1890ff;
+        }
+        &::before {
+          content: '';
+          position: absolute;
+          border: 5px solid;
+          border-color: #394c67 transparent transparent transparent;
+          bottom: -10px;
+          left: 6px;
+          opacity: 0.8;
+        }
+        svg {
+          font-size: 15px;
+          color: #fff;
+          vertical-align: middle;
+        }
+        &.inline {
+          .point-value {
+            color: #1890ff;
+          }
+        }
+        &.off-line {
+          background: #8b8b8b;
+          box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
+          .point-value {
+            color: #ffffff;
+          }
+          &::before {
+            border-color: #8b8b8b transparent transparent transparent;
+          }
+        }
+        &.alarm {
+          box-shadow: 0px 5px 10px -2px #ff3f0d;
+          .point-value {
+            color: #ff3f0d;
+          }
+        }
+      }
+      a {
+        position: relative;
+        font-size: 12px;
+        line-height: 24px;
+        box-shadow: 0 0 0 1px #ccc;
+        background: #fff;
+        color: black;
+        float: left;
+      }
     }
   }
+  .el-dialog__wrapper {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  @at-root .el-dialog.planShow-dialog {
+    width: 1000px;
+    .el-dialog__body {
+      padding: 0;
+    }
+    .el-dialog__header {
+      padding: 0;
+    }
+    .planDialog-basic-info {
+      flex: 0 240px;
+      padding: 25px 0;
+      border-right: 2px solid #c6d3dc;
+    }
+    .planDialog-level-info {
+      flex: 0 0 700px;
+      padding: 25px 0;
+    }
+    .icon-wrap {
+      text-align: center;
+      img {
+        width: 60px;
+      }
+    }
+    .device-name {
+      font-weight: 500;
+      padding-left: 25px;
+      font-size: 24px;
+      margin: 10px 0;
+    }
+    .device-status {
+      margin-top: 5px;
+      text-align: center;
+      letter-spacing: 3px;
+      color: #02a9d1;
+      font-size: 15px;
+    }
+    .inline {
+      color: #13ce66;
+    }
+    .off-line {
+      color: #d3dce6;
+    }
+    .alarm {
+      color: #ff4949;
+    }
+    .basic-info-list {
+      margin-top: 10px;
+      padding-left: 5px;
+      list-style: none;
+      li {
+        padding: 8px 5px;
+      }
+      .label {
+        display: inline-block;
+        width: 85px;
+        color: rgba(0, 0, 0, 0.85);
+        text-align: right;
+      }
+      .value {
+        color: rgba(0, 0, 0, 0.65);
+      }
+    }
+    .level-radio {
+      text-align: center;
+    }
+  }
+  @at-root .video-dialog {
+    width: 900px;
+    border-radius: 4px;
+    overflow: hidden;
+    .el-dialog__body {
+      padding: 0;
+    }
+    .el-dialog__header {
+      padding: 0;
+    }
+  }
+}
+.clearfix {
+  content: '';
+  clear: both;
+  display: block;
+}
+.planShow-sturctTree-popover {
+  min-width: 300px;
   .struct-wrap {
     flex: 0 0 300px;
     border-radius: 4px;
     overflow: hidden;
-    // transition: flex .1s;
     &.close {
       flex: 0;
     }
@@ -1021,265 +1239,10 @@ export default {
       margin-left: 10px;
     }
   }
-  .plan-wrap {
-    // overflow: auto;
-    flex: 1;
-    height: 797px;
-    margin-left: 15px;
-
-    border-radius: 4px;
-    position: relative;
-    .tree-toggle {
-      position: absolute;
-      top: 50%;
-      left: -30px;
-      transform: translateY(-50%);
-      cursor: pointer;
-      padding: 5px;
-      svg {
-        color: #339999;
-        font-size: 20px;
-      }
-    }
-    .plan-content {
-      position: relative;
-      width: 1366px;
-      height: 768px;
-      margin: auto;
-      //   overflow: hidden;
-      background-repeat: no-repeat;
-      background-position-x: center;
-      background-size: auto 768px;
-    }
-    .device-item {
-      position: relative;
-      .device-popover {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 35px;
-        // width: 200px;
-        min-width: 100px;
-        border-radius: 4px;
-        border: 1px solid #ebeef5;
-        padding: 6px;
-        color: #606266;
-        line-height: 1.4;
-        // text-align: justify;
-        font-size: 12px;
-        background: #fff;
-        z-index: 1000;
-        cursor: pointer;
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-        &:after {
-          content: '';
-          position: absolute;
-          left: 50%;
-          bottom: -13px;
-          transform: translateX(-50%);
-          border: 7px solid transparent;
-          border-top-color: #fff;
-        }
-        .inline {
-          color: #339999;
-        }
-        .off-line {
-          color: #ccc;
-        }
-        .alarm {
-          color: #f56c6c;
-        }
-      }
-      .icon-wrap {
-        position: relative;
-        width: 22px;
-        color: #fff;
-        line-height: 20px;
-        height: 22px;
-        border-radius: 6px;
-        text-align: center;
-        background: #399999;
-        &::before {
-          content: '';
-          position: absolute;
-          border: 5px solid;
-          border-color: #339999 transparent transparent transparent;
-          bottom: -10px;
-          left: 6px;
-        }
-        svg {
-          font-size: 14px;
-          color: #fff;
-          vertical-align: middle;
-        }
-        &.inline {
-          background: #339999;
-          &::before {
-            border-color: #339999 transparent transparent transparent;
-          }
-        }
-        &.off-line {
-          background: #dcdfe6;
-          &::before {
-            border-color: #dcdfe6 transparent transparent transparent;
-          }
-        }
-        &.alarm {
-          background: #f56c6c;
-          &::before {
-            border-color: #f56c6c transparent transparent transparent;
-          }
-        }
-      }
-      .point-icon-wrap {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        .point-value {
-          position: absolute;
-          height: 22px;
-          line-height: 22px;
-          padding: 0 5px;
-          border-top-right-radius: 5px;
-          border-bottom-right-radius: 5px;
-          background: #fff;
-          left: 22px;
-          color: #339999;
-          font-size: 12px;
-          box-shadow: 0 0 0 1px #ccc;
-        }
-      }
-      a {
-        position: relative;
-        font-size: 12px;
-        line-height: 24px;
-        box-shadow: 0 0 0 1px #ccc;
-        background: #fff;
-        color: black;
-        float: left;
-      }
-    }
-    .screenfull-btn {
-      position: absolute;
-      top: 10px;
-      left: 120px;
-      z-index: 10;
-      padding: 5px;
-    }
-    .plan-edit-btn {
-      position: absolute;
-      left: 10px;
-      top: 10px;
-      z-index: 10;
-      padding: 5px;
-    }
-    .plan-view-btn {
-      position: absolute;
-      left: 60px;
-      top: 10px;
-      z-index: 10;
-      padding: 5px;
-    }
-    .filter-select {
-      position: absolute;
-      top: 8px;
-      left: 190px;
-      z-index: 10;
-      .el-tag__close {
-        display: none;
-      }
-    }
-  }
-  .el-dialog__wrapper {
-    background: rgba(0, 0, 0, 0.5);
-  }
-  @at-root .el-dialog.planShow-dialog {
-    width: 1000px;
-    .el-dialog__body {
-      padding: 0;
-    }
-    .el-dialog__header {
-      padding: 0;
-    }
-    .planDialog-basic-info {
-      flex: 0 225px;
-      padding: 25px 0;
-      border-right: 2px solid #c6d3dc;
-    }
-    .planDialog-level-info {
-      flex: 0 0 700px;
-      padding: 25px 0;
-    }
-    .icon-wrap {
-      text-align: center;
-      img {
-        width: 60px;
-      }
-    }
-    .device-name {
-      text-align: center;
-      font-size: 15px;
-      margin-top: 5px;
-    }
-    .device-status {
-      margin-top: 5px;
-      text-align: center;
-      letter-spacing: 3px;
-      color: #02a9d1;
-      font-size: 15px;
-    }
-    .inline {
-      color: #13ce66;
-    }
-    .off-line {
-      color: #d3dce6;
-    }
-    .alarm {
-      color: #ff4949;
-    }
-    .basic-info-list {
-      margin-top: 10px;
-      list-style: none;
-      li {
-        padding: 5px;
-      }
-      .label {
-        display: inline-block;
-        width: 75px;
-        font-weight: bold;
-        text-align: right;
-      }
-    }
-    .level-radio {
-      text-align: center;
-    }
-  }
-  @at-root .video-dialog {
-    width: 900px;
-    border-radius: 4px;
-    overflow: hidden;
-    .el-dialog__body {
-      padding: 0;
-    }
-    .el-dialog__header {
-      padding: 0;
-    }
-  }
-}
-.clearfix {
-  content: '';
-  clear: both;
-  display: block;
 }
 .plan-tooltip {
   z-index: 2147483647 !important;
 }
-.plan-filter-select {
-  z-index: 2147483647 !important;
-}
-.plan-select {
-  z-index: 2147483647 !important;
-}
-
 .plan-date-picker {
   z-index: 2147483647 !important;
 }
