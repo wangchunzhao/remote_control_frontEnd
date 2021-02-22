@@ -1,0 +1,229 @@
+.device-container{
+  position: relative;
+  .alarm-tag {
+    font-size: 13px;
+    background: #fff2e8;
+    border: 1px solid #f84d50;
+    color: #f84d50;
+  }
+  .offline-tag {
+    font-size: 13px;
+    background-color: rgba(144, 147, 153, 0.1);
+    border-color: rgba(144, 147, 153, 0.2);
+    color: #909399;
+  }
+  .normal-tag {
+    font-size: 13px;
+    background: #f6ffec;
+    border: 1px solid #52c41b;
+    color: #52c41b;
+  }
+  .device-wrap{
+    box-sizing: border-box;
+    background: #fff;
+    padding: 24px 32px;
+    overflow: hidden;
+    border-radius: 4px;
+    .handleWrapper{
+      position: relative;
+      margin-top: 3px;
+    }
+  }
+  .searchWrap{
+    position: absolute;
+    right:0;
+    top:0;
+    .el-input{
+      width:75%;
+      float:left;
+    }
+    .el-button{
+      width:20%;
+      float:right;
+    }
+  }
+  .el-tabs__content{
+    overflow: inherit;
+  }
+  .el-tabs__nav-scroll{
+    padding-left: 40px;
+    background: #fff
+  }
+  .device-btn-wrap{
+    position: absolute;
+    top: 0;
+    right: 0;
+    .searchcardWrap{
+      float: right;
+      .el-input{
+        width: 75%;
+        float: left;
+      }
+      .el-button{
+        width: 20%;
+        float: right;
+      }
+    }
+    .searchtableWrap{
+      float: right;
+      .el-input{
+        width: 29%;
+        float: left;
+      }
+      .el-select{
+        width: 29%;
+        float: left;
+        margin: 0 10px;
+      }
+      .el-button{
+        float: right;
+      }
+    }
+    .switchWrap{
+      float: left;
+      margin-right: 10px;
+      margin-top: 1px;
+    }
+  }
+  .device-card{
+    box-sizing: border-box;
+    padding: 10px;
+    @media (max-width: 1380px){
+      & {
+        width: 25%;
+      }
+    }
+    @media (max-width: 1000px){
+      & {
+        width: 33.33333%;
+      }
+    }
+    .device-pic{
+      width: 100%;
+      height: 120px;
+      display: block;
+      background: #DEDDE0;
+      text-align: center;
+      // position: relative;
+      img{
+        height: 100%;
+        width: auto;
+        // position: absolute;
+        // top: 20%;
+        // left: 0;
+      }
+      .active{
+        height: 50%;
+        vertical-align: middle;
+      }
+      .noimg{
+        width: 0;
+        height: 100%;
+        display: inline-block;
+        vertical-align:middle
+      }
+    }
+    .device-card_name{
+      font-size: 18px;
+      margin-bottom: 5px;
+      overflow : hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      // display: -webkit-box;
+      // -webkit-line-clamp: 1;
+      // -webkit-box-orient: vertical;
+    }
+    .device-card_params{
+      height: 100px;
+      width: 100%;
+      padding: 10px 0;
+      box-sizing: border-box;
+      .point-param{
+        line-height: 20px;
+        // text-overflow: ellipsis;
+        // overflow: hidden;
+        // white-space: nowrap;
+        .point-param_title{
+          float: left;
+          width: 80%;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap
+        }
+        .point-param_value{
+          float: right;
+          width: 20%;
+          text-align: right
+        }
+      }
+    }
+    .device-card_title{
+      line-height:25px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .device-card_btnwrapper{
+      display:block;
+      &:after,&:before{
+        display: table;
+        content:""
+      }
+      &:after{
+        clear:both;
+      }
+      .device-card_button{
+        float:right;
+      }
+    }
+  }
+  // .el-table .warning-row {
+  //     background: #FEF0F0;
+  // }
+  .el-table .danger-row{
+      background: #FEF0F0;
+  }
+  .el-table .header-row th{
+      background: #F2F6FC;
+  }
+  .currentValue{
+    color:#1890ff;
+  }
+  .online {
+    &:before {
+      content: '';
+      display: inline-block;
+      width: .6em;
+      height: .6em;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: green;
+    }
+  }
+
+  .close {
+    &:before {
+      content: '';
+      display: inline-block;
+      width: .6em;
+      height: .6em;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: #dbdbdb;
+    }
+  }
+  .normal{
+    color:#1890ff
+  }
+  .active{
+    color:#F56C6C
+  }
+  .device-card_a{
+    color:#1890ff
+  }
+}
+// @media (max-width: 768px){
+//     .el-col-xs-24 {
+//         width: 100%;
+//     }
+// }

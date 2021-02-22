@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>设备详情</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: rgb(242, 242, 242);
+      -webkit-overflow-scrolling: touch;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      max-width: 500px;
+    }
+
+    #order-select {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .title {
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 0;
+    }
+
+    .device-no {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: normal;
+      font-size: 14px;
+      color: #b3afaf;
+    }
+
+    .title-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-right: 15px;
+      border-left: 3px solid rgb(17, 126, 224);
+      border-bottom: 1px solid #ececec;
+      line-height: 40px;
+    }
+
+    .title-wrap span {
+      margin-left: 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .info-wrap {
+      background: #fff;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      line-height: 30px;
+      color: rgba(0, 0, 0, 0.45);
+      font-size: 14px;
+      padding: 0 20px;
+    }
+
+    .chart-wrap {
+      background: #fff;
+      position: relative;
+      margin-top: 20px;
+    }
+
+    #myChart {
+      width: 100%;
+      margin-bottom: 15px;
+      margin-top: 15px;
+    }
+
+    .table {
+      display: none;
+    }
+
+    .table-visible {
+      display: block;
+    }
+
+    .table-wrap {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      background: #fff;
+    }
+
+    .table-row {
+      line-height: 40px;
+      color: rgba(0, 0, 0, 0.45);
+      margin: 0 30px;
+      border-bottom: 1px solid #e8e8e8;
+      font-size: 14px;
+    }
+
+    .table-row-value {
+      float: right;
+    }
+
+    .icon-wrap .icon-xia {
+      display: none;
+    }
+
+    .icon-wrap .icon-shang {
+      display: inline-block;
+    }
+
+    .icon-wrap.hide .icon-shang {
+      display: none;
+    }
+
+    .icon-wrap.hide .icon-xia {
+      display: inline-block;
+    }
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.15em;
+      fill: currentColor;
+      overflow: hidden;
+    }
+
+    .no-data {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ccc;
+      font-size: 15px;
+    }
+
+    .no-data.show {
+      display: block;
+    }
+
+    .btn {
+      position: relative;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 6px 14px;
+      box-sizing: border-box;
+      font-size: 14px;
+      text-align: center;
+      text-decoration: none;
+      color: #FFFFFF;
+      border-radius: 5px;
+      border-width: 0;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      overflow: hidden;
+      background-color: #1890FF;
+    }
+
+    .btn:focus {
+      outline: 0;
+    }
+
+    .loading-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .loading-page.hide {
+      display: none;
+    }
+
+    .loading-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: hsla(0, 0%, 7%, .7);
+      border-radius: 6px;
+    }
+
+    .toast {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      background: hsla(0, 0%, 7%, 0.9);
+      border-radius: 6px;
+      font-size: 14px;
+      padding: 6px 15px;
+      min-width: 140px;
+      display: none;
+    }
+
+    .toast.visible {
+      display: block;
+    }
+
+    .loading-page svg {
+      color: #fff;
+      font-size: 35px;
+      animation: circle 2s infinite linear;
+    }
+
+    #chartImg {
+      width: 100%;
+      height: 250px;
+      margin-top: 20px;
+    }
+
+    @keyframes circle {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h3 class="title">
+    <!-- <span class="order-name">
+      &nbsp;
+    </span> -->
+    运单号：
+    <select id="order-select"></select>
+  </h3>
+
+  <h4 class="device-no"></h4>
+  <div style="text-align: center;margin-bottom: 15px;">
+    <button class="btn">导出报表</button>
+  </div>
+  <div class="info-wrap">
+    <div class="title-wrap">
+      <span>概要</span>
+    </div>
+    <div style="padding: 10px 0">
+      <div class="info-row">
+        <span>开始时间</span>
+        <span class="begin-time"></span>
+      </div>
+      <div class="info-row">
+        <span>结束时间</span>
+        <span class="end-time"></span>
+      </div>
+      <div class="info-row">
+        <span>最高温度</span>
+        <span class="max-temp"></span>
+      </div>
+      <div class="info-row">
+        <span>最低温度</span>
+        <span class="min-temp"></span>
+      </div>
+      <div class="info-row">
+        <span>平均温度</span>
+        <span class="average-temp"></span>
+      </div>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="title-wrap">
+      <span>温度曲线</span>
+    </div>
+    <div id="canvas-div">
+      <canvas id="myChart" height="250"></canvas>
+    </div>
+    <img id="chartImg" style="display: none" src="" alt="">
+    <div class="no-data">
+      暂无温度数据
+    </div>
+  </div>
+  <div class="table-wrap">
+    <div class="title-wrap table-toggle">
+      <span>温度数据表</span>
+      <span class="icon-wrap hide">
+        <svg class="icon icon-shang" aria-hidden="true">
+          <use xlink:href="#icon-shang"></use>
+        </svg>
+        <svg class="icon icon-xia" aria-hidden="true">
+          <use xlink:href="#icon-xia"></use>
+        </svg>
+      </span>
+
+    </div>
+    <div class="table">
+      <div class="table-row" style="color: rgba(0, 0, 0, 0.65);margin-top:20px;">
+        <span>时间</span>
+        <span style="float: right;">温度</span>
+      </div>
+      <div class="table-body">
+
+      </div>
+    </div>
+  </div>
+  <a href="" id="down-link" download style="display: none;"></a>
+  <div class="loading-page hide">
+    <div class="loading-wrap">
+      <svg class="icon icon-xia" aria-hidden="true">
+        <use xlink:href="#icon-loading"></use>
+      </svg>
+    </div>
+  </div>
+  <div class="toast">当前运单暂无相关纪录</div>
+  <script src="https://gw.alipayobjects.com/os/antv/assets/f2/3.2.2/f2-all.min.js"></script>
+  <script src="https://at.alicdn.com/t/font_857648_vd142qqtgvd.js"></script>
+  <script>
+    //toastShow()
+    let $tableBody = document.querySelector('.table-body')
+    let $table = document.querySelector('.table')
+    let $loading = document.querySelector('.loading-page')
+
+    document.querySelector('.device-no').innerText = `设备号：${getQueryString('terminalNumber')}`
+
+    fetchData(getQueryString('terminalNumber'))
+
+    var chart = new F2.Chart({
+      id: 'myChart',
+      pixelRatio: window.devicePixelRatio,
+      padding: ['auto', 28, 'auto', 'auto']
+    });
+
+    function fetchData(terminalNumber, orderId = '') {
+      $loading.classList.remove('hide')
+      document.querySelector('.no-data').classList.remove('show')
+
+      fetch(
+        `https://sinocold.net:8443/api/Terminal/GetTerminalData?terminalNumber=${terminalNumber}&waybillManagementId=${orderId}`
+        ).then(res => {
+        return res.json()
+      }).then(res => {
+        let data = JSON.parse(res)
+        document.querySelector('.begin-time').innerText = data.Outline.StartTime
+        document.querySelector('.end-time').innerText = data.Outline.EndTime
+        document.querySelector('.max-temp').innerText = data.Outline.MaxValue + '℃'
+        document.querySelector('.min-temp').innerText = data.Outline.MinValue + '℃'
+        document.querySelector('.average-temp').innerText = data.Outline.AvgValue.toFixed(1) + '℃'
+        if (!data.Title) {
+          toastShow()
+          document.querySelector('.no-data').classList.toggle('show')
+          $loading.classList.add('hide')
+          return false
+        }
+        // document.querySelector('.order-name').innerText = data.Title
+        var orderSelect = document.getElementById('order-select')
+        if (!orderSelect.options.length) {
+          for (let i = 0; i < data.DropdownList.length; i++) {
+            orderSelect.options[i] = new Option(data.DropdownList[i].Value, data.DropdownList[i].Key)
+          }
+        }
+        if (!data.Data.length) {
+          document.querySelector('.no-data').classList.add('show')
+          toastShow()
+          $loading.classList.add('hide')
+          // return false
+        }
+
+        chart.clear()
+
+        let HTML = ''
+        data.Data.forEach(item => {
+          HTML = HTML +
+            `
+        <div class="table-row">
+          <span>${item.UPDATE_TIME}</span>
+          <span class="table-row-value">${item.VALUE}℃</span>
+        </div>
+        `
+        })
+
+        $tableBody.innerHTML = HTML;
+        chart.source(data.Data, {
+          UPDATE_TIME: {
+            type: 'timeCat',
+            tickCount: 5,
+            range: [0, 1],
+            mask: 'MM-DD HH:mm'
+          }
+        });
+        chart.tooltip({
+          showCrosshairs: true,
+          showItemMarker: false,
+          triggerOn: ['touchstart', 'touchmove'],
+          background: {
+            radius: 2,
+            fill: '#1890FF',
+            padding: [3, 5]
+          },
+          nameStyle: {
+            fill: '#fff'
+          },
+          onShow: function onShow(ev) {
+            var items = ev.items
+            items[0].name = items[0].title
+            items[0].value = items[0].value + '℃'
+          }
+        })
+        chart.guide().text({
+          position: ['min', 'max'],
+          content: '℃',
+          style: {
+            textBaseline: 'middle',
+            textAlign: 'start'
+          },
+          offsetX: -23,
+          offsetY: -20
+        })
+
+        chart.line({
+          sortable: false
+        }).position('UPDATE_TIME*VALUE')
+
+        chart.render()
+        $loading.classList.add('hide')
+      }).catch(err => {
+        console.error(err)
+        $loading.classList.add('hide')
+      })
+    }
+
+    document.getElementById('order-select').addEventListener('change', (e) => {
+      fetchData(getQueryString('terminalNumber'), e.target.value)
+    })
+
+    document.querySelector('.btn').addEventListener('click', () => {
+      $loading.classList.remove('hide')
+      document.getElementById('chartImg').src = document.getElementById('myChart').toDataURL();
+      let html = document.documentElement.outerHTML
+      html = html.replace('<img id="chartImg" style="display: none', '<img id="chartImg" style="display: block')
+      html = html.replace('<div id="canvas-div">', '<div id="canvas-div" style="display: none">')
+      html = html.replace('<div class="table">', '<div class="table table-visible">')
+      html = html.replace('<button class="btn">导出报表</button>', '')
+      html = html.replace('<div class="loading-page">', '<div class="loading-page hide">')
+      let data = new URLSearchParams()
+      data.append('html', html)
+      fetch('https://sinocold.net:8443/api/Terminal/DownloadPDF', {
+        method: 'POST',
+        body: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }).then(res => {
+        return res.json()
+      }).then(res => {
+        let u = navigator.userAgent
+        if (u.indexOf('Android') > -1 || u.indexOf('Adr') > -1) { // Android 手机
+          window.open('https://sinocold.net:8443' + res)
+        } else {
+          document.getElementById('down-link').href = 'https://sinocold.net:8443' + res
+          document.getElementById('down-link').click()
+        }
+        $loading.classList.add('hide')
+      }).catch(err => {
+        console.error(err)
+        $loading.classList.add('hide')
+      })
+    })
+    // 禁用长按弹出菜单
+    document.querySelector('html').addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+    })
+
+    document.querySelector('.table-toggle').addEventListener('click', () => {
+      $table.classList.toggle('table-visible')
+      document.querySelector('.icon-wrap').classList.toggle('hide')
+    })
+
+    function getQueryString(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i")
+      var r = window.location.search.substr(1).match(reg)
+      if (r != null) return unescape(r[2]);
+      return null
+    }
+
+    function toastShow() {
+      let $toast = document.querySelector('.toast')
+      $toast.classList.add('visible')
+      setTimeout(() => {
+        $toast.classList.remove('visible')
+      }, 3000);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+# 告诉docker不要将这三个打包到image文件。
+.git
+node_modules
+npm-debug.log

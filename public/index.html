@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>coolcare</title>
+    <style>
+      html,
+      body,
+      #app {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+      #loading-wrap {
+        background-color: #324157;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+      }
+      #loading-wrap .spinner {
+        width: 70px;
+        text-align: center;
+      }
+
+      #loading-wrap .spinner > div {
+        width: 18px;
+        height: 18px;
+        background-color: #ffffff;
+
+        border-radius: 100%;
+        display: inline-block;
+        -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+        animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+      }
+
+      #loading-wrap .spinner .bounce1 {
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+      }
+
+      #loading-wrap .spinner .bounce2 {
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+      }
+
+      @-webkit-keyframes sk-bouncedelay {
+        0%, 80%, 100% { -webkit-transform: scale(0) }
+        40% { -webkit-transform: scale(1.0) }
+      }
+
+      @keyframes sk-bouncedelay {
+        0%, 80%, 100% {
+          -webkit-transform: scale(0);
+          transform: scale(0);
+        } 40% {
+          -webkit-transform: scale(1.0);
+          transform: scale(1.0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but coolcare_pc doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app">
+      <div id="loading-wrap">
+        <div class="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      var host = window.location.host
+
+      var link = document.querySelector("link[rel*='icon']") || document.createElement('link')
+      link.rel = 'shortcut icon'
+      if ( host === 'yun.ikold.com.cn' || host === 'ikold.com.cn' || host === 'cloud.ikold.com.cn') { // 部署在科立德服务器
+        link.href = 'https://cdn.sinocold.net/images/favicon_ikold.ico?v=2'
+        document.querySelector('title').innerText = 'CRYOTEK'
+      } else if ( host === 'service.haiercarrier.com') { // 部署在海尔开利服务器
+        link.href = 'https://cdn.sinocold.net/images/haier_favicon.ico'
+        document.querySelector('title').innerText = 'Haier Carrier'
+      } else {
+        document.querySelector('title').innerText = 'CoolCare'
+        link.href = 'https://cdn.sinocold.net/images/coolcare_favicon.ico?v=2'
+      }
+      document.getElementsByTagName('head')[0].appendChild(link)
+
+
+      window.loadingTimer = setTimeout(function() {
+        var loadingWrap = document.getElementById('loading-wrap')
+        loadingWrap.style.display = 'flex'
+      }, 2500)
+    </script>
+    <script type="text/javascript" src="https://at.alicdn.com/t/font_476527_b45v2rdhlc.js"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=kmGLT5EjKCWL5D5o2Ss9godDaA2GLZY9&s=1"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+    <script type='text/javascript' src='https://api.map.baidu.com/library/InfoBox/1.2/src/InfoBox_min.js'></script>
+    <script type="text/javascript" src='static/js/CanvasLayer.js'></script>
+    <script type="text/javascript" src='https://mapv.baidu.com/build/mapv.js'></script>
+    <script src="https://cdn.sinocold.net/package/echarts/4.1.0/echarts.min.js"></script>
+    <script>window.echarts || document.write('<script src="<%= BASE_URL %>static/js/echarts.min.js"><\/script>')</script>
+    <script src="https://cdn.sinocold.net/package/xlsx/0.16.2/xlsx.full.min.js"></script>
+    <script>window.XLSX || document.write('<script src="<%= BASE_URL %>static/js/xlsx.full.min.js"><\/script>')</script>
+    <script type="text/javascript" src="static/video/ckplayer/ckplayer.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/fabric@2.7.0/dist/fabric.min.js"></script>
+    <script>window.fabric || document.write('<script src="<%= BASE_URL %>static/js/fabric.min.js"><\/script>')</script>
+    <script src="https://cdn.jsdelivr.net/npm/fabric-customise-controls@2.0.2-beta/dist/customiseControls.min.js"></script> -->
+    <script src="https://cdn.sinocold.net/package/html2canvas/1.0.0-rc.4/html2canvas.min.js"></script>
+    <script>window.html2canvas || document.write('<script src="<%= BASE_URL %>static/js/html2canvas.min.js"><\/script>')</script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

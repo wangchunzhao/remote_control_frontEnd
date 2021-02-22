@@ -1,0 +1,636 @@
+html,body,#app,.wrapper{
+  width: 100%;
+  height: 100%;
+}
+body {
+  font-size: 14px;
+  font-family: "Helvetica Neue",Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+/* 修改滚动条样式 */
+.thin-scroll::-webkit-scrollbar,
+.subContent::-webkit-scrollbar,.coolBody::-webkit-scrollbar,
+.el-table__body-wrapper::-webkit-scrollbar,
+.el-menu--horizontal .el-menu::-webkit-scrollbar{
+  width: 7px;
+  height: 7px;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb,
+.subContent::-webkit-scrollbar-thumb,.coolBody::-webkit-scrollbar-thumb,
+.el-table__body-wrapper::-webkit-scrollbar-thumb,
+.el-menu--horizontal .el-menu::-webkit-scrollbar-thumb{
+  height: 16px;
+  border-radius: 4px;
+  background-color: #A6A6A6;
+  border-left: 2px solid transparent;
+}
+
+.thin-scroll::-webkit-scrollbar-track,
+.subContent::-webkit-scrollbar-track,.coolBody::-webkit-scrollbar-track,
+.el-table__body-wrapper::-webkit-scrollbar-track,
+.el-menu--horizontal .el-menu::-webkit-scrollbar-track{
+  background-color: #E5E5E5;
+  border-left: 2px solid transparent;
+}
+
+/*左侧菜单el-tooltip样式*/
+.singleMenu{
+  .el-tooltip{
+    padding-left:15px!important
+  }
+}
+
+/*清除浮动*/
+.clear-fix::after {
+  content: "";
+  display: block;
+  clear: both;
+  visibility: hidden;
+}
+.icon {
+  width: 1em; height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.createForm{
+  .el-dialog{
+    width:450px;
+    .el-dialog__body{
+      .el-form-item:last-child {
+        margin-bottom:0;
+      }
+    }
+    .el-dialog__footer{
+      text-align:center;
+    }
+  }
+}
+
+/*视频巡店卡片样式*/
+.video-wrapper .box-card .el-card__header{
+  padding: 10px 20px;
+}
+.video-wrapper .box-card .el-card__body{
+  padding: 0;
+}
+.shop-card{
+  .el-card__header{
+    padding: 10px 20px;
+  }
+  .el-table {
+    .el-table__expanded-cell{
+      padding: 20px 50px;
+      .el-tag{
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+/*隐藏百度地图左下角图标8*/
+.anchorBL{
+  display: none;
+}
+
+/*重置所有dialog 头部主题样式*/
+.el-dialog .el-dialog__header {
+  padding: 15px;
+  border-bottom: 1px solid #DEDFE0;
+}
+.el-dialog .el-dialog__footer {
+  padding: 10px;
+  border-top: 1px solid #DEDFE0;
+}
+
+.corner-label {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  .icon {
+    position: relative;
+    z-index: 10;
+    margin-left: 14px;
+    margin-top: 3px;
+    display: block;
+    color: rgba(0,0,0,.65);
+  }
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 15px solid #A1CF64;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+  }
+  &.not-allow {
+    &:after {
+      border-top-color: #ccc;
+      border-right-color: #ccc;
+    }
+  }
+}
+.bg-fff {
+  background: #fff;
+}
+
+.svg-icon {
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  fill: currentColor;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+// 设置项目中表格的行高
+// .el-table .el-table__body-wrapper td, .el-table .el-table__body-wrapper th{
+//     padding: 10px 0;
+// }
+// .el-table .el-table__header-wrapper td, .el-table .el-table__header-wrapper th{
+//     padding: 10px 0;
+// }
+// .el-table .el-table__fixed-body-wrapper td, .el-table .el-table__fixed-body-wrapper th{
+//     padding: 10px 0;
+// }
+// .el-table .el-table__fixed-header-wrapper td, .el-table .el-table__fixed-header-wrapper th{
+//     padding: 10px 0;
+// }
+
+// 设置项目中树节点的高度
+.el-tree-node .el-tree-node__content {
+  height: 34px;
+}
+
+//实时监测历史图表对话框
+.history-dialog{
+  .el-dialog{
+    width:90%;
+    min-width: 960px;
+  }
+}
+.history-wrap {
+  display: flex;
+}
+.history-chart {
+  flex: 1;
+}
+.history-form {
+  flex: 0 0 300px;
+  display: flex;
+  align-items: center;
+}
+
+//实时监测参数表格
+.params-container{
+  box-sizing: border-box;
+  .params-wrap{
+    padding: 24px 32px;
+    background: #fff;
+    overflow: hidden;
+    border-radius: 4px;
+    .searchBtn{
+      position: absolute;
+      top: 0;
+      left: 190px;
+      width: 60px;
+    }
+    .online {
+      &:before {
+        content: '';
+        display: inline-block;
+        width: .6em;
+        height: .6em;
+        margin-right: 6px;
+        border-radius: 50%;
+        background: green;
+        vertical-align: 1.8px;
+      }
+    }
+    .offline {
+      &:before {
+        content: '';
+        display: inline-block;
+        width: .6em;
+        height: .6em;
+        margin-right: 6px;
+        border-radius: 50%;
+        background: #dbdbdb;
+        vertical-align: 1.8px;
+      }
+    }
+    .normal{
+      color:#1890ff
+    }
+    .active{
+      color:#F56C6C
+    }
+    .handleWrapper{
+      position: relative;
+      margin-top: 3px;
+    }
+  }
+  .el-table .header-row th{
+    background: #F2F6FC;
+  }
+}
+
+/*冷藏车轨迹*/
+.car-table_wrapper{
+  position: absolute;
+  background: #fff;
+  .cancelSelection{
+    position: absolute;
+    top: 5px;
+    left: 186px;
+    padding: 4px;
+  }
+  .el-table td, .el-table th{
+    height: 32px;
+  }
+  .el-table .cell{
+    padding: 0 5px;
+  }
+  .el-table__body-wrapper{
+    // height: 340px;
+    overflow-y: auto;
+    cursor: pointer
+  }
+  .el-table__header-wrapper{
+    display: none;
+  }
+}
+.infowindowItem{
+  line-height:20px;
+  border-bottom:1px solid #E9E9E9;
+}
+.infowindowItem-left{
+  text-align: left;
+  line-height: 25px;
+}
+.infowindowItem-right{
+  // float: right;
+  color: #666666;
+  line-height: 25px;
+}
+
+//视频监控 video-dialog
+.video-dialog {
+  // width: 960px;
+  border-radius: 4px;
+  overflow: hidden;
+  .el-dialog__body {
+    padding: 0;
+  }
+  .el-dialog__header {
+    padding: 0;
+  }
+}
+
+// 后台配置样式
+.page-backgroundConfig {
+  font-size: 13px;
+  .menu {
+    a {
+      font-size: 20px;
+      color: black;
+      display: inline-block;
+      padding: 10px 30px;
+      border-radius: 3px;
+      margin-right: 25px;
+      img {
+        vertical-align: middle;
+        margin-right: 6px;
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+  .el-pagination {
+    text-align: center;
+    margin-top: 15px;
+  }
+  .operation-btn {
+    float: right;
+    margin-top: -3px;
+    padding: 6px;
+    transform: translateX(8px);
+  }
+  .clearfix::after {
+    display: block;
+    clear: both;
+    content: "";
+  }
+  .attention {
+    .el-dialog__body {
+      padding: 0;
+    }
+  }
+  .attention-wrap {
+    background: #F2D7D8;
+    font-size: 16px;
+    line-height: 25px;
+    color: #cc5454;
+    padding: 15px;
+  }
+  .attention-text {
+    font-weight: bold;
+  }
+  .attention-info {
+    line-height: 15px;
+  }
+}
+.bg-fff {
+  background: #fff;
+}
+.pdg{
+  padding: 7px 22px 22px 22px;
+  max-width: 1710px;
+  margin: 0 auto 30px auto !important;
+}
+.pdg2, .chartCommonWrapper{
+  padding: 22px;
+  // border-top: 2px solid #e4e7ed;
+  max-width: 1710px;
+  margin: 0 auto !important;
+  position: relative;
+  box-sizing: content-box;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #e4e7ed;
+  }
+}
+.pdl40{
+  padding-left: 40px;
+}
+.mgb20{
+  margin-bottom: 20px;
+}
+.pd0{
+  padding: 0;
+}
+.mg0{
+  margin: 0
+}
+.w100{
+  width: 100%;
+}
+.mgt20{
+  margin-top: 20px;
+}
+//覆盖element 默认样式 暂时不可删除
+.el-menu--horizontal>.el-menu-item.is-active{
+  border: none!important;
+}
+
+.el-notification__closeBtn.el-icon-close {
+  top: 10px;
+  right: 7px;
+}
+// 文字按钮样式
+.el-button, .el-link {
+  &.btn-primary {
+    color: #409EFF;
+  }
+  &.btn-danger {
+    color: #fd3e5d;
+    &:hover {
+      color: #f56c6c;
+    }
+  }
+  &.btn-success {
+    color: #67c23a;
+  }
+  &.btn-wran {
+    color: #e6a23c;
+  }
+}
+// 统一设置表格表头颜色
+
+.el-table {
+  .el-table__fixed-header-wrapper, .el-table__header-wrapper {
+    th {
+      background: #F2F6FC;
+      .cell{
+        color: #3c3c3c
+      }
+    }
+  }
+}
+.el-table .el-table__body-wrapper td .cell,.el-tabs__item{
+  color: #656565
+}
+.el-table th>.cell.highlight {
+  color: #409EFF !important;
+}
+div.el-table__fixed {
+  &::before {
+    display: none;
+  }
+}
+
+//报警页面 公共样式
+.alarm-handleBox{
+  .el-form-item__content{
+    margin-left: 0!important
+  }
+}
+.alarm-project_wrapper{
+  .el-input__inner{
+    height: 32px!important;
+  }
+}
+
+// 报警等级 .el-tag
+.record-tag {
+  background:rgba(236,254,245,1);
+  color: #31BA7F;
+  border-color: #31BA7F;
+}
+.normal-tag {
+  background: rgba(244,248,255,1);
+  color: #2B76FF;
+  border-color: #2B76FF;
+}
+.important-tag {
+  background: rgba(254,250,234,1);
+  color: #FF9306;
+  border-color: #FF9306;
+}
+.emergency-tag {
+  background: rgba(254,240,240,1);
+  color: #FE786B;
+  border-color: #FE786B;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0,0,0,.85);
+}
+
+@keyframes shine {
+  0% {
+    box-shadow: 0 0 0 0 hsla(0, 92%, 48%, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 10px hsla(0, 7%, 53%, 0);
+  }
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hiddne;
+}
+
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.el-switch-innertext {
+  .el-switch__label--left {
+    position: relative;
+    left: 46px;
+    color: #fff;
+    z-index: -1111;
+  }
+  .el-switch__label--right {
+    position: relative;
+    right: 46px;
+    color: #fff;
+    z-index: -1111;
+  }
+  .el-switch__label.is-active {
+    z-index: 1111;
+    color: #fff;
+  }
+  .el-switch__label--left {
+    position: relative;
+    left: 46px;
+    color: #fff;
+    z-index: -1111;
+  }
+  .el-switch__label--right {
+    position: relative;
+    right: 46px;
+    color: #fff;
+    z-index: -1111;
+  }
+  .el-switch__label--right.is-active {
+    z-index: 1111;
+    color: #fff !important;
+  }
+  .el-switch__label--left.is-active {
+    z-index: 1111;
+    color: #9c9c9c !important;
+  }
+}
+.content-box {
+  max-width: 1710px;
+  margin: 24px auto 24px auto;
+  background: #fff;
+  border-radius: 4px;
+  padding: 24px 32px;
+}
+
+@media screen and (max-width: 1800px) {
+  .content-box {
+    margin: 24px;
+  }
+}
+
+/*表格底部分页样式*/
+.pagination-wrap {
+  margin-top: 20px;
+  text-align: center;
+}
+
+// 表格顶部的工具栏
+.table-tool-box {
+  margin-bottom: 16px;
+  .filter-input {
+    width: 200px;
+    float: right;
+  }
+  .right-wrap {
+    float: right;
+    display: flex;
+    align-items: center;
+  }
+  &::after {
+    content: "";
+    display: block;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
+.page-tabs {
+  .el-tabs__nav-scroll {
+    padding-left: 40px;
+    background: #fff;
+  }
+  .el-tabs__header {
+    margin: 0;
+  }
+}
+
+a.el-link {
+  font-weight: normal;
+  & + .el-link {
+    margin-left: 10px;
+  }
+}
+
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+select:focus,
+textarea {
+  font-size: 14px;
+}
+
+// chrome 浏览器记住密码后input黄色背景处理
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+}
+
+div.role-permission-popover {
+  padding: 0;
+  padding-left: 10px;
+  .content {
+    width: 350px;
+    height: 300px;
+    overflow-y: auto;
+  }
+}
