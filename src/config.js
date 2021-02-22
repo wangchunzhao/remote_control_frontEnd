@@ -21,9 +21,9 @@ const baseUriProd = 'https://yun.sinocold.net:5001'
 // const baseUriProd = 'http://192.168.6.180:5003'
 
 // const baseUriDev = 'http://dev.sinocold.com:8083'
-const baseUriDev = 'http://152.136.134.93:9183'
+// const baseUriDev = 'http://152.136.134.93:9183'
 // const baseUriDev = 'http://192.168.6.13:30863'
-// const baseUriDev = 'https://yun.sinocold.net:5001'
+const baseUriDev = 'https://yun.sinocold.net:5001'
 // const baseUriDev = 'http://192.168.6.180:5013'
 // const baseUriDev = 'http://192.168.6.194:5003'
 
@@ -34,10 +34,11 @@ export const BASE_URI =
 export const PROJECT_NAME = 'CoolCare-PC'
 
 // 数据大屏
-global.DATAV_PROJECT_URL =
-  BASE_URI === 'https://yun.sinocold.net:5001'
-    ? 'https://yun.sinocold.net/DataV'
-    : `http://dev.sinocold.com:30392` // 测试环境
+// global.DATAV_PROJECT_URL =
+//   BASE_URI === 'https://yun.sinocold.net:5001'
+//     ? 'https://yun.sinocold.net/DataV'
+//     : `http://dev.sinocold.com:30392` // 测试环境
+global.DATAV_PROJECT_URL = `http://dev.sinocold.com:30392`
 
 global._host = _host
 global.BASE_URI = BASE_URI

@@ -31,12 +31,13 @@
             企业内排名
           </div>
           <div class="project-total">
-            {{ ElectricOverview.Rank ? ElectricOverview.Rank : '-' }}/<span
-              style="font-size: 24px;color: rgba(0, 0, 0, 0.45);"
+            <!--            {{ ElectricOverview.Rank ? ElectricOverview.Rank : '-' }}/-->
+            1/
+            <span style="font-size: 24px;color: rgba(0, 0, 0, 0.45);"
               >{{
                 ElectricOverview.RankTotal ? ElectricOverview.RankTotal : '-'
-              }}</span
-            >
+              }}
+            </span>
           </div>
         </div>
         <div class="right-wrap-line"></div>
@@ -165,7 +166,7 @@ export default {
       color: #000;
     }
   }
-  .card-title{
+  .card-title {
     font-size: 16px;
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 500;
@@ -209,11 +210,11 @@ export default {
     color: rgba(0, 0, 0, 0.85);
     line-height: 38px;
   }
-  .right-wrap-line{
+  .right-wrap-line {
     margin: 0 32px;
     width: 1px;
     height: 40px;
-    background: #E9E9E9;
+    background: #e9e9e9;
   }
 }
 </style>
