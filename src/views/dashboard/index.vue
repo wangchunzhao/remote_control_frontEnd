@@ -209,10 +209,8 @@ export default {
     color: rgba(0, 0, 0, 0.85);
     line-height: 38px;
   }
-  .right-wrap-item {
-    margin-left: 30px;
-  }
   .right-wrap-line{
+    margin: 0 32px;
     width: 1px;
     height: 40px;
     background: #E9E9E9;

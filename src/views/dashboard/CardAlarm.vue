@@ -12,7 +12,8 @@
         全部报警
       </el-button>
     </div>
-    <div v-nodata="isNoData" v-loading="tableLoading" class="main-body">
+    <div v-loading="tableLoading" class="main-body">
+      <div v-if="tableData.length === 0" class="no-data">暂无数据</div>
       <div v-for="(item, index) in tableData" :key="index" class="list-item">
         <div class="item-top">
           <div class="item-title">
@@ -152,9 +153,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-body {
-  min-height: 200px;
-}
 .card-alarm {
   .list-item {
     &:first-of-type {
@@ -193,6 +191,15 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+  .no-data {
+    margin-top: 200px;
+    text-align: center;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.45);
+    line-height: 22px;
   }
 }
 </style>

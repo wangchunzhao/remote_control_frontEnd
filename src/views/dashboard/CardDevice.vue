@@ -40,7 +40,8 @@
         </el-dropdown>
       </div>
     </div>
-    <div v-nodata="isNoData" v-loading="tableLoading" class="main-body">
+    <div v-loading="tableLoading" class="main-body">
+      <div v-if="tableData.length === 0" class="no-data">暂无数据</div>
       <div
         class="list-item online-item"
         v-for="(item, index) in tableData"
@@ -329,9 +330,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-body {
-  min-height: 200px;
-}
 .card-device {
   .list-item {
     margin-bottom: 12px;
@@ -406,6 +404,15 @@ export default {
     font-weight: 400;
     color: #8fa2b5;
     line-height: 24px;
+  }
+  .no-data {
+    margin-top: 200px;
+    text-align: center;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.45);
+    line-height: 22px;
   }
 }
 </style>
