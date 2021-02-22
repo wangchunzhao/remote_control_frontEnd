@@ -419,7 +419,7 @@ export default {
 <style lang="scss">
 .card-device {
   .el-card__body {
-    height: 400px;
+    height: 420px;
     overflow-y: auto;
     padding-top: 20px;
   }

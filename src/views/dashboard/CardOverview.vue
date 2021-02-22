@@ -19,9 +19,7 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">{{
-              ElectricOverview.TodayElectricTotal
-            }}</span>
+            <span class="focus-num">168280</span>
             kWh
           </div>
         </div>
@@ -41,9 +39,7 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">{{
-              ElectricOverview.OnlineMeterTotal
-            }}</span>
+            <span class="focus-num">21</span>
           </div>
         </div>
       </el-col>
@@ -60,9 +56,7 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">{{
-              ElectricOverview.OnlineMeterTotal
-            }}</span>
+            <span class="focus-num">17</span>
           </div>
         </div>
       </el-col>
@@ -78,10 +72,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">{{
-              ElectricOverview.OnlineDeviceTotal
-            }}</span>
-            / {{ ElectricOverview.DeviceTotal }}
+            <span class="focus-num">5</span>
+            / 8
           </div>
         </div>
       </el-col>
@@ -98,10 +90,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">{{
-              ElectricOverview.OnlineMeterTotal
-            }}</span>
-            / {{ ElectricOverview.MeterTotal }}
+            <span class="focus-num">9</span>
+            / 9
           </div>
         </div>
       </el-col>
@@ -126,10 +116,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">{{
-              ElectricOverview.OnlineMeterTotal
-            }}</span>
-            / {{ ElectricOverview.MeterTotal }}
+            <span class="focus-num">2</span>
+            / 2
           </div>
         </div>
       </el-col>
@@ -154,10 +142,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">{{
-              ElectricOverview.OnlineMeterTotal
-            }}</span>
-            / {{ ElectricOverview.MeterTotal }}
+            <span class="focus-num">5</span>
+            / 5
           </div>
         </div>
       </el-col>
@@ -182,10 +168,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">{{
-              ElectricOverview.OnlineMeterTotal
-            }}</span>
-            / {{ ElectricOverview.MeterTotal }}
+            <span class="focus-num">2</span>
+            / 2
           </div>
         </div>
       </el-col>

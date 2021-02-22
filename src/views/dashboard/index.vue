@@ -13,7 +13,7 @@
         />
         <div>
           <h3 class="company-name">{{ projectInfo.ProjectName }}</h3>
-          <div style="color: #8FA2B5;">
+          <div style="color: #8FA2B5;font-size: 15px">
             {{ projectInfo.SubareaName }} | {{ projectInfo.address }}
           </div>
         </div>
@@ -23,7 +23,7 @@
           <div style="font-size: 14px;color: rgba(0, 0, 0, 0.45);">
             设备数
           </div>
-          <div class="project-total">{{ projectInfo.RunDays }}</div>
+          <div class="project-total">9</div>
         </div>
         <div class="right-wrap-line"></div>
         <div class="right-wrap-item">

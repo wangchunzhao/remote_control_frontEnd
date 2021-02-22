@@ -37,7 +37,7 @@ export default {
     return {
       branchId: undefined,
       deviceIds: [],
-      dateType: 1, //时间类型 1：日 2：周 3：月
+      dateType: 3, //时间类型 1：日 2：周 3：月
       currentNum: '-', //本用电量
       currentPercent: '-', //消耗指标
       lastNum: '-', //上次用电量
