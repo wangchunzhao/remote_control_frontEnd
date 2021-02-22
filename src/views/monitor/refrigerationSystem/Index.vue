@@ -153,6 +153,13 @@ export default {
         .catch(err => {
           console.error(err)
         })
+        .finally(() => {
+          if (this.$route.query.activeName) {
+            this.$nextTick(() => {
+              this.tabActive = this.$route.query.activeName + ''
+            })
+          }
+        })
     },
 
     handleRefreshPage() {

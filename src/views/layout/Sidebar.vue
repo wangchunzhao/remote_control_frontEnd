@@ -5,8 +5,8 @@
       :default-active="$route.path"
       :class="{ 'is-collapse': isNest }"
       :collapse="!isNest"
-      background-color="#282828"
-      text-color="#FFF"
+      background-color="#fff"
+      text-color="rgba(0,0,0,0.65)"
       active-text-color="#1890ff"
       class="el-menu-vertical-demo"
       unique-opened
@@ -169,7 +169,7 @@ export default {
   margin-right: 16px;
   width: 16px;
   height: 16px;
-  color: #fff;
+  color: rgba(0, 0, 0, 0.65) !important;
   vertical-align: middle;
 }
 </style>

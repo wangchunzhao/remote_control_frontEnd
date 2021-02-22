@@ -31,7 +31,7 @@
     <el-menu
       class="horizontal-menu thin-scroll"
       mode="horizontal"
-      background-color="#282828"
+      background-color="#152c73"
       text-color="#FFF"
       active-text-color="#fff"
       menu-trigger="click"
@@ -51,7 +51,7 @@
         <div class="subarea-cascader-search" @click="cascaderSearchFun">
           <i
             class="el-icon-search"
-            style="width: 20px;height: 20px;font-size: 16px;background: #282828;"
+            style="width: 20px;height: 20px;font-size: 16px;background: #152c73;"
           ></i>
         </div>
         <el-cascader
@@ -432,7 +432,7 @@ export default {
         }
 
         resetRouter()
-      } else if (this.company.id === 64) {
+      } else if (this.company.id === 64 || this.company.id === 55) {
         // 定制大屏
         let info = {
           UId: this.userInfo.uid,
@@ -547,15 +547,18 @@ export default {
   font-size: 22px;
   line-height: 49px;
   color: #fff;
-  background: #282828;
+  background: #152c73;
   min-width: 600px;
   z-index: 100;
+  .subarea-cascader .el-input__inner {
+    background: #152c73 !important;
+  }
   .logo {
     flex: 0 0 160px;
     height: 50px;
     display: flex;
     font-size: 22px;
-    background: #191717;
+    background: #152c73 !important;
     float: left;
     .Platform {
       flex: 1;
@@ -601,13 +604,15 @@ export default {
     padding: 0 20px;
     transform: translateY(2px);
     &:hover {
-      background: #202020;
+      background: #000000;
+      opacity: 0.34;
     }
   }
   .msg-center {
     cursor: pointer;
     &:hover {
-      background: rgb(32, 32, 32);
+      background: #000000;
+      opacity: 0.34;
     }
   }
   .userinfo {
@@ -617,7 +622,8 @@ export default {
     cursor: pointer;
     // height: 47px;
     &:hover {
-      background: rgb(32, 32, 32);
+      background: #000000;
+      opacity: 0.34;
     }
     .el-dropdown-link {
       cursor: pointer;
@@ -681,7 +687,7 @@ export default {
     position: absolute;
     right: 0;
     top: 0;
-    background: #282828;
+    background: #152c73;
     width: 30px;
     height: 50px;
     z-index: 101;
@@ -706,7 +712,7 @@ export default {
       z-index: 10;
     }
     .el-input__inner {
-      background: #282828;
+      background: #152c73;
       border: none;
     }
     .el-icon-arrow-down {
@@ -719,23 +725,24 @@ export default {
 }
 div.subarea-cascader-popper {
   ul {
-    background-color: #333;
+    background-color: #152c73;
   }
   li.el-cascader-node {
     color: #fff;
     &:hover,
     &.in-active-path {
-      background-color: #292929;
+      background: #000000;
+      opacity: 0.34;
     }
     &.is-active {
       color: rgb(24, 144, 255);
     }
   }
   .popper__arrow::after {
-    border-bottom-color: #333 !important;
+    border-bottom-color: #152c73 !important;
   }
   .el-cascader-menu__item.is-disabled {
-    background-color: #282828;
+    background-color: #152c73;
   }
 }
 .system-dropdown {

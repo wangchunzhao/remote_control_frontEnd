@@ -216,6 +216,27 @@ const userSet = {
 }
 // #endregion 用户设置 end
 
+// #region 业务看板 start
+const dashboard = {
+  path: '/dashboard',
+  component: layout,
+  singleMenu: true,
+  redirect: '/dashboard/index',
+  meta: {
+    icon: 'outline',
+    title: '业务看板'
+  },
+  children: [
+    {
+      path: 'index',
+      name: 'Dashboard',
+      component: _import('dashboard/index'),
+      meta: { title: '业务看板', icon: 'outline', customHeader: true }
+    }
+  ]
+}
+// #endregion 业务看板 end
+
 // #region 能耗管理 start
 const energyManage = {
   path: '/energyManage',
@@ -1276,6 +1297,7 @@ export const constRouter = [
 
 // 业务运营平台的路由
 export const businessRouter = [
+  dashboard,
   monitor,
   alarmManage,
   eventCenter,
