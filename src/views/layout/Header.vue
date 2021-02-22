@@ -432,7 +432,7 @@ export default {
         }
 
         resetRouter()
-      } else if (this.company.id === 64) {
+      } else if (this.company.id === 64 || this.company.id === 55) {
         // 定制大屏
         let info = {
           UId: this.userInfo.uid,

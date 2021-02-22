@@ -108,7 +108,7 @@ export default {
         getAlarmAct({
           pid: undefined,
           page: 1,
-          num: 99999,
+          num: 10,
           bstime: undefined,
           betime: undefined,
           area: [this.project.id].join(','),

@@ -20,13 +20,7 @@
             v-loading="chooseLoading"
           >
             <el-dropdown-item>
-              <el-checkbox
-                :indeterminate="isIndeterminate"
-                v-model="checkAll"
-                @change="handleCheckAllChange"
-              >
-                {{ choosePointIdList.length }}/{{ tableData.length }}
-              </el-checkbox>
+              {{ choosePointIdList.length }}/10
             </el-dropdown-item>
             <el-checkbox-group
               v-model="choosePointIdList"
@@ -37,9 +31,9 @@
                 v-for="(item, index) in tableData"
                 :key="index"
               >
-                <el-checkbox :label="item.id" :disabled="item.disabled">{{
-                  item.name
-                }}</el-checkbox>
+                <el-checkbox :label="item.id" :disabled="item.disabled">
+                  设备名称{{ index + 1 }}
+                </el-checkbox>
               </el-dropdown-item>
             </el-checkbox-group>
           </el-dropdown-menu>
@@ -48,9 +42,12 @@
     </div>
     <div v-nodata="isNoData" v-loading="tableLoading" class="main-body">
       <div
+        class="list-item online-item"
         v-for="(item, index) in tableData"
         :key="index"
-        class="list-item online-item offline-item alarm-item"
+        :class="
+          index < 2 ? 'online-item' : index < 3 ? 'offline-item' : 'alarm-item'
+        "
       >
         <div class="item-top">
           <div class="item-title">
@@ -75,6 +72,88 @@
           </div>
         </div>
       </div>
+      <!--      <div-->
+      <!--        v-for="(item, index) in tableData"-->
+      <!--        :key="index"-->
+      <!--        class="list-item"-->
+      <!--        :class="-->
+      <!--          item.modelConnectStatus === 1-->
+      <!--            ? 'offline-item'-->
+      <!--            : item.modelConnectStatus === 3-->
+      <!--            ? 'alarm-item'-->
+      <!--            : 'online-item'-->
+      <!--        "-->
+      <!--      >-->
+      <!--在线、离线-->
+      <!--        <div v-if="item.modelConnectStatus !== 3">-->
+      <!--          <div class="item-top">-->
+      <!--            <div class="item-title">-->
+      <!--              {{ item.mname }}-->
+      <!--            </div>-->
+      <!--            <div class="item-value" v-if="item.num2">-->
+      <!--              item.num2 && item.modelConnectStatus !== 1 ? item.num2.val : '&#45;&#45;'-->
+      <!--            </div>-->
+      <!--            <div v-else></div>-->
+      <!--          </div>-->
+      <!--          <el-row class="item-center" :gutter="24" v-if="!SMALL_TYPE1.includes(item.SmallTypeId)">-->
+      <!--            <el-col :span="12">吸气压力：0.8bar</el-col>-->
+      <!--            <el-col :span="12">排气压力：12.6bar</el-col>-->
+      <!--          </el-row>-->
+      <!--          <div class="item-bottom">-->
+      <!--            <div class="item-bottom-item">-->
+      <!--              <div class="item-bottom-item-icon item-bottom-item-icon-online" />-->
+      <!--              <div class="item-bottom-item-text">液位报警</div>-->
+      <!--            </div>-->
+      <!--            <div class="item-bottom-item">-->
+      <!--              <div-->
+      <!--                class="item-bottom-item-icon item-bottom-item-icon-offline"-->
+      <!--              />-->
+      <!--              <div class="item-bottom-item-text">总低压报警</div>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--        报警-->
+      <!--        <el-tooltip-->
+      <!--          v-else-->
+      <!--          class="item"-->
+      <!--          effect="dark"-->
+      <!--          content="报警原因"-->
+      <!--          placement="top"-->
+      <!--        >-->
+      <!--          <div slot="content">-->
+      <!--            <div v-for="(item, index) in data.ModelTreeAlarmList" :key="index">-->
+      <!--              {{-->
+      <!--                `${item.PointName}，${item.DATA_NAME}，${item.ALARM_SETTING}`-->
+      <!--              }}-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class="item-top">-->
+      <!--            <div class="item-title">-->
+      <!--              CLT10.1双面岛柜(无盖）P-->
+      <!--            </div>-->
+      <!--            <div class="item-value" v-if="item.num2">-->
+      <!--              item.num2 && item.modelConnectStatus !== 1 ? item.num2.val : '&#45;&#45;'-->
+      <!--            </div>-->
+      <!--            <div v-else></div>-->
+      <!--          </div>-->
+      <!--          <el-row class="item-center" :gutter="24">-->
+      <!--            <el-col :span="12">吸气压力：0.8bar</el-col>-->
+      <!--            <el-col :span="12">排气压力：12.6bar</el-col>-->
+      <!--          </el-row>-->
+      <!--          <div class="item-bottom">-->
+      <!--            <div class="item-bottom-item">-->
+      <!--              <div class="item-bottom-item-icon item-bottom-item-icon-online" />-->
+      <!--              <div class="item-bottom-item-text">液位报警</div>-->
+      <!--            </div>-->
+      <!--            <div class="item-bottom-item">-->
+      <!--              <div-->
+      <!--                class="item-bottom-item-icon item-bottom-item-icon-offline"-->
+      <!--              />-->
+      <!--              <div class="item-bottom-item-text">总低压报警</div>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </el-tooltip>-->
+      <!--      </div>-->
     </div>
   </el-card>
 </template>
@@ -82,22 +161,17 @@
 <script>
 import debounce from 'lodash/debounce'
 import { checkPermission } from '@/utils/permissions'
-import { getNewRepairActivePage } from '@/api/newRepairActive'
-import { randomString } from '@/utils'
+import { SMALL_TYPE1, BIG_TYPE1 } from '@/views/monitor/type'
+import { queryDeviceInfo } from '@/api/model'
 
 export default {
   data() {
     return {
       tableLoading: false,
       isNoData: false,
-      tableData: [],
+      tableData: [1, 2, 3, 4, 5, 6, 7, 8],
       chooseLoading: false,
-      isIndeterminate: true,
-      checkAll: false,
-      choosePointIdList: [],
-
-      timer: null, // 定时器
-      time: 60 // 获取电费预警延时 单位s
+      choosePointIdList: []
     }
   },
   computed: {
@@ -118,23 +192,9 @@ export default {
     }
   },
   created() {
-    this.clearTimer()
-    this.fetchTableData()
-    const _this = this
-    this.timer = setInterval(() => {
-      _this.fetchTableData()
-    }, _this.time * 1000)
-  },
-  beforeDestroy() {
-    this.clearTimer()
+    // this.fetchTableData()
   },
   methods: {
-    clearTimer() {
-      if (this.timer) {
-        clearInterval(this.timer)
-        this.timer = null
-      }
-    },
     checkJumpRoutingPermission(routerParmas = {}, permission = []) {
       if (checkPermission(permission)) {
         this.$router.push(routerParmas)
@@ -146,34 +206,8 @@ export default {
     handleCheckedChange() {
       this.editDefaultPoint()
     },
-    //全选点位显示
-    handleCheckAllChange(val) {
-      let Options = this.tableData
-      let List = this.choosePointIdList
-      let choosePointIdList = []
-      List = val
-        ? Options.map(item => item.id)
-        : Options.map(item => {
-            if (item.disabled) {
-              return item.id
-            }
-          })
-      List.map(item => {
-        if (item) {
-          choosePointIdList.push(item)
-        }
-      })
-      this.choosePointIdList = [...new Set(choosePointIdList)]
-      this.editDefaultPoint()
-    },
-    checkBoxReg() {
-      this.checkAll =
-        this.choosePointIdList.length > 0 &&
-        this.choosePointIdList.length === this.tableData.length
-      this.isIndeterminate =
-        this.choosePointIdList.length > 0 &&
-        this.choosePointIdList.length < this.tableData.length
-    },
+    //选择验证
+    checkBoxReg() {},
     //设置显示的点位
     editDefaultPoint(type = true) {
       // this.chooseLoading = true
@@ -205,35 +239,81 @@ export default {
     fetchTableData: debounce(
       function() {
         this.tableLoading = true
-        getNewRepairActivePage({
-          CompanyId: this.companyId,
-          Status: [1],
-          ProjectIdList: [this.projectId],
+        queryDeviceInfo({
+          IsGetAsteriskModelTree: true,
+          ProjectId: this.projectId,
+          UId: this.userId,
           BigTypeId: undefined,
           SmallTypeId: undefined,
-          EquipmentId: undefined,
-          AcceptanceTime: undefined,
-          IsApp: false,
-          IsMy: true,
-          pageSize: 9999,
-          pageIndex: 1
+          ModelTreeName: undefined,
+          ModelTreeStatusList: undefined,
+          PageIndex: 1,
+          PageSize: 10
         })
           .then(res => {
-            let data = res.data
-            if (data.Code === 200) {
-              this.tableData = data.Data.Data
-              this.tableData.forEach(v => {
-                v.ref_FaultContent = randomString(10)
+            if (res.data.Code === 200) {
+              let data = res.data.Data.Data
+              data.forEach(item1 => {
+                if (SMALL_TYPE1.includes(item1.SmallTypeId)) {
+                  item1.isMonitor = false
+                  item1.monitorOnline = false
+                  item1.PointList.length &&
+                    item1.PointList.forEach(item => {
+                      item.alarmactive !== 0 && (item1.alarm = true)
+                      if (
+                        item.pname === '库温' ||
+                        item.pname === '温度' ||
+                        item.pname === '控制温度'
+                      ) {
+                        item1.num1 = {
+                          val: item.value,
+                          alarm: item.alarmactive !== 0,
+                          id: item.point
+                        }
+                      } else if (item.pname === '湿度') {
+                        item1.num2 = {
+                          val: item.value,
+                          alarm: item.alarmactive !== 0
+                        }
+                      } else if (item.pname.indexOf('制冷状态') > -1) {
+                        item1.state1 = {
+                          val: item.value,
+                          alarm: item.alarmactive !== 0,
+                          id: item.point
+                        }
+                      } else if (item.pname === '化霜状态') {
+                        item1.state2 = {
+                          val: item.valuename,
+                          alarm: item.alarmactive !== 0,
+                          id: item.point
+                        }
+                      } else if (item.pname === '风机状态') {
+                        item1.state3 = {
+                          val: item.valuename,
+                          alarm: item.alarmactive !== 0,
+                          id: item.point
+                        }
+                      } else if (item.pname === '库门状态') {
+                        item1.state4 = {
+                          val: item.valuename,
+                          alarm: item.alarmactive !== 0,
+                          id: item.point
+                        }
+                      } else if (item.type === 57) {
+                        item1.isMonitor = true
+                        item.value === 1 && (item1.monitorOnline = true)
+                      }
+                    })
+                }
               })
+
+              this.cardList = data
             } else {
-              this.tableData = []
-              this.$message.error('获取维修列表失败')
+              this.cardList = []
             }
           })
           .catch(err => {
             console.error(err)
-            this.tableData = []
-            this.$message.error('获取维修列表失败')
           })
           .finally(() => {
             this.tableLoading = false

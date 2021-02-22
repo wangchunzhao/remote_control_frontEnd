@@ -104,7 +104,7 @@ export default {
           AcceptanceTime: undefined,
           IsApp: false,
           IsMy: true,
-          pageSize: 9999,
+          pageSize: 10,
           pageIndex: 1
         })
           .then(res => {

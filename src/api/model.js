@@ -316,6 +316,7 @@ export const queryDeviceInfo = ({
   ModelTreeName,
   ModelTreeStatusList,
   PageIndex,
+  IsGetAsteriskModelTree,
   PageSize
 }) => {
   return fetch.post(
@@ -325,6 +326,7 @@ export const queryDeviceInfo = ({
       BigTypeId,
       SmallTypeId,
       ModelTreeName,
+      IsGetAsteriskModelTree,
       ModelTreeStatusList,
       PageIndex,
       PageSize

@@ -21,7 +21,14 @@
       <div class="right-wrap" style="display: flex;align-items: center">
         <div class="right-wrap-item">
           <div style="font-size: 14px;color: rgba(0, 0, 0, 0.45);">
-            能耗排名
+            设备数
+          </div>
+          <div class="project-total">{{ projectInfo.RunDays }}</div>
+        </div>
+        <div class="right-wrap-line"></div>
+        <div class="right-wrap-item">
+          <div style="font-size: 14px;color: rgba(0, 0, 0, 0.45);">
+            企业内排名
           </div>
           <div class="project-total">
             {{ ElectricOverview.Rank ? ElectricOverview.Rank : '-' }}/<span
@@ -32,6 +39,7 @@
             >
           </div>
         </div>
+        <div class="right-wrap-line"></div>
         <div class="right-wrap-item">
           <div style="font-size: 14px;color: rgba(0, 0, 0, 0.45);">
             运行天数
@@ -203,6 +211,11 @@ export default {
   }
   .right-wrap-item {
     margin-left: 30px;
+  }
+  .right-wrap-line{
+    width: 1px;
+    height: 40px;
+    background: #E9E9E9;
   }
 }
 </style>
