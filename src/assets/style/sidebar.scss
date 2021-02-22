@@ -1,6 +1,17 @@
 // 侧边栏
 .sidebar-container{
-  background: #282828;
+  background: #fff;
+  .el-menu-item,.el-submenu__title{
+    background: #fff!important;
+    color: #000!important;
+    //激活颜色
+    &.is-active{
+      color: rgb(24, 144, 255)!important
+    }
+  }
+  .el-submenu__title i{
+    color: #000;
+  }
 }
 .sidebar-container>.el-menu {
   width: 100%!important;

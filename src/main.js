@@ -154,6 +154,76 @@ Vue.prototype.sortChinese = (arr, dataLeven) => {
   })
 }
 
+/**
+ * 项目地址转换
+ * @param address {string} 项目地址
+ * @return {string} 转换后的地址
+ * @example 320000,320100,320105;江苏省/南京市/建邺区;兴隆大街177号->江苏省-南京市-建邺区-兴隆大街177号
+ */
+Vue.prototype.projectAddressForMat = address => {
+  let str = address.substring(address.indexOf(';') + 1)
+  str = str.replace(new RegExp('/', 'g'), '-')
+  str = str.replace(new RegExp(';', 'g'), '-')
+  str = str.replace(new RegExp('省', 'g'), '省-')
+  str = str.replace(new RegExp('市', 'g'), '市-')
+  str = str.replace(new RegExp('区', 'g'), '区-')
+  str = str.replace(new RegExp('-辖区', 'g'), '辖区')
+  str = str.replace(new RegExp('---', 'g'), '-')
+  str = str.replace(new RegExp('--', 'g'), '-')
+  return str
+}
+
+/**
+ * 时间范围计算(n天前-今天)
+ * @param count {number} 天数(可为负值) count＜0=count*-1天后 count＞0=count天前
+ * @param type {string} 返回结果时间格式（暂只支持:'YYYY-MM-DD'和'YYYY-MM-DD hh:mm:ss'两种）
+ * @return {[string, string]} [开始时间,结束时间]
+ */
+Vue.prototype.timeForMat = (count, type = 'YYYY-MM-DD') => {
+  // 拼接时间
+  const time1 = new Date()
+  const time2 = new Date()
+  if (count === 1) {
+    time1.setTime(time1.getTime() - 24 * 60 * 60 * 1000)
+  } else {
+    if (count === 0) {
+      time1.setTime(time1.getTime())
+    } else if (count > 0) {
+      time1.setTime(time1.getTime() - 24 * 60 * 60 * 1000)
+    } else {
+      if (count === -2) {
+        time1.setTime(time1.getTime() + 24 * 60 * 60 * 1000 * 2)
+      } else {
+        time1.setTime(time1.getTime() + 24 * 60 * 60 * 1000)
+      }
+    }
+  }
+
+  const Y1 = time1.getFullYear()
+  const M1 =
+    time1.getMonth() + 1 > 9
+      ? time1.getMonth() + 1
+      : '0' + (time1.getMonth() + 1)
+  const D1 = time1.getDate() > 9 ? time1.getDate() : '0' + time1.getDate()
+  const timer1 =
+    type.indexOf(' ') > 0
+      ? Y1 + '-' + M1 + '-' + D1 + ' ' + '23:59:59'
+      : Y1 + '-' + M1 + '-' + D1 // 当前时间
+
+  time2.setTime(time2.getTime() - 24 * 60 * 60 * 1000 * count)
+  const Y2 = time2.getFullYear()
+  const M2 =
+    time2.getMonth() + 1 > 9
+      ? time2.getMonth() + 1
+      : '0' + (time2.getMonth() + 1)
+  const D2 = time2.getDate() > 9 ? time2.getDate() : '0' + time2.getDate()
+  const timer2 =
+    type.indexOf(' ') > 0
+      ? Y2 + '-' + M2 + '-' + D2 + ' ' + '00:00:00'
+      : Y2 + '-' + M2 + '-' + D2 // 之前的7天或者30天
+  return [timer2, timer1]
+}
+
 Vue.prototype._ = _
 
 // 为date原型添加format时间格式化函数(new Date().format("yyyy-MM-dd hh:mm:ss"))
