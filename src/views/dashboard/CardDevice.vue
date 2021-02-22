@@ -31,7 +31,7 @@
                 v-for="(item, index) in tableData"
                 :key="index"
               >
-                <el-checkbox :label="item.id" :disabled="item.disabled">
+                <el-checkbox :label="item" :disabled="item.disabled">
                   设备名称{{ index + 1 }}
                 </el-checkbox>
               </el-dropdown-item>

@@ -208,7 +208,7 @@ export default {
   .el-card__body {
     height: 420px;
     overflow-y: auto;
-    padding-top: 0;
+    padding-top: 20px;
   }
 }
 </style>
