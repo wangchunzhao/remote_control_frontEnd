@@ -9,7 +9,6 @@
       :show-maintenance="showMaintenance"
     />
     <ConfigDialog ref="configDialog" @change="handleSetChange" />
-
     <div
       v-permission="[130]"
       @click="handleOpenSetDialog"
@@ -53,7 +52,7 @@ import { maintainContractList } from '@/api/maintainContract'
 import PactSignDialog from './PactSignDialog'
 import dayjs from 'dayjs'
 import Cookies from 'js-cookie'
-import { storageName } from '@/utils/index'
+import { storageName } from '@/utils'
 import { getDataScreenCookie, removeDataScreenCookie } from '@/utils/auth'
 import DialogAddGateway from '@/views/terminalManage/gateway/gatewayList/DialogAdd'
 import { showDeviceList } from '@/api/device_new'
@@ -371,58 +370,46 @@ export default {
 
       this.map.clearOverlays()
 
-      let self = this
       let markers = []
       let marker = null
       let points = []
       this.$nextTick(() => {
-        var myGeo = new BMap.Geocoder()
-        // 将地址解析结果显示在地图上，并调整地图视野
+        const myGeo = new BMap.Geocoder()
+        // 将地址解析结果显示在地图上，并调整地图视野r
 
         list.forEach(item => {
           const address =
             item.adresss.split(';')[1] + item.adresss.split(';')[2]
           item.adresss = item.adresss.split(';')[1] + item.adresss.split(';')[2]
-          myGeo.getPoint(address, function(point) {
+          myGeo.getPoint(address, point => {
             points.push(point)
             if (point) {
               if (Number(item.AlarmNum) > 0) {
                 const alarmIcon = new BMap.Icon(
-                  'https://webapi.amap.com/theme/v1.3/markers/n/mark_rs.png',
-                  new BMap.Size(23, 30)
+                  'https://cdn.sinocold.net/Carrier_PC/%E5%AE%9A%E4%BD%8D2.png',
+                  new BMap.Size(25, 30)
                 )
                 marker = new BMap.Marker(point, { icon: alarmIcon })
-                self.map.addOverlay(marker)
+                this.map.addOverlay(marker)
                 markers.push(marker)
               } else {
                 const normalIcon = new BMap.Icon(
-                  'https://webapi.amap.com/theme/v1.3/markers/n/mark_bs.png',
-                  new BMap.Size(23, 30)
+                  'https://cdn.sinocold.net/Carrier_PC/%E5%AE%9A%E4%BD%8D.png',
+                  new BMap.Size(25, 30)
                 )
                 marker = new BMap.Marker(point, { icon: normalIcon })
-                self.map.addOverlay(marker)
+                this.map.addOverlay(marker)
                 markers.push(marker)
               }
-              const content = `<div style="position:relative;box-sizing:border-box;cursor:pointer;z-index: 1000" class="goStore" siteId='${
-                item.id
-              }'>
-                                <p style="padding:0;margin-bottom:5px;color:#184B8D;font-size:16px;margin-top:0;font-weight:bold;text-overflow:ellipsis;overflow:hidden;white-space:nowrap">${
-                                  item.ProjectName
-                                }</p>
-                                <p class="showAlarm" style="color:#F76464;margin-bottom:7px;display:flex;align-items:center;"><img src="https://cdn.sinocold.net/images/monitorDashboard/alarm.png" style="margin-right:5px"><span class="alarmNum">当前报警&nbsp;${
-                                  item.AlarmNum
-                                }</span></p>
-                                <p style="padding:0;margin:0 0 7px 0;text-overflow:ellipsis;overflow:hidden;white-space:nowrap">
-                                <img src="https://cdn.sinocold.net/images/monitorDashboard/marker.png" style="float:left;margin-right:5px;">${address}</p>
-                                <p style="margin:0 0 7px 0;height:20px;"><img src="https://cdn.sinocold.net/images/monitorDashboard/man.png" style="float:left;margin-right:5px;">${item.cname ||
-                                  ''}</p>
-                                <p style="margin:0;"><img src="https://cdn.sinocold.net/images/monitorDashboard/phone.png" style="float:left;margin-right:5px;">${item.mobile ||
-                                  ''}</p>
-                                <div siteId='${
-                                  item.ProjectId
-                                }' class="goStore-cover" style="position: absolute;top:0;left: 0; bottom:0;right:0;"></div>
-                              </div>`
-              self.addClickHandler(content, marker)
+              this.addClickHandler(
+                {
+                  projectId: item.id,
+                  projectName: item.ProjectName,
+                  alarmNum: item.AlarmNum,
+                  address
+                },
+                marker
+              )
             }
           })
         })
@@ -430,108 +417,90 @@ export default {
 
       setTimeout(() => {
         // 将所有定位点放在可视区域内
-        var view = this.map.getViewport(eval(points))
-        var mapZoom = view.zoom
-        var centerPoint = view.center
+        const view = this.map.getViewport(eval(points))
+        const mapZoom = view.zoom
+        const centerPoint = view.center
         this.map.centerAndZoom(centerPoint, mapZoom)
         // 设置定位点聚合
         // eslint-disable-next-line no-unused-vars
-        let markerClusterer = new BMapLib.MarkerClusterer(this.map, {
+        new BMapLib.MarkerClusterer(this.map, {
           markers: markers
         })
       }, 1000)
     },
-    // 点击位置出现信息窗体
+    // 给 marker 绑定点击事件， 点击出现信息窗体
     addClickHandler(content, marker) {
-      let _this = this
-      marker.addEventListener('click', function(e) {
-        _this.openInfo(content, e)
+      marker.addEventListener('click', e => {
+        this.openInfoWindow(
+          content,
+          new BMap.Point(e.target.getPosition().lng, e.target.getPosition().lat)
+        )
       })
     },
-    // 信息窗体
-    openInfo(content, e) {
-      const div = document.createElement('div')
-      div.innerHTML = content
-      // 判断门店报警是否为0 为0则不显示报警框
-      if (div.querySelector('.alarmNum').innerHTML === 0) {
-        div.querySelector('.showAlarm').style.cssText = 'display:none'
-      } else {
-        div.querySelector('.showAlarm').style.cssText =
-          'display:inline;color:#F76464'
+    // 显示项目信息窗体
+    openInfoWindow(info, point) {
+      console.log('[450]-index.vue', point)
+      const html = `
+          <div class="project-info-window" data-project="${info.projectId}">
+            <div class="project-name ellipsis">${info.projectName}</div>
+            <div class="info-row ellipsis" style="color: ${
+              info.alarmNum > 0 ? '#FF3F0D' : '#fff'
+            }">
+              <svg t="1614052837772" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="39581" xmlns:xlink="http://www.w3.org/1999/xlink" width="46" height="46"><defs><style type="text/css"></style></defs><path d="M816 768h-24V428c0-141.1-104.3-257.8-240-277.2V112c0-22.1-17.9-40-40-40s-40 17.9-40 40v38.8C336.3 170.2 232 286.9 232 428v340h-24c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h216c0 61.8 50.2 112 112 112s112-50.2 112-112h216c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM512 888c-26.5 0-48-21.5-48-48h96c0 26.5-21.5 48-48 48z" p-id="39582"></path></svg>
+              当前报警 ${info.alarmNum}
+            </div>
+            <div class="info-row">
+              <svg t="1614052917375" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="39989" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40"><defs><style type="text/css"></style></defs><path d="M512 327c-29.9 0-58 11.6-79.2 32.8C411.7 381 400 409.1 400 439c0 29.9 11.7 58 32.8 79.2C454 539.3 482.1 551 512 551c29.9 0 58-11.7 79.2-32.8C612.4 497 624 468.9 624 439c0-29.9-11.6-58-32.8-79.2S541.9 327 512 327z" p-id="39990"></path><path d="M854.6 289.1c-18.8-43.4-45.7-82.3-79.9-115.7-34.2-33.4-73.9-59.5-118.2-77.8C610.7 76.6 562.1 67 512 67c-50.1 0-98.7 9.6-144.5 28.5-44.3 18.3-84 44.5-118.2 77.8-34.2 33.4-61.1 72.4-79.9 115.7-19.5 45-29.4 92.8-29.4 142 0 70.6 16.9 140.9 50.1 208.7 26.7 54.5 64 107.6 111 158.1 80.3 86.2 164.5 138.9 188.4 153 6.9 4.1 14.7 6.1 22.4 6.1 7.8 0 15.5-2 22.4-6.1 23.9-14.1 108.1-66.8 188.4-153 47-50.4 84.3-103.6 111-158.1C867.1 572 884 501.8 884 431.1c0-49.2-9.9-97-29.4-142zM512 615c-97.2 0-176-78.8-176-176s78.8-176 176-176 176 78.8 176 176-78.8 176-176 176z" p-id="39991"></path></svg>
+              ${info.address}
+            </div>
+          </div>
+      `
+      if (this.trackInfoBox) {
+        // 关闭之前已打开的 infoWindow
+        this.trackInfoBox.close()
       }
-      var p = e.target
-      var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat)
-      var infoWindow = new BMap.InfoWindow(content, this.opts) // 创建信息窗口对象
-      this.map.openInfoWindow(infoWindow, point) // 开启信息窗口
-      const self = this
-      // 延时加载 点击门店进入当前门店的实时监测页面
-      setTimeout(function() {
-        const store = document.querySelector('.goStore-cover')
-        store.addEventListener('click', e => {
-          const pid = Number(e.target.getAttribute('siteId'))
-          self.$store.dispatch(
+      this.trackInfoBox = new BMapLib.InfoBox(this.map, html, {
+        closeIconMargin: '-20px -20px 0 0',
+        alignBottom: false,
+        closeIconUrl:
+          'https://cdn.sinocold.net/images/baiduMap/closeinfowindow.png'
+      })
+      this.trackInfoBox.open(point)
+      // 延时加载, 等 dom 加载完成， 点击门店进入当前门店的实时监测页面
+      setTimeout(() => {
+        const infoWindow = document.querySelector('.project-info-window')
+        infoWindow.addEventListener('click', e => {
+          const pid = Number(e.currentTarget.getAttribute('data-project'))
+          this.$store.dispatch(
             'ChangeProject',
-            self.proList.find(item => item.ProjectId === pid)
+            this.proList.find(item => item.ProjectId === pid)
           )
           let projectPath = []
-          self.subarea.forEach(item => {
+          this.subarea.forEach(item => {
             getPathById(pid, item, val => {
               projectPath = val
             })
           })
-          self.$store.commit('UPDATE_PROJECT_PATH', projectPath)
-          self.$router.push({ name: 'triggerRouterGuard' })
+          this.$store.commit('UPDATE_PROJECT_PATH', projectPath)
+          this.$router.push({ name: 'triggerRouterGuard' })
         })
       }, 100)
     },
     // 设置中心点
     setCenter(item) {
       const myGeo = new BMap.Geocoder()
-      let _this = this
-      myGeo.getPoint(item.adresss, function(point) {
+      myGeo.getPoint(item.adresss, point => {
         if (point) {
-          _this.map.setCenter(point)
-          const div = `<div style="position:relative;box-sizing:border-box;cursor:pointer" class="goStore" siteId='${
-            item.id
-          }'>
-                    <p style="padding:0;margin-bottom:5px;color:#184B8D;font-size:16px;margin-top:0;font-weight:bold;text-overflow:ellipsis;overflow:hidden;white-space:nowrap">${
-                      item.ProjectName
-                    }</p>
-                    <p class="showAlarm" style="color:#F76464;margin-bottom:7px;display:flex;align-items:center;"><img src="https://cdn.sinocold.net/images/monitorDashboard/alarm.png" style="margin-right:5px"><span class="alarmNum">当前报警&nbsp;${
-                      item.AlarmNum
-                    }</span></p>
-                    <p style="padding:0;margin:0 0 7px 0;text-overflow:ellipsis;overflow:hidden;white-space:nowrap">
-                        <img src="https://cdn.sinocold.net/images/monitorDashboard/marker.png" style="float:left;margin-right:5px;">${item.adresss ||
-                          ''}</p>
-                        <p style="margin:0 0 7px 0;height:20px;"><img src="https://cdn.sinocold.net/images/monitorDashboard/man.png" style="float:left;margin-right:5px;">${item.cname ||
-                          ''}</p>
-                        <p style="margin:0;"><img src="https://cdn.sinocold.net/images/monitorDashboard/phone.png" style="float:left;margin-right:5px;">${item.mobile ||
-                          ''}</p>
-                        <div siteId='${
-                          item.ProjectId
-                        }' class="goStore-cover" style="position: absolute;top:0;left: 0; bottom:0;right:0;"></div>
-                      </div>`
-          const infoWindow = new BMap.InfoWindow(div, _this.opts)
-          // 延时加载 点击门店进入当前门店的实时监测页面
-          setTimeout(function() {
-            const store = document.querySelector('.goStore-cover')
-            store.addEventListener('click', e => {
-              const pid = Number(e.target.getAttribute('siteid'))
-              _this.$store.dispatch(
-                'ChangeProject',
-                _this.proList.find(item => item.ProjectId === pid)
-              )
-              let projectPath = []
-              _this.subarea.forEach(item => {
-                getPathById(pid, item, val => {
-                  projectPath = val
-                })
-              })
-              _this.$store.commit('UPDATE_PROJECT_PATH', projectPath)
-              _this.$router.push({ name: 'triggerRouterGuard' })
-            })
-          }, 100)
-          _this.map.openInfoWindow(infoWindow, point) // 开启信息窗口
+          this.map.setCenter(point)
+          this.openInfoWindow(
+            {
+              projectId: item.id || item.ProjectId,
+              projectName: item.ProjectName,
+              alarmNum: item.AlarmNum,
+              address: item.adresss || ''
+            },
+            new BMap.Point(point.lng, point.lat)
+          )
         }
       })
     }
@@ -560,6 +529,25 @@ export default {
       color: rgba(0, 0, 0, 0.65);
       padding-top: 20px;
       padding-bottom: 25px;
+    }
+  }
+  .project-info-window {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 9px 28px 8px rgba(0, 0, 0, 0.05),
+      0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+    border-radius: 2px;
+    padding: 10px;
+    .project-name {
+      font-size: 14px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #ffffff;
+      line-height: 22px;
+    }
+    .info-row {
+      font-size: 12px;
+      line-height: 1.5;
     }
   }
 }
@@ -661,6 +649,40 @@ export default {
 </style>
 
 <style lang="scss">
+#amap-cointainer {
+  .project-info-window {
+    transform: translateY(-25px);
+    position: relative;
+    width: 200px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 9px 28px 8px rgba(0, 0, 0, 0.05),
+      0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+    border-radius: 2px;
+    padding: 10px;
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top: 6px solid rgba(0, 0, 0, 0.75);
+    }
+    .project-name {
+      font-size: 14px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #ffffff;
+      line-height: 22px;
+      margin-bottom: 5px;
+    }
+    .info-row {
+      font-size: 12px;
+      line-height: 1.8;
+    }
+  }
+}
 .maintenance-notify {
   padding: 14px 13px 14px 13px;
   .el-notification__group {
