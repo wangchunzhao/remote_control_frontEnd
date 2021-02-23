@@ -8,14 +8,15 @@
       :userGatewayList="userGatewayList"
       :show-maintenance="showMaintenance"
     />
+    <OverviewPanel />
     <ConfigDialog ref="configDialog" @change="handleSetChange" />
-    <div
+    <!-- <div
       v-permission="[130]"
       @click="handleOpenSetDialog"
       class="setting-handle-button"
     >
       <c-svg name="setting-fill"> </c-svg>
-    </div>
+    </div> -->
     <PactSignDialog @refresh="handlePactSign" ref="pactSignDialog" />
     <div
       class="empty-gateway"
@@ -46,6 +47,7 @@
 <script>
 import { getPathById } from '@/utils/index'
 import Sidebar from './Sidebar'
+import OverviewPanel from './OverviewPanel'
 import ConfigDialog from './ConfigDialog'
 import { getCompanyTotalList } from '@/api/companyTotal'
 import { maintainContractList } from '@/api/maintainContract'
@@ -58,13 +60,15 @@ import DialogAddGateway from '@/views/terminalManage/gateway/gatewayList/DialogA
 import { showDeviceList } from '@/api/device_new'
 import { updatePreferences } from '@/api/preferences'
 import { resetRouter } from '@/router'
+import mapConfigJson from '@/assets/json/custom_map_config.json'
 
 export default {
   components: {
     Sidebar,
     ConfigDialog,
     PactSignDialog,
-    DialogAddGateway
+    DialogAddGateway,
+    OverviewPanel
   },
   data() {
     return {
@@ -187,7 +191,7 @@ export default {
       .then(res => {
         if (res.data.Code === 200) {
           let data = res.data.Data.Data
-          var showNotification = data => {
+          const showNotification = data => {
             return new Promise(resolve => {
               const instance = this.$notify({
                 title: `维保合同：（${data.contractNumber}）`,
@@ -363,9 +367,9 @@ export default {
     // 初始化地图信息
     mapInit(list) {
       this.map = new BMap.Map('map-container', { enableMapClick: false }) // 创建地图实例
-      this.map.setMapStyle({ style: 'googlelite' })
-      var point = new BMap.Point(121.429116, 31.153208) // 创建点坐标
+      const point = new BMap.Point(121.429116, 31.153208) // 创建点坐标
       this.map.centerAndZoom(point, 12) // 初始化地图，设置中心点坐标和地图级别
+      this.map.setMapStyleV2({ styleJson: mapConfigJson })
       this.map.enableScrollWheelZoom(true) // 开启鼠标滚轮缩放
 
       this.map.clearOverlays()
@@ -439,7 +443,6 @@ export default {
     },
     // 显示项目信息窗体
     openInfoWindow(info, point) {
-      console.log('[450]-index.vue', point)
       const html = `
           <div class="project-info-window" data-project="${info.projectId}">
             <div class="project-name ellipsis">${info.projectName}</div>
@@ -460,7 +463,7 @@ export default {
         this.trackInfoBox.close()
       }
       this.trackInfoBox = new BMapLib.InfoBox(this.map, html, {
-        closeIconMargin: '-20px -20px 0 0',
+        closeIconMargin: '-40px -20px 0 0',
         alignBottom: false,
         closeIconUrl:
           'https://cdn.sinocold.net/images/baiduMap/closeinfowindow.png'
@@ -538,6 +541,7 @@ export default {
       0px 6px 16px 0px rgba(0, 0, 0, 0.08);
     border-radius: 2px;
     padding: 10px;
+    cursor: pointer;
     .project-name {
       font-size: 14px;
       font-family: PingFangSC-Medium, PingFang SC;
