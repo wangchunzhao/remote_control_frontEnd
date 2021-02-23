@@ -191,6 +191,7 @@ export default {
     window.removeEventListener('resize', this.chart.resize)
   },
   methods: {
+    //获取数据
     fetchTableData() {
       const dates = []
       const now = new Date()

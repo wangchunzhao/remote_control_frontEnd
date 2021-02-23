@@ -129,6 +129,7 @@ export default {
     this.fetchTableData()
   },
   methods: {
+    //查找子系统
     findChildSystem(name) {
       let flag = false
       let path = ''
@@ -150,6 +151,7 @@ export default {
         this.$message.error('当前项目暂无次系统')
       }
     },
+    //校验权限
     checkJumpRoutingPermission(routerParmas = {}, permission = []) {
       if (checkPermission(permission)) {
         this.$router.push(routerParmas)
@@ -181,6 +183,7 @@ export default {
       this.choosePointIdList = [...new Set(choosePointIdList)]
       this.editDefaultPoint()
     },
+    //选择器校验
     checkBoxReg() {
       this.checkAll =
         this.choosePointIdList.length > 0 &&
@@ -189,7 +192,6 @@ export default {
         this.choosePointIdList.length > 0 &&
         this.choosePointIdList.length < this.typeOptions.length
     },
-
     //设置显示的点位
     editDefaultPoint(type = true) {
       // this.chooseLoading = true

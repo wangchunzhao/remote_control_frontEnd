@@ -13,7 +13,15 @@
       </el-button>
     </div>
     <div v-loading="tableLoading" class="main-body">
-      <div v-if="tableData.length === 0" class="no-data">暂无数据</div>
+      <div v-if="tableData.length === 0" class="no-data">
+        <img
+          style="width: 80px;"
+          src="
+          https://cdn.sinocold.net/images/empty.png"
+          alt="暂无数据"
+        />
+        <div>暂无数据</div>
+      </div>
       <div v-for="(item, index) in tableData" :key="index" class="list-item">
         <div class="item-top">
           <div class="item-title">
@@ -76,12 +84,14 @@ export default {
     this.clearTimer()
   },
   methods: {
+    //清除定时器
     clearTimer() {
       if (this.timer) {
         clearInterval(this.timer)
         this.timer = null
       }
     },
+    //校验权限
     checkJumpRoutingPermission(routerParmas = {}, permission = []) {
       if (checkPermission(permission)) {
         this.$router.push(routerParmas)
@@ -179,7 +189,7 @@ export default {
     text-overflow: ellipsis;
   }
   .no-data {
-    margin-top: 200px;
+    margin-top: 150px;
     text-align: center;
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -195,6 +205,9 @@ export default {
     height: 420px;
     overflow-y: auto;
     padding-top: 20px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 </style>

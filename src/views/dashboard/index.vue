@@ -1,5 +1,5 @@
 <template>
-  <div class="company-dashboard">
+  <div class="company-dashboard" :key="reloadKey">
     <div class="company-dashboard-header">
       <div class="left-wrap">
         <img
@@ -66,7 +66,7 @@
           <card-repair />
         </el-col>
         <el-col :span="8">
-          <card-device />
+          <card-device @watchHistory="watchHistory" />
         </el-col>
       </el-row>
       <el-row :gutter="16" style="margin-top: 16px;">
@@ -79,6 +79,11 @@
       </el-row>
       <el-row style="margin-top: 20px"></el-row>
     </div>
+    <HistoryDialog
+      ref="historyDialog"
+      :point-ids="history.point"
+      :device-id="history.deviceId"
+    />
   </div>
 </template>
 
@@ -91,8 +96,11 @@ import CardRepair from './CardRepair'
 import CardDevice from './CardDevice'
 import CardQrcode from './CardQrcode'
 import { GetElectricOverview, GetProject } from '@/api/dashboard'
+import HistoryDialog from '@/components/HistoryDialog'
+
 export default {
   components: {
+    HistoryDialog,
     CardQuickEntry,
     CardOverview,
     CardAlarm,
@@ -103,6 +111,11 @@ export default {
   },
   data() {
     return {
+      reloadKey: 1,
+      history: {
+        point: null,
+        deviceId: 0
+      },
       ElectricOverview: {},
       projectInfo: {}
     }
@@ -115,10 +128,26 @@ export default {
       return this.$store.state.app.project
     }
   },
-  created() {
-    this.fetchTableData()
+  watch: {
+    project: {
+      handler: function(val) {
+        if (val) {
+          this.fetchTableData()
+          this.reloadKey++
+        }
+      },
+      deep: true,
+      immediate: true
+    }
   },
   methods: {
+    //查看点位历史数据
+    watchHistory(pointId, deviceId) {
+      this.history.point = [pointId]
+      this.history.deviceId = deviceId
+      this.$refs.historyDialog.toggleDialog()
+    },
+    //获取数据
     fetchTableData() {
       GetProject({
         projectId: this.project.id

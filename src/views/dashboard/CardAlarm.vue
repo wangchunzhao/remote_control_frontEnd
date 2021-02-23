@@ -1,7 +1,7 @@
 <template>
   <el-card shadow="never" class="box-card card-alarm">
     <div slot="header" class="clearfix">
-      <span class="card-title">报警</span>
+      <span class="card-title">当前报警</span>
       <el-button
         type="text"
         style="float: right;padding: 5px 0;"
@@ -13,11 +13,19 @@
       </el-button>
     </div>
     <div v-loading="tableLoading" class="main-body">
-      <div v-if="tableData.length === 0" class="no-data">暂无数据</div>
+      <div v-if="tableData.length === 0" class="no-data">
+        <img
+          style="width: 80px;"
+          src="
+          https://cdn.sinocold.net/images/empty.png"
+          alt="暂无数据"
+        />
+        <div>暂无数据</div>
+      </div>
       <div v-for="(item, index) in tableData" :key="index" class="list-item">
         <div class="item-top">
           <div class="item-title">
-            {{ item.PointName }}
+            {{ item.mname }}
           </div>
           <div style="flex:1;margin-left: 12px">
             <el-tag
@@ -67,7 +75,7 @@ export default {
       isNoData: false,
       tableData: [],
       timer: null, // 定时器
-      time: 60  // 获取电费预警延时 单位s
+      time: 60 // 获取电费预警延时 单位s
     }
   },
   computed: {
@@ -87,12 +95,14 @@ export default {
     this.clearTimer()
   },
   methods: {
+    //清除定时器
     clearTimer() {
       if (this.timer) {
         clearInterval(this.timer)
         this.timer = null
       }
     },
+    //校验权限
     checkJumpRoutingPermission(routerParmas = {}, permission = []) {
       if (checkPermission(permission)) {
         this.$router.push(routerParmas)
@@ -193,7 +203,7 @@ export default {
     text-overflow: ellipsis;
   }
   .no-data {
-    margin-top: 200px;
+    margin-top: 150px;
     text-align: center;
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -209,6 +219,9 @@ export default {
     height: 420px;
     overflow-y: auto;
     padding-top: 20px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 </style>

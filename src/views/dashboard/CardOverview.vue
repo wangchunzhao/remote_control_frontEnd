@@ -198,6 +198,7 @@ export default {
     this.fetchTableData()
   },
   methods: {
+    //校验权限
     checkJumpRoutingPermission(routerParmas = {}, permission = []) {
       if (checkPermission(permission)) {
         this.$router.push(routerParmas)
@@ -205,6 +206,7 @@ export default {
         this.$message.error('当前账号暂无相关权限,请联系管理员')
       }
     },
+    //获取数据
     fetchTableData() {
       GetElectricOverview({
         Type: 0,
