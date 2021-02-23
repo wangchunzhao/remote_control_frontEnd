@@ -32,50 +32,113 @@
       class="horizontal-menu thin-scroll"
       mode="horizontal"
       background-color="#152c73"
-      text-color="#FFF"
+      text-color="rgba(255, 255, 255, 0.85)"
       active-text-color="#fff"
       menu-trigger="click"
     >
-      <el-menu-item v-if="showMapMenu" index="02">
-        <router-link
-          to="/map/index"
+      <el-menu-item index="01">
+        <el-link
+          :underline="false"
+          @click.native="platformChange(PLATFORM.business)"
           class="menu-link"
-          :class="$route.path === '/map/index' ? 'active-link' : ''"
+          :class="platform === PLATFORM.business ? 'active-link' : ''"
         >
-          <c-svg name="location" style="width: 16px;height: 16px;" />
-          总览
-        </router-link>
+          <c-svg name="yewuyunying" style="width: 16px;height: 16px;" />
+          业务运营
+        </el-link>
       </el-menu-item>
-      <div v-if="isShowProjectSelect()" class="subarea-cascader-wrap">
-        <c-svg name="appstore" style="width: 16px;height: 16px;" />
-        <div class="subarea-cascader-search" @click="cascaderSearchFun">
-          <i
-            class="el-icon-search"
-            style="width: 20px;height: 20px;font-size: 16px;background: #152c73;"
-          ></i>
-        </div>
-        <el-cascader
-          v-model="path"
-          :props="{
-            expandTrigger: 'hover',
-            children: 'Children',
-            value: 'SubareaId',
-            label: 'SubareaName'
-          }"
-          ref="cascader"
-          @focus="cascaderFocus"
-          @visible-change="cascaderVisible"
-          popper-class="subarea-cascader-popper"
-          :show-all-levels="false"
-          placeholder="搜索项目名称"
-          filterable
-          class="subarea-cascader"
-          :options="subareaOptions"
-          @change="changeProject"
-        />
-      </div>
+      <el-menu-item index="02" v-permission="[2]">
+        <el-link
+          :underline="false"
+          @click.native="platformChange('DATA_SCREEN')"
+          class="menu-link"
+        >
+          <c-svg name="shujudaping" style="width: 16px;height: 16px;" />
+          数据大屏
+        </el-link>
+      </el-menu-item>
+      <el-menu-item index="03" v-if="dataAnalysisStatus">
+        <el-link
+          :underline="false"
+          @click.native="platformChange(PLATFORM.dataAnalysis)"
+          class="menu-link"
+          :class="platform === PLATFORM.dataAnalysis ? 'active-link' : ''"
+        >
+          <c-svg name="shujufenxi" style="width: 16px;height: 16px;" />
+          数据分析
+        </el-link>
+      </el-menu-item>
+      <el-menu-item index="04" v-if="deviceConnectStatus">
+        <el-link
+          :underline="false"
+          @click.native="platformChange(PLATFORM.deviceConnect)"
+          class="menu-link"
+          :class="platform === PLATFORM.deviceConnect ? 'active-link' : ''"
+        >
+          <c-svg name="shebeilianjie" style="width: 16px;height: 16px;" />
+          设备连接
+        </el-link>
+      </el-menu-item>
+      <el-menu-item index="05" v-if="systemManageStatus">
+        <el-link
+          :underline="false"
+          @click.native="platformChange(PLATFORM.systemManage)"
+          class="menu-link"
+          :class="platform === PLATFORM.systemManage ? 'active-link' : ''"
+        >
+          <c-svg name="qiyeguanli" style="width: 16px;height: 16px;" />
+          企业管理
+        </el-link>
+      </el-menu-item>
     </el-menu>
     <div class="header-right">
+      <el-menu
+        class="horizontal-menu thin-scroll"
+        mode="horizontal"
+        background-color="#152c73"
+        text-color="rgba(255, 255, 255, 0.85)"
+        active-text-color="#fff"
+        menu-trigger="click"
+      >
+        <el-menu-item v-if="showMapMenu" index="02">
+          <router-link
+            to="/map/index"
+            class="menu-link"
+            :class="$route.path === '/map/index' ? 'active-link' : ''"
+          >
+            <c-svg name="location" style="width: 16px;height: 16px;" />
+            总览
+          </router-link>
+        </el-menu-item>
+        <div v-if="isShowProjectSelect()" class="subarea-cascader-wrap">
+          <c-svg name="appstore" style="width: 16px;height: 16px;" />
+          <div class="subarea-cascader-search" @click="cascaderSearchFun">
+            <i
+              class="el-icon-search"
+              style="width: 20px;height: 20px;font-size: 16px;background: #152c73;"
+            ></i>
+          </div>
+          <el-cascader
+            v-model="path"
+            :props="{
+              expandTrigger: 'hover',
+              children: 'Children',
+              value: 'SubareaId',
+              label: 'SubareaName'
+            }"
+            ref="cascader"
+            @focus="cascaderFocus"
+            @visible-change="cascaderVisible"
+            popper-class="subarea-cascader-popper"
+            :show-all-levels="false"
+            placeholder="搜索项目名称"
+            filterable
+            class="subarea-cascader"
+            :options="subareaOptions"
+            @change="changeProject"
+          />
+        </div>
+      </el-menu>
       <el-tooltip
         v-if="industryId === 1"
         content="CoolCare 帮助文档"
@@ -115,54 +178,6 @@
                 </el-dropdown-item>
               </template>
             </div>
-
-            <!-- 业务平台只有在有业务平台的权限或没有分配项目的时候显示  -->
-            <el-dropdown-item
-              :divided="companyList.length > 1"
-              @click.native="platformChange(PLATFORM.business)"
-            >
-              业务运营
-              <i
-                v-if="platform === PLATFORM.business"
-                class="el-icon-check system-dropdown-check"
-              />
-            </el-dropdown-item>
-            <el-dropdown-item
-              v-if="handleShowPlatform(PLATFORM.dataAnalysis)"
-              @click.native="platformChange(PLATFORM.dataAnalysis)"
-            >
-              数据分析
-              <i
-                v-if="platform === PLATFORM.dataAnalysis"
-                class="el-icon-check system-dropdown-check"
-              />
-            </el-dropdown-item>
-            <el-dropdown-item
-              v-if="handleShowPlatform(PLATFORM.systemManage)"
-              @click.native="platformChange(PLATFORM.systemManage)"
-            >
-              系统管理
-              <i
-                v-if="platform === PLATFORM.systemManage"
-                class="el-icon-check system-dropdown-check"
-              />
-            </el-dropdown-item>
-            <el-dropdown-item
-              v-if="handleShowPlatform(PLATFORM.deviceConnect)"
-              @click.native="platformChange(PLATFORM.deviceConnect)"
-            >
-              设备连接
-              <i
-                v-if="platform === PLATFORM.deviceConnect"
-                class="el-icon-check system-dropdown-check"
-              />
-            </el-dropdown-item>
-            <el-dropdown-item
-              v-permission="[2]"
-              @click.native="platformChange('DATA_SCREEN')"
-            >
-              数据大屏
-            </el-dropdown-item>
             <el-dropdown-item
               :divided="true"
               @click.native="$router.push('/userSet/myInformation')"
@@ -194,6 +209,9 @@ export default {
   },
   data() {
     return {
+      dataAnalysisStatus: false, //数据分析菜单
+      deviceConnectStatus: false, //设备连接菜单
+      systemManageStatus: false, //企业管理菜单
       path: this.$store.state.app.projectPath,
       prePath: '',
       avatar: '',
@@ -258,6 +276,11 @@ export default {
       deep: true,
       immediate: true
     }
+  },
+  mounted() {
+    this.dataAnalysisStatus = this.handleShowPlatform(PLATFORM.dataAnalysis)
+    this.deviceConnectStatus = this.handleShowPlatform(PLATFORM.deviceConnect)
+    this.systemManageStatus = this.handleShowPlatform(PLATFORM.systemManage)
   },
   methods: {
     cascaderSearchFun() {
@@ -493,7 +516,8 @@ export default {
     text-align: center;
     border: 0;
     .menu-link {
-      display: inline-block;
+      display: flex;
+      align-items: center;
       height: 50px;
       padding: 0 20px;
       .icon {
@@ -502,7 +526,8 @@ export default {
     }
   }
   .active-link {
-    color: rgb(24, 144, 255);
+    color: #fff;
+    background: rgba(0, 0, 0, 0.34);
   }
   .el-submenu .el-submenu__title {
     height: 50px;
@@ -515,7 +540,7 @@ export default {
   .el-dropdown {
     font-size: 14px;
     cursor: pointer;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.85);
     height: 49px;
     &:hover {
       background-color: #292929;
@@ -546,7 +571,7 @@ export default {
   height: 50px;
   font-size: 22px;
   line-height: 49px;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.85);
   background: #152c73;
   min-width: 600px;
   z-index: 100;
@@ -564,7 +589,7 @@ export default {
       flex: 1;
       text-align: center;
       font-size: 16px;
-      color: #fff;
+      color: rgba(255, 255, 255, 0.85);
     }
     .hamburger-container {
       line-height: 45px;
@@ -627,7 +652,7 @@ export default {
     }
     .el-dropdown-link {
       cursor: pointer;
-      color: #fff;
+      color: rgba(255, 255, 255, 0.85);
     }
     .user-logo {
       width: 30px;
@@ -698,7 +723,7 @@ export default {
       outline: none;
     }
     .el-input__inner {
-      color: #fff;
+      color: rgba(255, 255, 255, 0.85);
       &:focus {
         outline: none;
       }
@@ -716,10 +741,10 @@ export default {
       border: none;
     }
     .el-icon-arrow-down {
-      color: #fff;
+      color: rgba(255, 255, 255, 0.85);
     }
     .el-input.is-focus .el-input__inner {
-      caret-color: #fff;
+      color: rgba(255, 255, 255, 0.85);
     }
   }
 }
@@ -728,11 +753,11 @@ div.subarea-cascader-popper {
     background-color: #152c73;
   }
   li.el-cascader-node {
-    color: #fff;
+    color: rgba(255, 255, 255, 0.85);
     &:hover,
     &.in-active-path {
       background: #000000;
-      opacity: 0.34;
+      opacity: 0.35;
     }
     &.is-active {
       color: rgb(24, 144, 255);
@@ -743,6 +768,22 @@ div.subarea-cascader-popper {
   }
   .el-cascader-menu__item.is-disabled {
     background-color: #152c73;
+  }
+  .el-cascader__suggestion-item {
+    color: rgba(255, 255, 255, 0.85);
+    &:hover {
+      background: #000000;
+      opacity: 0.35;
+    }
+  }
+  .el-scrollbar__wrap {
+    background-color: #152c73;
+  }
+  .el-cascader-menu__wrap {
+    height: 350px !important;
+  }
+  .el-scrollbar__wrap {
+    height: 350px !important;
   }
 }
 .system-dropdown {

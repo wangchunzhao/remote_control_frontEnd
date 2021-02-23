@@ -16,145 +16,440 @@
           </el-button>
           <el-dropdown-menu
             slot="dropdown"
-            class="dropdown-box"
+            class="card-device-dropdown-box"
             v-loading="chooseLoading"
           >
-            <el-dropdown-item>
-              {{ choosePointIdList.length }}/10
-            </el-dropdown-item>
+            <div style="padding: 0 20px">
+              <div style="display: flex;align-items: center">
+                <div style="margin-right: 10px">
+                  {{ choosePointIdList.length }}/10
+                </div>
+                <el-input
+                  size="small"
+                  placeholder="请输入"
+                  v-model="filterForm.text"
+                  clearable
+                ></el-input>
+              </div>
+            </div>
             <el-checkbox-group
               v-model="choosePointIdList"
               @change="handleCheckedChange"
             >
-              <el-dropdown-item
-                :divided="index === 0"
-                v-for="(item, index) in tableData"
-                :key="index"
+              <div
+                v-for="(item1, index1) in filterList"
+                :key="index1"
+                v-if="item1"
               >
-                <el-checkbox :label="item" :disabled="item.disabled">
-                  设备名称{{ index + 1 }}
-                </el-checkbox>
-              </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <div
+                    class="card-device-dropdown-item-title"
+                    @click="handleDropTitleItem(index1)"
+                  >
+                    <div>{{ item1.SmallTypeName }}</div>
+                    <c-svg
+                      :name="item1.show ? 'top' : 'bottom'"
+                      style="width: 16px;height: 16px"
+                    ></c-svg>
+                  </div>
+                </el-dropdown-item>
+                <el-dropdown-item
+                  v-show="item1.show"
+                  v-for="(item, index) in item1.data"
+                  :key="index"
+                >
+                  <div class="card-device-dropdown-item-box">
+                    <el-checkbox
+                      :label="item.ModelTreeId"
+                      :disabled="item.disabled"
+                    >
+                      <div class="card-device-dropdown-item-text">
+                        {{ item.ModelTreeName }}
+                      </div>
+                    </el-checkbox>
+                  </div>
+                </el-dropdown-item>
+              </div>
             </el-checkbox-group>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </div>
     <div v-loading="tableLoading" class="main-body">
-      <div v-if="tableData.length === 0" class="no-data">暂无数据</div>
+      <div v-if="tableData.length === 0" class="no-data">
+        <img
+          style="width: 80px;"
+          src="
+          https://cdn.sinocold.net/images/empty.png"
+          alt="暂无数据"
+        />
+        <div>暂无数据</div>
+      </div>
       <div
-        class="list-item online-item"
         v-for="(item, index) in tableData"
         :key="index"
+        class="list-item"
         :class="
-          index < 2 ? 'online-item' : index < 3 ? 'offline-item' : 'alarm-item'
+          item.modelConnectStatus === 1
+            ? 'offline-item'
+            : item.modelConnectStatus === 3
+            ? 'alarm-item'
+            : 'online-item'
         "
       >
-        <div class="item-top">
-          <div class="item-title">
-            CLT10.1双面岛柜(无盖）P
+        <!--        在线、离线-->
+        <div v-if="item.modelConnectStatus !== 3">
+          <div class="item-top">
+            <div class="item-title">
+              {{ item.mname }}
+            </div>
+            <div class="item-value" v-if="item.num1">
+              {{
+                item.num1 && item.modelConnectStatus !== 1
+                  ? item.num1.val + '℃'
+                  : '--℃'
+              }}
+            </div>
+            <div v-else-if="item.num2">
+              {{
+                item.num2 && item.modelConnectStatus !== 1
+                  ? item.num2.val + '%'
+                  : '--%'
+              }}
+            </div>
+            <div v-else></div>
           </div>
-          <div class="item-value">
-            -19.7°C
+          <!--          卡片模式2/3-->
+          <el-row
+            class="item-center"
+            :gutter="24"
+            v-if="!SMALL_TYPE1.includes(item.SmallTypeId) && item.PointList"
+          >
+            <el-col
+              :span="12"
+              v-for="(point, opintIndex) in item.PointList.length > 3
+                ? item.PointList.slice(0, 4)
+                : item.PointList"
+              :key="opintIndex"
+            >
+              <div
+                @click.stop="
+                  () => $emit('watchHistory', point.point, item.mtid)
+                "
+              >
+                {{ point.pname }}：{{ point.valuename }}
+              </div>
+            </el-col>
+          </el-row>
+          <div
+            class="item-bottom"
+            v-if="SMALL_TYPE1.includes(item.SmallTypeId)"
+          >
+            <el-tooltip
+              class="item"
+              :open-delay="500"
+              effect="dark"
+              content="制冷状态"
+              placement="bottom-end"
+            >
+              <div
+                class="item-bottom-item"
+                @click.stop="
+                  () => $emit('watchHistory', item.state1.id, item.mtid)
+                "
+                v-if="item.state1"
+              >
+                <div
+                  class="item-bottom-item-icon item-bottom-item-icon-online"
+                  :class="
+                    item.state1.val === 0
+                      ? 'item-bottom-item-icon-offline'
+                      : 'item-bottom-item-icon-online'
+                  "
+                />
+                <div class="item-bottom-item-text">制冷</div>
+              </div>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              :open-delay="500"
+              effect="dark"
+              content="风机状态"
+              placement="bottom-end"
+            >
+              <div
+                class="item-bottom-item"
+                @click.stop="
+                  () => $emit('watchHistory', item.state3.id, item.mtid)
+                "
+                v-if="item.state3"
+              >
+                <div
+                  class="item-bottom-item-icon item-bottom-item-icon-online"
+                  :class="
+                    item.state3.val === '关'
+                      ? 'item-bottom-item-icon-offline'
+                      : 'item-bottom-item-icon-online'
+                  "
+                />
+                <div class="item-bottom-item-text">风机</div>
+              </div>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              :open-delay="500"
+              effect="dark"
+              content="除霜状态"
+              placement="bottom-end"
+            >
+              <div
+                class="item-bottom-item"
+                @click.stop="
+                  () => $emit('watchHistory', item.state2.id, item.mtid)
+                "
+                v-if="item.state2"
+              >
+                <div
+                  class="item-bottom-item-icon item-bottom-item-icon-online"
+                  :class="
+                    item.state2.val === '关'
+                      ? 'item-bottom-item-icon-offline'
+                      : 'item-bottom-item-icon-online'
+                  "
+                />
+                <div class="item-bottom-item-text">化霜</div>
+              </div>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              :open-delay="500"
+              effect="dark"
+              content="库门状态"
+              placement="bottom-end"
+            >
+              <div
+                class="item-bottom-item"
+                @click.stop="
+                  () => $emit('watchHistory', item.state4.id, item.mtid)
+                "
+                v-if="item.state4"
+              >
+                <div
+                  class="item-bottom-item-icon item-bottom-item-icon-online"
+                  :class="
+                    item.state4.val === '关'
+                      ? 'item-bottom-item-icon-offline'
+                      : 'item-bottom-item-icon-online'
+                  "
+                />
+                <div class="item-bottom-item-text">库门</div>
+              </div>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              :open-delay="500"
+              effect="dark"
+              content="监控视频"
+              placement="bottom-end"
+            >
+              <div class="item-bottom-item" v-if="item.isMonitor">
+                <div
+                  class="item-bottom-item-icon item-bottom-item-icon-online"
+                  :class="
+                    !item.monitorOnline === '关'
+                      ? 'item-bottom-item-icon-offline'
+                      : 'item-bottom-item-icon-online'
+                  "
+                />
+                <div class="item-bottom-item-text">监控</div>
+              </div>
+            </el-tooltip>
           </div>
         </div>
-        <el-row class="item-center" :gutter="24">
-          <el-col :span="12">吸气压力：0.8bar</el-col>
-          <el-col :span="12">排气压力：12.6bar</el-col>
-        </el-row>
-        <div class="item-bottom">
-          <div class="item-bottom-item">
-            <div class="item-bottom-item-icon item-bottom-item-icon-online" />
-            <div class="item-bottom-item-text">液位报警</div>
+        <!--        报警-->
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="报警原因"
+          placement="top"
+        >
+          <div slot="content">
+            <div
+              v-for="(alarm, alarmIndex) in item.ModelTreeAlarmList"
+              :key="alarmIndex"
+            >
+              {{
+                `${alarm.PointName}，${alarm.DATA_NAME}，${alarm.ALARM_SETTING}`
+              }}
+            </div>
           </div>
-          <div class="item-bottom-item">
-            <div class="item-bottom-item-icon item-bottom-item-icon-offline" />
-            <div class="item-bottom-item-text">总低压报警</div>
+          <div v-if="item.modelConnectStatus === 3">
+            <div class="item-top">
+              <div class="item-title">
+                {{ item.mname }}
+              </div>
+              <div class="item-value" v-if="item.num1">
+                {{
+                  item.num1 && item.modelConnectStatus !== 1
+                    ? item.num1.val + '℃'
+                    : '--℃'
+                }}
+              </div>
+              <div v-else-if="item.num2">
+                {{
+                  item.num2 && item.modelConnectStatus !== 1
+                    ? item.num2.val + '%'
+                    : '--%'
+                }}
+              </div>
+              <div v-else></div>
+            </div>
+            <!--          卡片模式2/3-->
+            <el-row
+              class="item-center"
+              :gutter="24"
+              v-if="!SMALL_TYPE1.includes(item.SmallTypeId) && item.PointList"
+            >
+              <el-col
+                :span="12"
+                v-for="(point, opintIndex) in item.PointList.length > 3
+                  ? item.PointList.slice(0, 4)
+                  : item.PointList"
+                :key="opintIndex"
+                @click.stop="
+                  () => $emit('watchHistory', point.point, item.mtid)
+                "
+              >
+                {{ point.pname }}：{{ point.valuename }}
+              </el-col>
+            </el-row>
+            <div
+              class="item-bottom"
+              v-if="SMALL_TYPE1.includes(item.SmallTypeId)"
+            >
+              <el-tooltip
+                class="item"
+                :open-delay="500"
+                effect="dark"
+                content="制冷状态"
+                placement="bottom-end"
+              >
+                <div
+                  class="item-bottom-item"
+                  @click.stop="
+                    () => $emit('watchHistory', item.state1.id, item.mtid)
+                  "
+                  v-if="item.state1"
+                >
+                  <div
+                    class="item-bottom-item-icon item-bottom-item-icon-online"
+                    :class="
+                      item.state1.val === 0
+                        ? 'item-bottom-item-icon-offline'
+                        : 'item-bottom-item-icon-online'
+                    "
+                  />
+                  <div class="item-bottom-item-text">制冷</div>
+                </div>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                :open-delay="500"
+                effect="dark"
+                content="风机状态"
+                placement="bottom-end"
+              >
+                <div
+                  class="item-bottom-item"
+                  @click.stop="
+                    () => $emit('watchHistory', item.state3.id, item.mtid)
+                  "
+                  v-if="item.state3"
+                >
+                  <div
+                    class="item-bottom-item-icon item-bottom-item-icon-online"
+                    :class="
+                      item.state3.val === '关'
+                        ? 'item-bottom-item-icon-offline'
+                        : 'item-bottom-item-icon-online'
+                    "
+                  />
+                  <div class="item-bottom-item-text">风机</div>
+                </div>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                :open-delay="500"
+                effect="dark"
+                content="除霜状态"
+                placement="bottom-end"
+              >
+                <div
+                  class="item-bottom-item"
+                  @click.stop="
+                    () => $emit('watchHistory', item.state2.id, item.mtid)
+                  "
+                  v-if="item.state2"
+                >
+                  <div
+                    class="item-bottom-item-icon item-bottom-item-icon-online"
+                    :class="
+                      item.state2.val === '关'
+                        ? 'item-bottom-item-icon-offline'
+                        : 'item-bottom-item-icon-online'
+                    "
+                  />
+                  <div class="item-bottom-item-text">化霜</div>
+                </div>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                :open-delay="500"
+                effect="dark"
+                content="库门状态"
+                placement="bottom-end"
+              >
+                <div
+                  class="item-bottom-item"
+                  @click.stop="
+                    () => $emit('watchHistory', item.state4.id, item.mtid)
+                  "
+                  v-if="item.state4"
+                >
+                  <div
+                    class="item-bottom-item-icon item-bottom-item-icon-online"
+                    :class="
+                      item.state4.val === '关'
+                        ? 'item-bottom-item-icon-offline'
+                        : 'item-bottom-item-icon-online'
+                    "
+                  />
+                  <div class="item-bottom-item-text">库门</div>
+                </div>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                :open-delay="500"
+                effect="dark"
+                content="监控视频"
+                placement="bottom-end"
+              >
+                <div class="item-bottom-item" v-if="item.isMonitor">
+                  <div
+                    class="item-bottom-item-icon item-bottom-item-icon-online"
+                    :class="
+                      !item.monitorOnline === '关'
+                        ? 'item-bottom-item-icon-offline'
+                        : 'item-bottom-item-icon-online'
+                    "
+                  />
+                  <div class="item-bottom-item-text">监控</div>
+                </div>
+              </el-tooltip>
+            </div>
           </div>
-        </div>
+        </el-tooltip>
       </div>
-      <!--      <div-->
-      <!--        v-for="(item, index) in tableData"-->
-      <!--        :key="index"-->
-      <!--        class="list-item"-->
-      <!--        :class="-->
-      <!--          item.modelConnectStatus === 1-->
-      <!--            ? 'offline-item'-->
-      <!--            : item.modelConnectStatus === 3-->
-      <!--            ? 'alarm-item'-->
-      <!--            : 'online-item'-->
-      <!--        "-->
-      <!--      >-->
-      <!--在线、离线-->
-      <!--        <div v-if="item.modelConnectStatus !== 3">-->
-      <!--          <div class="item-top">-->
-      <!--            <div class="item-title">-->
-      <!--              {{ item.mname }}-->
-      <!--            </div>-->
-      <!--            <div class="item-value" v-if="item.num2">-->
-      <!--              item.num2 && item.modelConnectStatus !== 1 ? item.num2.val : '&#45;&#45;'-->
-      <!--            </div>-->
-      <!--            <div v-else></div>-->
-      <!--          </div>-->
-      <!--          <el-row class="item-center" :gutter="24" v-if="!SMALL_TYPE1.includes(item.SmallTypeId)">-->
-      <!--            <el-col :span="12">吸气压力：0.8bar</el-col>-->
-      <!--            <el-col :span="12">排气压力：12.6bar</el-col>-->
-      <!--          </el-row>-->
-      <!--          <div class="item-bottom">-->
-      <!--            <div class="item-bottom-item">-->
-      <!--              <div class="item-bottom-item-icon item-bottom-item-icon-online" />-->
-      <!--              <div class="item-bottom-item-text">液位报警</div>-->
-      <!--            </div>-->
-      <!--            <div class="item-bottom-item">-->
-      <!--              <div-->
-      <!--                class="item-bottom-item-icon item-bottom-item-icon-offline"-->
-      <!--              />-->
-      <!--              <div class="item-bottom-item-text">总低压报警</div>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--        报警-->
-      <!--        <el-tooltip-->
-      <!--          v-else-->
-      <!--          class="item"-->
-      <!--          effect="dark"-->
-      <!--          content="报警原因"-->
-      <!--          placement="top"-->
-      <!--        >-->
-      <!--          <div slot="content">-->
-      <!--            <div v-for="(item, index) in data.ModelTreeAlarmList" :key="index">-->
-      <!--              {{-->
-      <!--                `${item.PointName}，${item.DATA_NAME}，${item.ALARM_SETTING}`-->
-      <!--              }}-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--          <div class="item-top">-->
-      <!--            <div class="item-title">-->
-      <!--              CLT10.1双面岛柜(无盖）P-->
-      <!--            </div>-->
-      <!--            <div class="item-value" v-if="item.num2">-->
-      <!--              item.num2 && item.modelConnectStatus !== 1 ? item.num2.val : '&#45;&#45;'-->
-      <!--            </div>-->
-      <!--            <div v-else></div>-->
-      <!--          </div>-->
-      <!--          <el-row class="item-center" :gutter="24">-->
-      <!--            <el-col :span="12">吸气压力：0.8bar</el-col>-->
-      <!--            <el-col :span="12">排气压力：12.6bar</el-col>-->
-      <!--          </el-row>-->
-      <!--          <div class="item-bottom">-->
-      <!--            <div class="item-bottom-item">-->
-      <!--              <div class="item-bottom-item-icon item-bottom-item-icon-online" />-->
-      <!--              <div class="item-bottom-item-text">液位报警</div>-->
-      <!--            </div>-->
-      <!--            <div class="item-bottom-item">-->
-      <!--              <div-->
-      <!--                class="item-bottom-item-icon item-bottom-item-icon-offline"-->
-      <!--              />-->
-      <!--              <div class="item-bottom-item-text">总低压报警</div>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--        </el-tooltip>-->
-      <!--      </div>-->
     </div>
   </el-card>
 </template>
@@ -164,15 +459,25 @@ import debounce from 'lodash/debounce'
 import { checkPermission } from '@/utils/permissions'
 import { SMALL_TYPE1, BIG_TYPE1 } from '@/views/monitor/type'
 import { queryDeviceInfo } from '@/api/model'
+import { getModelTreePage } from '@/api/model_new'
+import { setModelTreeAsterisk, cancelModelTreeAsterisk } from '@/api/modelTree'
 
 export default {
   data() {
     return {
       tableLoading: false,
       isNoData: false,
-      tableData: [1, 2, 3, 4, 5, 6, 7, 8],
+      tableData: [],
       chooseLoading: false,
-      choosePointIdList: []
+      choosePointIdList: [],
+      oldChoosePointIdList: [],
+      filterList: [],
+      List: [],
+      filterForm: {
+        text: ''
+      },
+      BIG_TYPE1,
+      SMALL_TYPE1
     }
   },
   computed: {
@@ -192,10 +497,21 @@ export default {
       return this.$store.state.app.userInfo.uid
     }
   },
+  watch: {
+    'filterForm.text'() {
+      this.filterListFun()
+    }
+  },
   created() {
-    // this.fetchTableData()
+    this.fetchTableData()
+    this.getAlldeviceList()
   },
   methods: {
+    //点击下拉菜单标题栏
+    handleDropTitleItem(index) {
+      this.filterList[index].show = !this.filterList[index].show
+    },
+    //校验权限
     checkJumpRoutingPermission(routerParmas = {}, permission = []) {
       if (checkPermission(permission)) {
         this.$router.push(routerParmas)
@@ -203,36 +519,131 @@ export default {
         this.$message.error('当前账号暂无相关权限,请联系管理员')
       }
     },
-    //选择当个点位显示
-    handleCheckedChange() {
-      this.editDefaultPoint()
+    //编辑点位
+    handleCheckedChange(v) {
+      this.List.map(item => {
+        for (let i = 0; i < item.data.length; i++) {
+          if (!v.includes(item.data[i].ModelTreeId) && v.length === 10) {
+            item.data[i].disabled = true
+          } else {
+            item.data[i].disabled = false
+          }
+        }
+      })
+      this.List = [...this.List]
+      this.filterListFun()
+      let modelTreeIdList = this.oldChoosePointIdList.filter(
+        item => !v.includes(item)
+      )
+      if (modelTreeIdList.length) {
+        //取消星标
+        cancelModelTreeAsterisk(modelTreeIdList)
+          .then(res => {
+            if (res.data.Code === 200 && res.data.Data) {
+              this.setAsterisk()
+            } else {
+              this.$message.error('调整失败')
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            this.$message.error('调整失败')
+          })
+      } else {
+        this.setAsterisk()
+      }
+    },
+    //设置星标设备
+    setAsterisk() {
+      setModelTreeAsterisk(this.choosePointIdList)
+        .then(res => {
+          if (res.data.Code === 200 && res.data.Data) {
+            this.$message.success('调整成功')
+            this.fetchTableData()
+          } else {
+            this.$message.error('调整失败')
+          }
+        })
+        .catch(err => {
+          console.error(err)
+          this.$message.error('调整失败')
+        })
     },
     //选择验证
-    checkBoxReg() {},
-    //设置显示的点位
-    editDefaultPoint(type = true) {
-      // this.chooseLoading = true
-      // editModelTreeShowPoint({
-      //   modelTreeId: this.$route.query.mtid - 0,
-      //   pointIdList: this.choosePointIdList
-      // })
-      //     .then(res => {
-      //       if (!type) {
-      //         return
-      //       } else if (res.data.Code === 200 && res.data.Data) {
-      //         this.$message.success('调整显示点位成功')
-      //       } else {
-      //         this.$message.error('调整显示点位失败')
-      //       }
-      //     })
-      //     .catch(err => {
-      //       console.error(err)
-      //       this.$message.error('调整显示点位失败')
-      //     })
-      //     .finally(() => {
-      //       this.checkBoxReg()
-      //       this.chooseLoading = false
-      //     })
+    getAlldeviceList() {
+      this.filterForm.text = ''
+      this.ModelTreeIdList = []
+      getModelTreePage({
+        ProjectId: this.projectId,
+        PageIndex: 1,
+        PageSize: 9999
+      })
+        .then(res => {
+          if (res.data.Code === 200) {
+            let List = []
+            let data = res.data.Data.Data
+            data.map(item => {
+              let flag = false
+              for (let i = 0; i < List.length; i++) {
+                if (List[i].SmallTypeId === item.SmallTypeId) {
+                  List[i].data.push(item)
+                  flag = true
+                  break
+                }
+              }
+              if (!flag) {
+                List.push({
+                  SmallTypeId: item.SmallTypeId,
+                  SmallTypeName: item.SmallTypeName,
+                  level: 0,
+                  show: false,
+                  data: [item]
+                })
+              }
+            })
+            this.filterList = List
+            this.List = List
+          } else {
+            this.filterList = []
+            this.List = []
+          }
+        })
+        .catch(err => {
+          console.error(err)
+          this.filterList = []
+          this.List = []
+        })
+    },
+    //筛选过滤
+    filterListFun() {
+      let filterList = []
+      if (this.filterForm.text) {
+        let List = JSON.parse(JSON.stringify(this.List))
+        filterList = List.map(item => {
+          item.show = true
+          if (
+            item.SmallTypeName &&
+            item.SmallTypeName.indexOf &&
+            item.SmallTypeName.indexOf(this.filterForm.text) >= 0
+          ) {
+            return item
+          } else {
+            for (let i = 0; i < item.data.length; i++) {
+              if (
+                item.data[i].ModelTreeName &&
+                item.data[i].ModelTreeName.indexOf &&
+                item.data[i].ModelTreeName.indexOf(this.filterForm.text) >= 0
+              ) {
+                item.data = [item.data[i]]
+                return item
+              }
+            }
+          }
+        })
+      } else {
+        filterList = this.List
+      }
+      this.filterList = filterList.filter(item => item)
     },
     /**
      * 获取表格数据
@@ -253,6 +664,10 @@ export default {
         })
           .then(res => {
             if (res.data.Code === 200) {
+              this.choosePointIdList = res.data.Data.Data.map(item => item.mtid)
+              this.oldChoosePointIdList = res.data.Data.Data.map(
+                item => item.mtid
+              )
               let data = res.data.Data.Data
               data.forEach(item1 => {
                 if (SMALL_TYPE1.includes(item1.SmallTypeId)) {
@@ -307,14 +722,14 @@ export default {
                     })
                 }
               })
-
-              this.cardList = data
+              this.tableData = data
             } else {
-              this.cardList = []
+              this.tableData = []
             }
           })
           .catch(err => {
             console.error(err)
+            this.tableData = []
           })
           .finally(() => {
             this.tableLoading = false
@@ -406,7 +821,7 @@ export default {
     line-height: 24px;
   }
   .no-data {
-    margin-top: 200px;
+    margin-top: 150px;
     text-align: center;
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -422,6 +837,33 @@ export default {
     height: 420px;
     overflow-y: auto;
     padding-top: 20px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
+}
+.card-device-dropdown-box {
+  max-height: 400px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  .el-checkbox {
+    display: flex;
+    align-items: center;
+    height: 36px;
+  }
+}
+.card-device-dropdown-item-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-device-dropdown-item-box {
+  max-width: 150px;
+}
+.card-device-dropdown-item-text {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

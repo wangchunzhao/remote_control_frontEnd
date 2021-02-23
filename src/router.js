@@ -1326,13 +1326,13 @@ export const systemManageRouter = [
   assetManagement,
   maintenanceManage,
   applicationManage,
-  deviceManage,
   logManage,
   { path: '*', redirect: '/403/index', hidden: true }
 ]
 
 // 设备连接平台的路由
 export const deviceConnectRouter = [
+  deviceManage,
   alarmConfig,
   terminalManage,
   { path: '*', redirect: '/403/index', hidden: true }

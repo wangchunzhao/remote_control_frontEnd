@@ -310,6 +310,7 @@ export const queryPoint = ({
 
 // #region 获取参数点位卡片数据 start
 export const queryDeviceInfo = ({
+  UId,
   ProjectId,
   BigTypeId,
   SmallTypeId,
@@ -322,6 +323,7 @@ export const queryDeviceInfo = ({
   return fetch.post(
     BASE_URI + `/api/Model/QueryDeviceInfo`,
     {
+      UId,
       ProjectId,
       BigTypeId,
       SmallTypeId,
