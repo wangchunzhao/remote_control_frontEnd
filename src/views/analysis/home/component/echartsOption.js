@@ -52,7 +52,7 @@ export const totalNumStoreEchartOptions = {
       // 并且是对此坐标系中所有 'bar' 系列生效。
       barWidth: '100%',
       data: [1],
-      color: '#F0F2F5', // 柱条颜色
+      color: '#F0F2F5' // 柱条颜色
     }
   ]
 }
@@ -98,7 +98,7 @@ export const totalNumDeviceEchartOptions = {
       type: 'bar', // 柱状、条形图
       barWidth: '100%', // 柱条的宽度,默认自适应
       data: [0], // 系列中数据内容数组
-      color:'#14D27C',
+      color: '#14D27C',
       zlevel: 1 // 柱状图所有图形的 zlevel 值,
       // zlevel 大的 Canvas 会放在 zlevel 小的 Canvas 的上面
     },
@@ -111,7 +111,7 @@ export const totalNumDeviceEchartOptions = {
       // 并且是对此坐标系中所有 'bar' 系列生效。
       barWidth: '100%',
       data: [1],
-      color: '#F0F2F5', // 柱条颜色
+      color: '#F0F2F5' // 柱条颜色
     }
   ]
 }

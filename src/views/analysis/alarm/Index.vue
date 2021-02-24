@@ -1,6 +1,6 @@
 <template>
   <div class="alarm-analysis">
-    <div class="pdg" style="padding: 0 25px;">
+    <div class="pdg" style="padding: 25px;">
       <div class="row1">
         <div class="line-chart">
           <el-card shadow="never">

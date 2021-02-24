@@ -32,7 +32,11 @@
             <div class="part-item">
               <div class="part-top">
                 <div class="part-title">总设备数</div>
-                <el-button type="text" class="part-entry">
+                <el-button
+                  type="text"
+                  class="part-entry"
+                  @click.native="$router.push({ path: '/analysis/device' })"
+                >
                   跨项目对比
                   <i class="el-icon-arrow-right"></i>
                 </el-button>
@@ -649,7 +653,7 @@ export default {
     this.renderChart2_1()
     this.renderChartStoreElectricity()
     this.renderChart2_2()
-    this.renderChart3_1()
+    // this.renderChart3_1()
     this.renderChart3_2()
     this.renderChart4_1()
     this.renderChart4_2()
