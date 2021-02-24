@@ -1,328 +1,327 @@
 <template>
   <div class="analysis-home content-box">
-    <el-row type="flex" :gutter="25" style="flex-wrap: wrap;">
-      <el-col :span="12">
-        <el-card shadow="never">
-          <div slot="header" class="clearfix">
-            <span class="card-title">昨日概览</span>
-            <span class="light-font" style="float: right;">
-              数据更新至{{
-                dayjs()
-                  .subtract(1, 'day')
-                  .format('YYYY-MM-DD')
-              }}
-            </span>
-          </div>
-          <div
-            v-loading="overviewLoading"
-            style="height: 300px;padding: 0 5% 0 10%;"
-          >
-            <el-row style="padding-top: 25px;">
-              <el-col :span="6">
-                <span class="light-font">总门店数</span>
-                <div class="bold-font" style="padding: 25px 0 40px 0">
-                  {{ overviewData.ProjectNum }}
+    <div>
+      <div class="part-title-box">
+        <div class="part-big-title">昨日概览</div>
+        <div class="part-big-time">
+          数据更新至{{
+            dayjs()
+              .subtract(1, 'day')
+              .format('YYYY-MM-DD')
+          }}
+        </div>
+      </div>
+      <el-row type="flex" :gutter="17">
+        <el-col :span="5">
+          <el-card shadow="never">
+            <div class="part-item">
+              <div class="part-top">
+                <div class="part-title">总门店数</div>
+              </div>
+              <div class="part-center">
+                <div class="part-value">{{ overviewData.ProjectNum }}</div>
+              </div>
+              <div class="part-step">
+                <div id="totalNumStoreEchart" class="part-value-step"></div>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="5">
+          <el-card shadow="never">
+            <div class="part-item">
+              <div class="part-top">
+                <div class="part-title">总设备数</div>
+                <el-button type="text" class="part-entry">
+                  跨项目对比
+                  <i class="el-icon-arrow-right"></i>
+                </el-button>
+              </div>
+              <div class="part-center">
+                <div class="part-value">{{ overviewData.DeviceNum }}</div>
+              </div>
+              <div class="part-step">
+                <div id="totalNumDeviceEchart" class="part-value-step"></div>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="4">
+          <el-card shadow="never">
+            <div class="part-item">
+              <div class="part-top">
+                <div class="part-title">总报警数</div>
+              </div>
+              <div class="part-center">
+                <div class="part-value">{{ overviewData.AlarmNum }}</div>
+              </div>
+              <div class="part-line"></div>
+              <div class="part-bottom">
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">日</div>
+                  <div
+                    :class="[
+                      overviewData.DayAlarmIncrease > 0
+                        ? 'red-font'
+                        : overviewData.DayAlarmIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
+                    ]"
+                  >
+                    <i
+                      v-if="overviewData.DayAlarmIncrease !== 0"
+                      :class="[
+                        overviewData.DayAlarmIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.DayAlarmIncrease }}%
+                  </div>
                 </div>
-              </el-col>
-              <el-col :span="6">
-                <span class="light-font">总设备数</span>
-                <div class="bold-font" style="padding: 25px 0 40px 0">
-                  {{ overviewData.DeviceNum }}
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">周</div>
+                  <div
+                    :class="[
+                      overviewData.WeekAlarmIncrease > 0
+                        ? 'red-font'
+                        : overviewData.WeekAlarmIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
+                    ]"
+                  >
+                    <i
+                      v-if="overviewData.WeekAlarmIncrease !== 0"
+                      :class="[
+                        overviewData.WeekAlarmIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.WeekAlarmIncrease }}%
+                  </div>
                 </div>
-              </el-col>
-              <el-col :span="12" />
-            </el-row>
-            <el-row>
-              <el-col :span="6">
-                <span class="light-font">总报警数</span>
-                <div style="line-height: 60px;">
-                  <span class="bold-font">{{ overviewData.AlarmNum }}</span>
-                  <span class="light-font">条</span>
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">月</div>
+                  <div
+                    :class="[
+                      overviewData.MonthAlarmIncrease > 0
+                        ? 'red-font'
+                        : overviewData.MonthAlarmIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
+                    ]"
+                  >
+                    <i
+                      v-if="overviewData.MonthAlarmIncrease !== 0"
+                      :class="[
+                        overviewData.MonthAlarmIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.MonthAlarmIncrease }}%
+                  </div>
                 </div>
-              </el-col>
-              <el-col :span="6">
-                <span class="light-font">总能耗</span>
-                <div style="line-height: 60px;">
-                  <span class="bold-font">{{
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="5">
+          <el-card shadow="never">
+            <div class="part-item">
+              <div class="part-top">
+                <div class="part-title">总能耗</div>
+                <el-button type="text" class="part-entry">
+                  跨项目对比
+                  <i class="el-icon-arrow-right"></i>
+                </el-button>
+              </div>
+              <div class="part-center">
+                <div class="part-value">
+                  {{
                     overviewData.EnergySum !== undefined
                       ? (overviewData.EnergySum / 10000).toFixed(1)
                       : ''
-                  }}</span>
-                  <span class="light-font">万度</span>
+                  }}
                 </div>
-              </el-col>
-              <el-col :span="6">
-                <span class="light-font">总维修数</span>
-                <div style="line-height: 60px;">
-                  <span class="bold-font">{{ overviewData.RepairSum }}</span>
-                  <span class="light-font">条</span>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <span class="light-font">总客流</span>
-                <div style="line-height: 60px;">
-                  <span class="bold-font">{{
-                    overviewData.PassengerSum !== undefined
-                      ? (overviewData.PassengerSum / 10000).toFixed(1)
-                      : ''
-                  }}</span>
-                  <span class="light-font">万人</span>
-                </div>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="6">
-                <div
-                  :class="[
-                    overviewData.DayAlarmIncrease > 0
-                      ? 'red-font'
-                      : overviewData.DayAlarmIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>日：{{ overviewData.DayAlarmIncrease }}%</span>
-                  <i
-                    v-if="overviewData.DayAlarmIncrease !== 0"
-                    :class="[
-                      overviewData.DayAlarmIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
-                    ]"
-                  />
-                </div>
-                <div
-                  :class="[
-                    overviewData.WeekAlarmIncrease > 0
-                      ? 'red-font'
-                      : overviewData.WeekAlarmIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>周：{{ overviewData.WeekAlarmIncrease }}%</span>
-                  <i
-                    v-if="overviewData.WeekAlarmIncrease !== 0"
-                    :class="[
-                      overviewData.WeekAlarmIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
-                    ]"
-                  />
-                </div>
-                <div
-                  :class="[
-                    overviewData.MonthAlarmIncrease > 0
-                      ? 'red-font'
-                      : overviewData.MonthAlarmIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>月：{{ overviewData.MonthAlarmIncrease }}%</span>
-                  <i
-                    v-if="overviewData.MonthAlarmIncrease !== 0"
-                    :class="[
-                      overviewData.MonthAlarmIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
-                    ]"
-                  />
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <div
-                  :class="[
-                    overviewData.DayEnergyIncrease > 0
-                      ? 'red-font'
-                      : overviewData.DayEnergyIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>日：{{ overviewData.DayEnergyIncrease }}%</span>
-                  <i
-                    v-if="overviewData.DayEnergyIncrease !== 0"
+                <div class="part-unit">万度</div>
+              </div>
+              <div class="part-line"></div>
+              <div class="part-bottom">
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">日</div>
+                  <div
                     :class="[
                       overviewData.DayEnergyIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
+                        ? 'red-font'
+                        : overviewData.DayEnergyIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
                     ]"
-                  />
+                  >
+                    <i
+                      v-if="overviewData.DayEnergyIncrease !== 0"
+                      :class="[
+                        overviewData.DayEnergyIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.DayEnergyIncrease }}%
+                  </div>
                 </div>
-                <div
-                  :class="[
-                    overviewData.WeekEnergyIncrease > 0
-                      ? 'red-font'
-                      : overviewData.WeekEnergyIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>周：{{ overviewData.WeekEnergyIncrease }}%</span>
-                  <i
-                    v-if="overviewData.WeekEnergyIncrease !== 0"
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">周</div>
+                  <div
                     :class="[
                       overviewData.WeekEnergyIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
+                        ? 'red-font'
+                        : overviewData.WeekEnergyIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
                     ]"
-                  />
+                  >
+                    <i
+                      v-if="overviewData.WeekEnergyIncrease !== 0"
+                      :class="[
+                        overviewData.WeekEnergyIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.WeekEnergyIncrease }}%
+                  </div>
                 </div>
-                <div
-                  :class="[
-                    overviewData.MonthEnergyIncrease > 0
-                      ? 'red-font'
-                      : overviewData.MonthEnergyIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>月：{{ overviewData.MonthEnergyIncrease }}%</span>
-                  <i
-                    v-if="overviewData.MonthEnergyIncrease !== 0"
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">月</div>
+                  <div
                     :class="[
                       overviewData.MonthEnergyIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
+                        ? 'red-font'
+                        : overviewData.MonthEnergyIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
                     ]"
-                  />
+                  >
+                    <i
+                      v-if="overviewData.MonthEnergyIncrease !== 0"
+                      :class="[
+                        overviewData.MonthEnergyIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.MonthAlarmIncrease }}%
+                  </div>
                 </div>
-              </el-col>
-              <el-col :span="6">
-                <div
-                  :class="[
-                    overviewData.DayRepairIncrease > 0
-                      ? 'red-font'
-                      : overviewData.DayRepairIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>日：{{ overviewData.DayRepairIncrease }}%</span>
-                  <i
-                    v-if="overviewData.DayRepairIncrease !== 0"
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="5">
+          <el-card shadow="never">
+            <div class="part-item">
+              <div class="part-top">
+                <div class="part-title">总维修数</div>
+              </div>
+              <div class="part-center">
+                <div class="part-value">{{ overviewData.RepairSum }}</div>
+              </div>
+              <div class="part-line"></div>
+              <div class="part-bottom">
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">日</div>
+                  <div
                     :class="[
                       overviewData.DayRepairIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
+                        ? 'red-font'
+                        : overviewData.DayRepairIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
                     ]"
-                  />
+                  >
+                    <i
+                      v-if="overviewData.DayRepairIncrease !== 0"
+                      :class="[
+                        overviewData.DayRepairIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.DayRepairIncrease }}%
+                  </div>
                 </div>
-                <div
-                  :class="[
-                    overviewData.WeekRepairIncrease > 0
-                      ? 'red-font'
-                      : overviewData.WeekRepairIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>周：{{ overviewData.WeekRepairIncrease }}%</span>
-                  <i
-                    v-if="overviewData.WeekRepairIncrease !== 0"
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">周</div>
+                  <div
                     :class="[
                       overviewData.WeekRepairIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
+                        ? 'red-font'
+                        : overviewData.WeekRepairIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
                     ]"
-                  />
+                  >
+                    <i
+                      v-if="overviewData.WeekRepairIncrease !== 0"
+                      :class="[
+                        overviewData.WeekRepairIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.WeekRepairIncrease }}%
+                  </div>
                 </div>
-                <div
-                  :class="[
-                    overviewData.MonthRepairIncrease > 0
-                      ? 'red-font'
-                      : overviewData.MonthRepairIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>月：{{ overviewData.MonthRepairIncrease }}%</span>
-                  <i
-                    v-if="overviewData.MonthRepairIncrease !== 0"
+                <div class="part-bottom-item">
+                  <div class="part-bottom-item-title">月</div>
+                  <div
                     :class="[
                       overviewData.MonthRepairIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
+                        ? 'red-font'
+                        : overviewData.MonthRepairIncrease < 0
+                        ? 'green-font'
+                        : 'light-font'
                     ]"
-                  />
+                  >
+                    <i
+                      v-if="overviewData.MonthRepairIncrease !== 0"
+                      :class="[
+                        overviewData.MonthRepairIncrease > 0
+                          ? 'el-icon-caret-top'
+                          : 'el-icon-caret-bottom'
+                      ]"
+                    />
+                  </div>
+                  <div class="part-bottom-item-value">
+                    {{ overviewData.MonthRepairIncrease }}%
+                  </div>
                 </div>
-              </el-col>
-              <el-col :span="6">
-                <div
-                  :class="[
-                    overviewData.DayPassengerIncrease > 0
-                      ? 'red-font'
-                      : overviewData.DayPassengerIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>日：{{ overviewData.DayPassengerIncrease }}%</span>
-                  <i
-                    v-if="overviewData.DayPassengerIncrease !== 0"
-                    :class="[
-                      overviewData.DayPassengerIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
-                    ]"
-                  />
-                </div>
-                <div
-                  :class="[
-                    overviewData.WeekPassengerIncrease > 0
-                      ? 'red-font'
-                      : overviewData.WeekPassengerIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>周：{{ overviewData.WeekPassengerIncrease }}%</span>
-                  <i
-                    v-if="overviewData.WeekPassengerIncrease !== 0"
-                    :class="[
-                      overviewData.WeekPassengerIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
-                    ]"
-                  />
-                </div>
-                <div
-                  :class="[
-                    overviewData.MonthPassengerIncrease > 0
-                      ? 'red-font'
-                      : overviewData.MonthPassengerIncrease < 0
-                      ? 'green-font'
-                      : 'light-font'
-                  ]"
-                  style="line-height: 25px;"
-                >
-                  <span>月：{{ overviewData.MonthPassengerIncrease }}%</span>
-                  <i
-                    v-if="overviewData.MonthPassengerIncrease !== 0"
-                    :class="[
-                      overviewData.MonthPassengerIncrease > 0
-                        ? 'el-icon-caret-top'
-                        : 'el-icon-caret-bottom'
-                    ]"
-                  />
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-        </el-card>
-      </el-col>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+
+    <el-row type="flex" :gutter="25" style="flex-wrap: wrap;">
       <el-col :span="12">
         <el-card shadow="never">
           <div slot="header" class="clearfix">
@@ -528,32 +527,6 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="12">
-        <el-card shadow="never">
-          <div slot="header" class="clearfix">
-            <span class="card-title">客流趋势</span>
-            <el-select
-              v-model="chart3_1Select"
-              size="mini"
-              style="width: 80px;margin-left: 15px;"
-              @change="renderChart3_1"
-            >
-              <el-option label="昨日" value="lastDay" />
-              <el-option label="上周" value="lastWeek" />
-              <el-option label="上月" value="lastMonth" />
-            </el-select>
-          </div>
-          <div>
-            <line-chart
-              :data="chart3_1Data"
-              :date-type="chart3_1Select"
-              :loading="chart3_1Loading"
-              dom-id="chart3_1"
-            />
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="12"></el-col>
     </el-row>
   </div>
 </template>
@@ -578,6 +551,10 @@ import {
 } from '@/api/overviewStatistical'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn' // load on demand
+import {
+  totalNumDeviceEchartOptions,
+  totalNumStoreEchartOptions
+} from './component/echartsOption'
 dayjs.locale('zh-cn')
 
 const timeMap = {
@@ -619,6 +596,11 @@ export default {
   },
   data() {
     return {
+      totalNumStoreEchartOptions,
+      totalNumDeviceEchartOptions,
+      totalNumStoreChart: null,
+      totalNumDeviceChart: null,
+
       overviewLoading: false,
       overviewData: {},
 
@@ -671,6 +653,12 @@ export default {
     this.renderChart3_2()
     this.renderChart4_1()
     this.renderChart4_2()
+    this.totalNumStoreChart = echarts.init(
+      document.getElementById('totalNumStoreEchart')
+    )
+    this.totalNumDeviceChart = echarts.init(
+      document.getElementById('totalNumDeviceEchart')
+    )
     this.overviewLoading = true
     getYesterDayOverview({
       industry: this.$store.state.app.company.industry,
@@ -679,13 +667,32 @@ export default {
       .then(res => {
         if (res.data.Code === 200) {
           this.overviewData = res.data.Data
+          this.totalNumStoreEchartOptions.series[0].data = [1]
+          this.totalNumStoreEchartOptions.series[1].data = [
+            this.overviewData.ProjectNum ? this.overviewData.ProjectNum : 1
+          ]
+          this.totalNumDeviceEchartOptions.series[0].data = [1]
+          this.totalNumDeviceEchartOptions.series[1].data = [
+            this.overviewData.DeviceNum ? this.overviewData.DeviceNum : 1
+          ]
+        } else {
+          this.totalNumStoreEchartOptions.series[0].data = []
+          this.totalNumStoreEchartOptions.series[1].data = [1]
+          this.totalNumDeviceEchartOptions.series[0].data = []
+          this.totalNumDeviceEchartOptions.series[1].data = [1]
         }
       })
       .catch(err => {
         console.error(err)
+        this.totalNumStoreEchartOptions.series[0].data = []
+        this.totalNumStoreEchartOptions.series[1].data = [1]
+        this.totalNumDeviceEchartOptions.series[0].data = []
+        this.totalNumDeviceEchartOptions.series[1].data = [1]
       })
       .finally(() => {
         this.overviewLoading = false
+        this.totalNumStoreChart.setOption(this.totalNumStoreEchartOptions)
+        this.totalNumDeviceChart.setOption(this.totalNumDeviceEchartOptions)
       })
   },
   methods: {
@@ -933,6 +940,105 @@ export default {
   }
   .green-font {
     color: rgba(47, 194, 91, 1);
+  }
+  .part-item {
+    height: 95px;
+  }
+  .part-title-box {
+    margin: 25px 0 11px 0;
+    display: flex;
+    align-items: center;
+  }
+  .part-big-title {
+    font-size: 18px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+    line-height: 25px;
+  }
+  .part-big-time {
+    margin-left: 12px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.45);
+    line-height: 20px;
+  }
+  .part-top {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .part-title {
+    flex: 1;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.45);
+    line-height: 22px;
+  }
+  .part-entry {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #1890ff;
+    line-height: 22px;
+    padding: 0;
+    span {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .part-center {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-end;
+  }
+  .part-value {
+    font-size: 30px;
+    font-family: HelveticaNeue;
+    color: rgba(0, 0, 0, 0.85);
+    line-height: 38px;
+  }
+  .part-unit {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.45);
+    line-height: 28px;
+    margin-left: 8px;
+  }
+  .part-line {
+    height: 1px;
+    background: #e8e8e8;
+    margin-bottom: 9px;
+  }
+  .part-step {
+    height: 8px;
+    background: #f0f2f5;
+    border-radius: 1px;
+    width: 100%;
+    display: flex;
+  }
+  .part-value-step {
+    flex: 1;
+    height: 8px;
+  }
+  .part-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .part-bottom-item {
+    display: flex;
+    align-items: center;
+  }
+  .part-bottom-item-title {
+    color: rgba(0, 0, 0, 0.65);
+  }
+  .part-bottom-item-value {
+    color: rgba(0, 0, 0, 0.85);
   }
 }
 </style>
