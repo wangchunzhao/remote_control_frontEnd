@@ -23,7 +23,7 @@
           <div style="font-size: 14px;color: rgba(0, 0, 0, 0.45);">
             设备数
           </div>
-          <div class="project-total">9</div>
+          <div class="project-total">{{ overview.ModelTreeTotal }}</div>
         </div>
         <div class="right-wrap-line"></div>
         <div class="right-wrap-item">
@@ -31,12 +31,9 @@
             企业内排名
           </div>
           <div class="project-total">
-            <!--            {{ ElectricOverview.Rank ? ElectricOverview.Rank : '-' }}/-->
-            1/
+            {{ overview.ProjectRank ? overview.ProjectRank : '-' }}/
             <span style="font-size: 24px;color: rgba(0, 0, 0, 0.45);"
-              >{{
-                ElectricOverview.RankTotal ? ElectricOverview.RankTotal : '-'
-              }}
+              >{{ overview.ProjectTotal ? overview.ProjectTotal : '-' }}
             </span>
           </div>
         </div>
@@ -45,14 +42,14 @@
           <div style="font-size: 14px;color: rgba(0, 0, 0, 0.45);">
             运行天数
           </div>
-          <div class="project-total">{{ projectInfo.RunDays }}</div>
+          <div class="project-total">{{ overview.RunDays }}</div>
         </div>
       </div>
     </div>
     <div class="main-content content-box">
       <el-row :gutter="16">
         <el-col :span="16">
-          <card-overview />
+          <card-overview :overview="overview" />
         </el-col>
         <el-col :span="8">
           <card-quick-entry />
@@ -95,8 +92,9 @@ import CardAlarm from './CardAlarm'
 import CardRepair from './CardRepair'
 import CardDevice from './CardDevice'
 import CardQrcode from './CardQrcode'
-import { GetElectricOverview, GetProject } from '@/api/dashboard'
 import HistoryDialog from '@/components/HistoryDialog'
+import { GetProject } from '@/api/dashboard'
+import { getProjectOverview } from '@/api/project'
 
 export default {
   components: {
@@ -116,7 +114,7 @@ export default {
         point: null,
         deviceId: 0
       },
-      ElectricOverview: {},
+      overview: {},
       projectInfo: {}
     }
   },
@@ -161,23 +159,21 @@ export default {
           this.$message.error(res.data.Message)
         }
       })
-      GetElectricOverview({
-        Type: 0,
-        IsGetRank: true,
-        DateType: 1,
-        CompanyId: this.company.id,
-        SubareaIdList: [this.project.SubareaId],
-        TimeQuantum: {
-          StartDate: this.timeForMat(1, 'YYYY-MM-DD hh:mm:ss')[0],
-          EndDate: this.timeForMat(1, 'YYYY-MM-DD hh:mm:ss')[1]
-        }
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.ElectricOverview = res.data.Data
-        } else {
-          this.$message.error(res.data.Message)
-        }
+      getProjectOverview({
+        ProjectId: this.project.id,
+        CompanyId: this.company.id
       })
+        .then(res => {
+          if (res.data.Code === 200) {
+            this.overview = res.data.Data
+          } else {
+            this.$message.error('获取项目概览失败')
+          }
+        })
+        .catch(err => {
+          console.error(err)
+          this.$message.error('获取项目概览失败')
+        })
     }
   }
 }

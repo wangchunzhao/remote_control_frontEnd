@@ -19,7 +19,7 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">168280</span>
+            <span class="focus-num">{{ overview.CurrentMonthEnergy }}</span>
             kWh
           </div>
         </div>
@@ -39,7 +39,7 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">21</span>
+            <span class="focus-num">{{ overview.CurrentMonthAlarm }}</span>
           </div>
         </div>
       </el-col>
@@ -56,7 +56,7 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">17</span>
+            <span class="focus-num">{{ overview.CurrentMonthRepair }}</span>
           </div>
         </div>
       </el-col>
@@ -72,8 +72,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">5</span>
-            / 8
+            <span class="focus-num">{{ overview.OnlineDeviceList }}</span>
+            / {{ overview.DeviceListTotal }}
           </div>
         </div>
       </el-col>
@@ -90,8 +90,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">9</span>
-            / 9
+            <span class="focus-num">{{ overview.RunModelTree }}</span>
+            / {{ overview.ModelTreeTotal }}
           </div>
         </div>
       </el-col>
@@ -116,8 +116,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">2</span>
-            / 2
+            <span class="focus-num">{{ overview.OpenAircrew }}</span>
+            / {{ overview.AircrewTotal }}
           </div>
         </div>
       </el-col>
@@ -142,8 +142,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">5</span>
-            / 5
+            <span class="focus-num">{{ overview.OpenCooler }}</span>
+            / {{ overview.CoolerTotal }}
           </div>
         </div>
       </el-col>
@@ -168,8 +168,8 @@
             </el-link>
           </div>
           <div class="bottom">
-            <span class="focus-num">2</span>
-            / 2
+            <span class="focus-num">{{ overview.OpenRefrigeratory }}</span>
+            / {{ overview.RefrigeratoryTotal }}
           </div>
         </div>
       </el-col>
@@ -178,24 +178,15 @@
 </template>
 
 <script>
-import { GetElectricOverview } from '@/api/dashboard'
 import { checkPermission } from '@/utils/permissions'
 export default {
-  data() {
-    return {
-      ElectricOverview: {}
+  props: {
+    overview: {
+      type: Object,
+      default: function() {
+        return {}
+      }
     }
-  },
-  computed: {
-    company() {
-      return this.$store.state.app.company
-    },
-    project() {
-      return this.$store.state.app.project
-    }
-  },
-  created() {
-    this.fetchTableData()
   },
   methods: {
     //校验权限
@@ -205,20 +196,6 @@ export default {
       } else {
         this.$message.error('当前账号暂无相关权限,请联系管理员')
       }
-    },
-    //获取数据
-    fetchTableData() {
-      GetElectricOverview({
-        Type: 0,
-        CompanyId: this.company.id,
-        SubareaIdList: [this.project.SubareaId]
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.ElectricOverview = res.data.Data
-        } else {
-          this.$message.error(res.data.Message)
-        }
-      })
     }
   }
 }

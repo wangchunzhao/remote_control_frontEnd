@@ -13,7 +13,7 @@
         <span class="card-value">{{ currentNum }}</span>
         kwh
       </div>
-      <div class="card-title">
+      <div class="card-title" v-if="dateType === 3">
         {{ dateType === 1 ? '今日' : '本月' }}指标消耗
         <span class="card-value">{{ currentPercent }}</span>
         %

@@ -32,6 +32,31 @@
                 ></el-input>
               </div>
             </div>
+            <div
+              v-if="filterList.length === 0"
+              class="no-data"
+              style="display: flex;flex-direction: column;align-items: center;margin: 50px 0;"
+            >
+              <img
+                style="width: 60px;"
+                src="
+          https://cdn.sinocold.net/images/empty.png"
+                alt="暂无数据"
+              />
+              <div
+                style="
+                  margin-top: 20px;
+                  text-align: center;
+                  font-size: 14px;
+                  font-family: PingFangSC-Regular, PingFang SC;
+                  font-weight: 400;
+                  color: rgba(0, 0, 0, 0.45);
+                  line-height: 22px;
+                "
+              >
+                暂无数据
+              </div>
+            </div>
             <el-checkbox-group
               v-model="choosePointIdList"
               @change="handleCheckedChange"
@@ -84,6 +109,7 @@
           alt="暂无数据"
         />
         <div>暂无数据</div>
+        <div class="no-data-remark">点击右上角「调整」添加</div>
       </div>
       <div
         v-for="(item, index) in tableData"
@@ -827,6 +853,15 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.45);
+    line-height: 22px;
+  }
+  .no-data-remark {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #1890ff;
     line-height: 22px;
   }
 }
