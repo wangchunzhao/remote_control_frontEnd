@@ -62,6 +62,7 @@ export const getVideoMonitorPage = ({
 // #region 获取设备页 start
 export const getModelTreePage = ({
   ProjectId,
+  SubareaIdList,
   BigTypeId,
   BigTypeIdList,
   SmallTypeId,
@@ -80,6 +81,7 @@ export const getModelTreePage = ({
     BASE_URI + '/api/Model/GetModelTreePage',
     {
       ProjectId,
+      SubareaIdList,
       BigTypeId,
       BigTypeIdList,
       SmallTypeId,

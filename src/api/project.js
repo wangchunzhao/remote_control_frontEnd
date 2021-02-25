@@ -23,3 +23,15 @@ export const deleteProjectAsterisk = ({ projectId }) => {
   })
 }
 // #endregion 删除星标项目 end
+
+// #region 获取项目概览 start
+export const getProjectOverview = data => {
+  return fetch.post(
+    global.HC_BASE_URI + '/api/Project/GetProjectOverview',
+    data,
+    {
+      headers: { 'Content-Type': 'application/json' }
+    }
+  )
+}
+// #endregion 获取项目概览 end

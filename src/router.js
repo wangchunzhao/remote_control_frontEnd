@@ -1251,6 +1251,12 @@ const analysis = {
       meta: { title: '统计分析' }
     },
     {
+      path: 'device',
+      component: _import('analysis/device/Index'),
+      name: 'analysisDevice',
+      meta: { showBackButton: true, title: '设备运行分析' }
+    },
+    {
       path: 'alarm',
       component: _import('analysis/alarm/Index'),
       name: 'analysisAlarm',
