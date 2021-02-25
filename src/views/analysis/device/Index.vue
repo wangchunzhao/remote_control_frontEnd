@@ -102,101 +102,12 @@
               class="thin-scroll"
             >
               <el-form-item label="日期">
-                <el-radio-group
-                  v-model="filterForm.scope"
-                  @change="scopeChange"
-                  size="small"
-                  border
-                >
-                  <el-radio-button label="day">
-                    日
-                  </el-radio-button>
-                  <!--                  <el-radio-button label="week">-->
-                  <!--                    周-->
-                  <!--                  </el-radio-button>-->
-                  <el-radio-button label="month">
-                    月
-                  </el-radio-button>
-                  <el-radio-button label="year">
-                    年
-                  </el-radio-button>
-                  <el-radio-button label="timeCustom">
-                    自定义
-                  </el-radio-button>
-                </el-radio-group>
-                <el-date-picker
-                  v-show="filterForm.scope === 'day'"
-                  v-model="filterForm.time"
-                  type="date"
-                  placeholder=""
-                  style="width: 100%;margin-top: 5px"
-                  :clearable="false"
-                  :picker-options="{
-                    disabledDate(time) {
-                      return time.getTime() > Date.now() - 3600000 * 24
-                    }
-                  }"
-                  @change="timeChange"
-                />
-                <!--                <el-date-picker-->
-                <!--                  v-show="filterForm.scope === 'week'"-->
-                <!--                  v-model="filterForm.time"-->
-                <!--                  type="week"-->
-                <!--                  format="yyyy 第 WW 周"-->
-                <!--                  placeholder=""-->
-                <!--                  :clearable="false"-->
-                <!--                  :picker-options="{-->
-                <!--                    firstDayOfWeek: 1,-->
-                <!--                    disabledDate(time) {-->
-                <!--                      return time.getTime() > Date.now() - 3600 * 1000 * 24 * 7-->
-                <!--                    }-->
-                <!--                  }"-->
-                <!--                  style="width: 100%;margin-top: 5px"-->
-                <!--                  @change="timeChange"-->
-                <!--                />-->
-                <el-date-picker
-                  v-show="filterForm.scope === 'month'"
-                  v-model="filterForm.time"
-                  type="month"
-                  placeholder=""
-                  :clearable="false"
-                  style="width: 100%;margin-top: 5px"
-                  :picker-options="{
-                    firstDayOfWeek: 1,
-                    disabledDate(time) {
-                      return (
-                        time >
-                        dayjs()
-                          .subtract(1, 'month')
-                          .startOf('month')
-                      )
-                    }
-                  }"
-                  @change="timeChange"
-                />
-                <el-date-picker
-                  v-show="filterForm.scope === 'year'"
-                  v-model="filterForm.time"
-                  type="year"
-                  placeholder=""
-                  :clearable="false"
-                  style="width: 100%;margin-top: 5px"
-                  :picker-options="{
-                    firstDayOfWeek: 1,
-                    disabledDate(time) {
-                      return time > dayjs().startOf('year')
-                    }
-                  }"
-                  @change="timeChange"
-                />
-<!--                <el-date-picker-->
-<!--                    v-show="filterForm.scope === 'timeCustom'"-->
-<!--                    v-model="dateRange"-->
-<!--                    type="daterange"-->
-<!--                    range-separator="至"-->
-<!--                    start-placeholder="开始日期"-->
-<!--                    end-placeholder="结束日期">-->
-<!--                </el-date-picker>-->
+                <CustomDatePicker
+                  :typeArr="['day', 'month', 'year', 'custom']"
+                  @timeChange="timeChange"
+                  @typeChange="scopeChange"
+                  ref="customDatePicker"
+                ></CustomDatePicker>
               </el-form-item>
               <el-form-item label="时段">
                 <el-radio-group
@@ -370,11 +281,13 @@ import {
   getElectricStatisticalDetailList
 } from '@/api/maintenanceStatistical'
 import { getModelTreePage, queryPointRead } from '@/api/model_new'
+import CustomDatePicker from '@/components/CustomDatePicker'
 
 export default {
   components: {
     LineChart,
-    Treeselect
+    Treeselect,
+    CustomDatePicker
   },
   data() {
     return {
@@ -447,6 +360,11 @@ export default {
     }
   },
   watch: {
+    dateRange(val) {
+      if (val) {
+        console.log(val, 'val')
+      }
+    },
     'filterForm.time'(time) {
       if (time) {
         switch (this.filterForm.scope) {
@@ -484,6 +402,7 @@ export default {
     }
   },
   mounted() {
+    this.$refs.customDatePicker.init('day', true)
     // 获取项目树
     getUserOwnSubareaTree({
       companyId: this.companyId
@@ -567,6 +486,7 @@ export default {
       this.filterForm.end = dayjs().format('YYYY-MM-DD')
     },
     scopeChange(val) {
+      console.log(val, 'scopeChange')
       if (val === 'day') {
         this.filterForm.time = dayjs().subtract(1, 'day')
         this.filterForm.start = dayjs()
@@ -691,8 +611,9 @@ export default {
         this.resertReviewList()
       }
     },
-    timeChange() {
-      this.renderChart()
+    timeChange(val) {
+      console.log(val, 'timeChange')
+      // this.renderChart()
     },
     typeChanage() {
       this.renderChart()
