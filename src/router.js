@@ -253,7 +253,11 @@ const energyManage = {
       path: 'preview',
       component: _import('energyManage/preview/Index'),
       name: 'energyManage_Preview',
-      meta: { title: '能耗概览', projectPermissionId: [120] }
+      meta: {
+        title: '能耗分析',
+        projectPermissionId: [120],
+        customHeader: true
+      }
     },
     {
       path: 'analyze',
@@ -1254,7 +1258,7 @@ const analysis = {
       path: 'device',
       component: _import('analysis/device/Index'),
       name: 'analysisDevice',
-      meta: { showBackButton: true, title: '设备运行分析' }
+      meta: { showBackButton: true, title: '设备运行分析', customHeader: true }
     },
     {
       path: 'alarm',

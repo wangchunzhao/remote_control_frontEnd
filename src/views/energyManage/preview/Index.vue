@@ -1,5 +1,23 @@
 <template>
   <div class="content-box energy_manage-preview">
+    <page-header title="能耗分析" showBack>
+      <template v-slot:right>
+        <div style="flex: 1;display: flex;justify-content: flex-end">
+          <el-button
+              @click.native="
+              () => {
+                $refs.dialogAssetClassify.openDialog()
+              }
+            "
+              style="margin-left: 15px;"
+              size="mini"
+          >
+            <c-svg name="time-circle" style="font-size: 13px;"></c-svg>
+            时段设置
+          </el-button>
+        </div>
+      </template>
+    </page-header>
     <Header />
     <Panel1 />
     <Panel2 />

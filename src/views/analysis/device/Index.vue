@@ -1,8 +1,26 @@
 <template>
   <div class="device-analysis">
+    <page-header title="设备运行分析">
+      <template v-slot:right>
+        <div style="flex: 1;display: flex;justify-content: flex-end">
+          <el-button
+            @click.native="
+              () => {
+                $refs.dialogAssetClassify.openDialog()
+              }
+            "
+            style="margin-left: 15px;"
+            size="mini"
+          >
+            <c-svg name="time-circle" style="font-size: 13px;"></c-svg>
+            时段设置
+          </el-button>
+        </div>
+      </template>
+    </page-header>
     <div class="pdg" style="padding: 25px;">
-      <el-row style="background-color: #fff">
-        <el-col :span="16">
+      <div style="background-color: #fff;display: flex">
+        <div style="flex: 1">
           <el-card shadow="never" style="border-bottom: none">
             <!--图-->
             <div class="line-chart-wrap" v-if="keyPointList.length">
@@ -80,9 +98,9 @@
               <div class="no-data-remark">您可通过右边「筛选条件」添加</div>
             </div>
           </el-card>
-        </el-col>
+        </div>
         <!--        筛选条件-->
-        <el-col :span="8">
+        <div style="width: 346px">
           <el-card shadow="never" style="border-bottom: none">
             <div slot="header" class="clearfix">
               <span class="card-title">筛选条件</span>
@@ -105,7 +123,7 @@
                 <CustomDatePicker
                   :typeArr="['day', 'month', 'year', 'custom']"
                   @timeChange="timeChange"
-                  @typeChange="scopeChange"
+                  @typeChange="timeTypeChange"
                   ref="customDatePicker"
                 ></CustomDatePicker>
               </el-form-item>
@@ -116,10 +134,10 @@
                   size="small"
                   border
                 >
-                  <el-radio-button label="dateRangeDefault">
+                  <el-radio-button label="default">
                     已设置时段
                   </el-radio-button>
-                  <el-radio-button label="dateRangeCustom">
+                  <el-radio-button label="custom">
                     自定义时段
                   </el-radio-button>
                 </el-radio-group>
@@ -138,7 +156,10 @@
                     :value="item.Id"
                   />
                 </el-select>
-                <div v-show="filterForm.timeIntervalType === 'custom'">
+                <div
+                  v-show="filterForm.timeIntervalType === 'custom'"
+                  style="display: flex;align-items: center;margin-top: 5px"
+                >
                   <el-time-select
                     placeholder="起始时间"
                     v-model="filterForm.startTimeInterval"
@@ -149,6 +170,7 @@
                     }"
                   >
                   </el-time-select>
+                  <div style="margin: 0 10px">-</div>
                   <el-time-select
                     placeholder="结束时间"
                     v-model="filterForm.endTimeInterval"
@@ -262,8 +284,8 @@
               </el-form-item>
             </el-form>
           </el-card>
-        </el-col>
-      </el-row>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -280,7 +302,11 @@ import {
   getElectricTypeList,
   getElectricStatisticalDetailList
 } from '@/api/maintenanceStatistical'
-import { getModelTreePage, queryPointRead } from '@/api/model_new'
+import {
+  getModelTreePage,
+  queryPointRead,
+  getModelTreeShowPoint
+} from '@/api/model_new'
 import CustomDatePicker from '@/components/CustomDatePicker'
 
 export default {
@@ -291,7 +317,6 @@ export default {
   },
   data() {
     return {
-      dataRange: [],
       treeOptions: [],
       typeOptions: [],
       normalizer(node) {
@@ -314,11 +339,9 @@ export default {
 
       filterForm: {
         scope: 'day', // 日期 默认日
-        time: dayjs().subtract(1, 'week'), //选中日期
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs()
-          .add(1, 'day')
-          .format('YYYY-MM-DD'),
+        time: '', //选中日期
+        start: '',
+        end: '',
         timeIntervalType: 'default', //时段类型 默认已设置时段
         timeInterval: '', //已有时段
         startTimeInterval: '', //开始时段
@@ -360,43 +383,6 @@ export default {
     }
   },
   watch: {
-    dateRange(val) {
-      if (val) {
-        console.log(val, 'val')
-      }
-    },
-    'filterForm.time'(time) {
-      if (time) {
-        switch (this.filterForm.scope) {
-          case 'day':
-            this.filterForm.start = dayjs(time).format('YYYY-MM-DD')
-            this.filterForm.end = dayjs(time)
-              .add(1, 'day')
-              .format('YYYY-MM-DD')
-            break
-          case 'week':
-            this.filterForm.start = dayjs(time)
-              .startOf('week')
-              .format('YYYY-MM-DD')
-            this.filterForm.end = dayjs(time)
-              .endOf('week')
-              .add(1, 'millisecond')
-              .format('YYYY-MM-DD')
-            break
-          case 'month':
-            this.filterForm.start = dayjs(time)
-              .startOf('month')
-              .format('YYYY-MM-DD')
-            this.filterForm.end = dayjs(time)
-              .endOf('month')
-              .add(1, 'millisecond')
-              .format('YYYY-MM-DD')
-            break
-          default:
-            break
-        }
-      }
-    },
     projectNameFilter() {
       this.fetchTableData()
     }
@@ -479,52 +465,13 @@ export default {
       this.filterForm.scope = 'day'
       this.filterForm.area = [this.treeOptions[0].SubareaId]
       this.filterForm.timeInterval = ''
-      this.filterForm.time = dayjs().subtract(1, 'day')
-      this.filterForm.start = dayjs()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD')
-      this.filterForm.end = dayjs().format('YYYY-MM-DD')
+      this.filterForm.time = ''
+      this.filterForm.start = ''
+      this.filterForm.end = ''
     },
     scopeChange(val) {
-      console.log(val, 'scopeChange')
-      if (val === 'day') {
-        this.filterForm.time = dayjs().subtract(1, 'day')
-        this.filterForm.start = dayjs()
-          .subtract(1, 'day')
-          .format('YYYY-MM-DD')
-        this.filterForm.end = dayjs().format('YYYY-MM-DD')
-      } else if (val === 'week') {
-        this.filterForm.time = dayjs().subtract(1, 'week')
-        this.filterForm.start = dayjs()
-          .subtract(1, 'week')
-          .startOf('week')
-          .format('YYYY-MM-DD')
-        this.filterForm.end = dayjs()
-          .subtract(1, 'week')
-          .startOf('week')
-          .add(7, 'day')
-          .format('YYYY-MM-DD')
-      } else if (val === 'month') {
-        this.filterForm.time = dayjs().subtract(1, 'month')
-        this.filterForm.start = dayjs()
-          .subtract(1, 'month')
-          .startOf('month')
-          .format('YYYY-MM-DD')
-        this.filterForm.end = dayjs()
-          .startOf('month')
-          .format('YYYY-MM-DD')
-      } else if (val === 'year') {
-        this.filterForm.time = dayjs().subtract(1, 'year')
-        this.filterForm.start = dayjs()
-          .subtract(1, 'month')
-          .startOf('month')
-          .format('YYYY-MM-DD')
-        this.filterForm.end = dayjs()
-          .startOf('month')
-          .format('YYYY-MM-DD')
-      } else if (val === 'timeCustom') {
-      } else if (val === 'dateRangeDefault') {
-      } else if (val === 'dateRangeCustom') {
+      if (val === 'default') {
+      } else if (val === 'custom') {
       }
       this.renderChart()
     },
@@ -597,7 +544,27 @@ export default {
         })
         .finally(() => {
           this.resertReviewList()
-          this.pointVisibleChange(false)
+          getModelTreeShowPoint({
+            mtidList: this.chooseDeviceIdList
+          })
+            .then(res => {
+              if (res.data.Code === 200) {
+                let data = res.data.Data
+                this.choosePointIdList = data.length
+                  ? data.map(item => item.Key)
+                  : []
+              } else {
+                this.choosePointIdList = []
+                this.$message.error('获取默认选中点位列表失败')
+              }
+            })
+            .catch(err => {
+              console.error(err)
+              this.$message.error('获取默认选中点位列表失败')
+            })
+            .finally(err => {
+              this.pointVisibleChange(false)
+            })
         })
     },
     // 更换点位
@@ -612,14 +579,20 @@ export default {
       }
     },
     timeChange(val) {
-      console.log(val, 'timeChange')
-      // this.renderChart()
+      this.filterForm.time = val.time ? val.time : ''
+      this.filterForm.start = val.dateRange.length > 1 ? val.dateRange[0] : ''
+      this.filterForm.end = val.dateRange.length > 1 ? val.dateRange[1] : ''
+      this.renderChart()
+    },
+    timeTypeChange(val) {
+      this.scope = val
+      this.renderChart()
     },
     typeChanage() {
       this.renderChart()
     },
     renderChart() {
-      if (this.choosePointIdList) {
+      if (this.choosePointIdList.length) {
         this.fetchTableData()
         for (let i = 0; i < this.keyPointList.length; i++) {
           this.$refs[`keyPointHistoryDialog${i}`][0].updateDialog(this.form)
