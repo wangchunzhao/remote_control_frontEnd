@@ -21,9 +21,9 @@ const baseUriProd = 'https://yun.sinocold.net:5001'
 // const baseUriProd = 'http://192.168.6.180:5003'
 
 // const baseUriDev = 'http://dev.sinocold.com:8083'
-const baseUriDev = 'http://152.136.134.93:9183'
+// const baseUriDev = 'http://152.136.134.93:9183'
 // const baseUriDev = 'http://192.168.6.13:30863'
-// const baseUriDev = 'https://yun.sinocold.net:5001'
+const baseUriDev = 'https://yun.sinocold.net:5001'
 // const baseUriDev = 'http://192.168.6.180:5200'
 // const baseUriDev = 'http://192.168.6.194:5003'
 

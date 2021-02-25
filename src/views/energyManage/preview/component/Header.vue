@@ -1,72 +1,105 @@
 <template>
   <div class="energy_manage-preview-header">
     <div class="item">
-      <div class="label">监测点数量</div>
-      <div class="value">{{ data.mointorPointNum }}</div>
-    </div>
-    <div class="item">
-      <div class="label">区域数量</div>
-      <div class="value">{{ data.areaNum }}</div>
-    </div>
-    <div class="item">
       <div class="label">今日用电(kWh)</div>
       <div class="value">{{ data.todayElectricityUse }}</div>
     </div>
     <div class="item">
-      <div class="label">今日最大负荷(kW)</div>
-      <div class="value">{{ data.todayElectricityLoad }}</div>
+      <div class="label">本周用电(kWh)</div>
+      <div class="value">{{ data.currentWeekElectricityUse }}</div>
+    </div>
+    <div class="item">
+      <div class="label">上周用电(kWh)</div>
+      <div class="value">{{ data.lastWeekElectricityUse }}</div>
     </div>
     <div class="item">
       <div class="label">本月用电量(kWh)</div>
       <div class="value">{{ data.currentMonthElectricityUse }}</div>
     </div>
+    <div class="item">
+      <div class="label">上月用电量(kWh)</div>
+      <div class="value">{{ data.lastMonthElectricityUse }}</div>
+    </div>
   </div>
 </template>
 
 <script>
-import { getEnergyNum } from '@/api/energyStatistical'
+import { getEnergyTimeContrastBrokenLine } from '@/api/energyStatistical'
+import dayjs from 'dayjs'
 export default {
   computed: {
-    projectId: function() {
+    sidebarStatus() {
+      return this.$store.state.app.sidebar
+    },
+    structTree() {
+      return this.$store.state.energy.energyStruct
+    },
+    projectId() {
       return this.$store.state.app.project.id
     },
     data: function() {
-      // mointorPointNum: '-',
-      // areaNum: '-',
-      // todayElectricityUse: '-',
-      // todayElectricityLoad: '-',
-      // currentMonthElectricityUse: '-'
       return this.$store.state.energy.previewData
     }
   },
-  watch: {
-    projectId: function() {
-      // this.fetchData()
-    }
-  },
-  mounted: function() {
+  mounted() {
     this.fetchData()
   },
   methods: {
     fetchData() {
-      getEnergyNum({
-        projectId: this.projectId
+      const dates = []
+      const now = new Date()
+      dates.push({
+        StartDate: dayjs(now)
+          .startOf('week')
+          .format('YYYY-MM-DD'),
+        EndDate: dayjs(now)
+          .endOf('week')
+          .add(1, 's')
+          .format('YYYY-MM-DD')
       })
-        .then(e => {
-          if (200 === e.data.Code) {
-            var data = e.data.Data
-            this.$store.commit('UPDATE_PREVIEW_DATA', {
-              mointorPointNum: data.Key,
-              areaNum: data.Value
+      dates.push({
+        StartDate: dayjs(now)
+          .subtract(1, 'week')
+          .startOf('week')
+          .format('YYYY-MM-DD'),
+        EndDate: dayjs(now)
+          .startOf('week')
+          .format('YYYY-MM-DD')
+      })
+      getEnergyTimeContrastBrokenLine({
+        dateType: 2,
+        timeQuantumList: dates,
+        modelTreeIdList: this.structTree
+          .find(item => {
+            return item.SubentryId === 1
+          })
+          .ModelTreeList.map(item => {
+            return item.ModelTreeId
+          })
+      })
+        .then(res => {
+          if (200 === res.data.Code) {
+            let data = res.data.Data
+            data.DataList.forEach((item, index) => {
+              if (0 === index) {
+                // 如果选的分项是电量的话
+                this.$store.commit('UPDATE_PREVIEW_DATA', {
+                  currentWeekElectricityUse: item.Total
+                })
+              } else {
+                // 如果选的分项是电量的话
+                this.$store.commit('UPDATE_PREVIEW_DATA', {
+                  lastWeekElectricityUse: item.Total
+                })
+              }
             })
-          } else
-            this.$store.commit('UPDATE_PREVIEW_DATA', {
-              mointorPointNum: '-',
-              areaNum: '-'
-            })
+          } else {
+            this.$message.error('数据获取失败')
+          }
         })
-        .catch(function(err) {
+        .catch(err => {
           console.error(err)
+          this.$message.error('数据获取失败')
         })
     }
   }

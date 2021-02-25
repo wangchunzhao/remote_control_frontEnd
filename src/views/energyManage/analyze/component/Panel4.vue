@@ -17,7 +17,7 @@
           :type="model === 'table' ? 'primary' : undefined"
           style="margin-left: 10px;"
         >
-          <c-svg name="table1" style="font-size: 17px;" />
+          <c-svg name="table1" style="font-size: 17px;color: #BFBFBF;" />
         </el-link>
         <el-cascader
           :options="structTree"
@@ -102,7 +102,18 @@
             :key="item.name + index"
             class="desc-item"
           >
-            <div>{{ item.name }} 总用量</div>
+            <div>
+              {{
+                filterForm.dates && filterForm.dates.length
+                  ? 'date' === filterForm.dates[index].dateType
+                    ? filterForm.dates[index].StartDate
+                    : filterForm.dates[index].StartDate +
+                      ' 至 ' +
+                      filterForm.dates[index].EndDate
+                  : ''
+              }}
+              总用量
+            </div>
             <div>
               <span class="desc-blod">{{ item.Total }}</span> {{ item.unit }}
             </div>

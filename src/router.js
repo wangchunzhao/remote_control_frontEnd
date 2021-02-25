@@ -250,26 +250,14 @@ const energyManage = {
   },
   children: [
     {
-      path: 'preview',
-      component: _import('energyManage/preview/Index'),
-      name: 'energyManage_Preview',
+      path: 'index',
+      component: _import('energyManage/Index'),
+      name: 'energyManageIndex',
       meta: {
         title: '能耗分析',
         projectPermissionId: [120],
         customHeader: true
       }
-    },
-    {
-      path: 'analyze',
-      component: _import('energyManage/analyze/Index'),
-      name: 'energyManage_Analyze',
-      meta: { title: '用能分析', projectPermissionId: [120] }
-    },
-    {
-      path: 'electricityLoad',
-      component: _import('energyManage/electricityLoad/Index'),
-      name: 'energyManage_ElectricityLoad',
-      meta: { title: '用电负荷', projectPermissionId: [120] }
     },
     {
       path: 'dataConfig',

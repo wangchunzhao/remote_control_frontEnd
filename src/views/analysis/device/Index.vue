@@ -4,11 +4,7 @@
       <template v-slot:right>
         <div style="flex: 1;display: flex;justify-content: flex-end">
           <el-button
-            @click.native="
-              () => {
-                $refs.dialogAssetClassify.openDialog()
-              }
-            "
+            @click.native="$refs.timeIntervalSetDialog.openDialog()"
             style="margin-left: 15px;"
             size="mini"
           >
@@ -287,6 +283,7 @@
         </div>
       </div>
     </div>
+    <TimeIntervalSetDialog ref="timeIntervalSetDialog"></TimeIntervalSetDialog>
   </div>
 </template>
 
@@ -308,12 +305,14 @@ import {
   getModelTreeShowPoint
 } from '@/api/model_new'
 import CustomDatePicker from '@/components/CustomDatePicker'
+import TimeIntervalSetDialog from '@/components/TimeIntervalSetDialog'
 
 export default {
   components: {
     LineChart,
     Treeselect,
-    CustomDatePicker
+    CustomDatePicker,
+    TimeIntervalSetDialog
   },
   data() {
     return {
@@ -327,15 +326,15 @@ export default {
         }
       },
 
-      filterLoading: false, //筛选
-      filterDeviceList: [],
-      deviceList: [],
-      filterPointList: [],
-      pointList: [],
-      chooseDeviceIdList: [],
-      choosePointIdList: [],
-      keyPointList: [], //关键点位列表
-      keyPointChartList: [], //关键点位实例列表
+      filterLoading: false, //筛选区域loading
+      filterDeviceList: [], // 筛选后的设备列表
+      deviceList: [],// 设备列表
+      filterPointList: [],// 筛选后的点位列表
+      pointList: [],//点位列表
+      chooseDeviceIdList: [],// 已选择的设备ID列表
+      choosePointIdList: [],// 已选择的点位ID列表
+      keyPointList: [], //图列表
+      keyPointChartList: [], //图实例列表
 
       filterForm: {
         scope: 'day', // 日期 默认日
@@ -365,7 +364,7 @@ export default {
         showThreshold: false // 显示阈值
       },
 
-      projectNameFilter: '',
+      projectNameFilter: '', // 表格 项目名称筛选值
       pagination: {
         currentPage: 1,
         size: 10,
@@ -439,18 +438,29 @@ export default {
       }
     },
     KeyPointRequestReg() {},
+    // 设备列表筛选
     filterDeviceListFun(v) {
       if (v) {
         this.filterDeviceList = this.deviceList.filter(
           item =>
-            item.ModelTreeName &&
-            item.ModelTreeName.indexOf &&
-            item.ModelTreeName.indexOf(v) >= 0
+            (item.ModelTreeName &&
+              item.ModelTreeName.indexOf &&
+              item.ModelTreeName.indexOf(v) >= 0) ||
+            (item.ModelTreePropertyList.length &&
+              item.ModelTreePropertyList.filter(
+                item1 =>
+                  item1.Key === '温区' &&
+                  item1.Value &&
+                  item1.Value.indexOf &&
+                  item1.Value.indexOf(v) >= 0
+              ).length) ||
+            (item.Tag && item.Tag.indexOf && item.Tag.indexOf(v) >= 0)
         )
       } else {
         this.filterDeviceList = this.deviceList
       }
     },
+    // 点位列表筛选
     filterPointListFun(v) {
       if (v) {
         this.filterPointList = this.pointList.filter(
@@ -469,12 +479,7 @@ export default {
       this.filterForm.start = ''
       this.filterForm.end = ''
     },
-    scopeChange(val) {
-      if (val === 'default') {
-      } else if (val === 'custom') {
-      }
-      this.renderChart()
-    },
+    // 清楚图表数据
     resertReviewList() {
       this.tableData = []
       this.keyPointList = []
@@ -485,6 +490,7 @@ export default {
       if (this.filterForm.area.length) {
         getModelTreePage({
           SubareaIdList: this.filterForm.area,
+          IsGetStaticProperty: true,
           PageIndex: 1,
           PageSize: 9999
         })
@@ -573,29 +579,52 @@ export default {
         for (let i = 0; i < this.keyPointList.length; i++) {
           this.$refs[`keyPointHistoryDialog${i}`][0].toggleDialog(this.form)
         }
-        this.fetchTableData()
+        this.renderChart(true)
       } else {
         this.resertReviewList()
       }
     },
+    // 更换时间类型
+    timeTypeChange(val) {
+      this.scope = val
+    },
+    // 更换时间
     timeChange(val) {
       this.filterForm.time = val.time ? val.time : ''
       this.filterForm.start = val.dateRange.length > 1 ? val.dateRange[0] : ''
       this.filterForm.end = val.dateRange.length > 1 ? val.dateRange[1] : ''
+      console.log('时间更新')
       this.renderChart()
     },
-    timeTypeChange(val) {
-      this.scope = val
-      this.renderChart()
+    // 更换时段类型
+    scopeChange(val) {
+      if (val === 'default') {
+      } else if (val === 'custom') {
+      }
     },
+    // 更换时段
     typeChanage() {
+      console.log('时段更新')
       this.renderChart()
     },
-    renderChart() {
+    // 图标更新验证
+    renderChart(init = false) {
+      if (
+        this.filterForm.start &&
+        this.filterForm.end &&
+        this.filterForm.timeInterval
+      ) {
+        console.log('图表更新')
+      }
+
       if (this.choosePointIdList.length) {
-        this.fetchTableData()
+        this.handleSizeChange()
         for (let i = 0; i < this.keyPointList.length; i++) {
-          this.$refs[`keyPointHistoryDialog${i}`][0].updateDialog(this.form)
+          if (init) {
+            this.$refs[`keyPointHistoryDialog${i}`][0].toggleDialog(this.form)
+          } else {
+            this.$refs[`keyPointHistoryDialog${i}`][0].updateDialog(this.form)
+          }
         }
       }
     },
