@@ -34,7 +34,6 @@
               :class="item.Asterisk ? 'start-icon-active' : 'start-icon'"
             ></c-svg>
             <EllipsisTooltip class="project-name" :content="item.ProjectName" />
-            <!-- <span class="project-name">{{ item.ProjectName }}</span> -->
             <span v-if="item.AlarmNum > 0" class="alarm-num">{{
               item.AlarmNum
             }}</span>
@@ -54,55 +53,73 @@
         ></c-svg>
         <div>暂无星标项目</div>
       </div>
-      <div class="title" style="margin-top: 20px;">
+      <div class="title" style="margin-top: 20px;margin-bottom: 10px">
         所有项目
-        <el-dropdown style="float: right;" @command="filterBySubarea">
+        <el-dropdown
+          style="float: right;margin-right: 5px;"
+          trigger="click"
+          @command="changeGroupType"
+        >
           <el-button type="text" style="padding: 0;font-weight: normal;">
-            {{
-              subareaOptions.length
-                ? subareaOptions.find(item => item.Id === subareaId).Name
-                : ''
-            }}
+            {{ groupTypes.find(v => v.value === projectGroupBy).label }}
             <i class="el-icon-arrow-down"></i
           ></el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
-              :command="item.Id"
-              v-for="item in subareaOptions"
-              :key="item.Id"
-              >{{ item.Name }}</el-dropdown-item
+              v-for="item in groupTypes"
+              :command="item.value"
+              :key="item.value"
+              >{{ item.label }}</el-dropdown-item
             >
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-      <div v-if="projectList" class="all-project-list">
-        <div
-          v-for="item in projectList"
-          :key="item.ProjectId"
-          class="project-box"
-          @click="() => handleClickProject(item)"
+      <div v-if="projectGroup" class="all-project-list">
+        <el-collapse
+          :value="
+            filterText && projectGroup
+              ? projectGroup.map(v => v.groupTitle)
+              : []
+          "
         >
-          <div class="project-box-main">
-            <c-svg
-              name="star-fill"
-              @click.native.stop="() => handleStart(item)"
-              :class="item.Asterisk ? 'start-icon-active' : 'start-icon'"
-            ></c-svg>
-            <EllipsisTooltip class="project-name" :content="item.ProjectName" />
-            <!-- <span :title="item.ProjectName" class="project-name">{{
-              item.ProjectName
-            }}</span> -->
-            <span v-if="item.AlarmNum > 0" class="alarm-num">{{
-              item.AlarmNum
-            }}</span>
-            <c-svg
-              class="position-icon"
-              @click.native.stop="() => handleClick(item)"
-              name="coordinates_fill"
-            ></c-svg>
-          </div>
-          <CProgress :data="handleProgressData(item)" />
-        </div>
+          <el-collapse-item
+            v-for="(group, index) in projectGroup"
+            :key="group.groupTitle + index"
+            :name="group.groupTitle"
+          >
+            <template slot="title">
+              {{ group.groupTitle }}
+              ({{ group.list.length }})
+            </template>
+            <div
+              v-for="item in group.list"
+              :key="item.ProjectId"
+              class="project-box"
+              @click="() => handleClickProject(item)"
+            >
+              <div class="project-box-main">
+                <c-svg
+                  name="star-fill"
+                  @click.native.stop="() => handleStart(item)"
+                  :class="item.Asterisk ? 'start-icon-active' : 'start-icon'"
+                ></c-svg>
+                <EllipsisTooltip
+                  class="project-name"
+                  :content="item.ProjectName"
+                />
+                <span v-if="item.AlarmNum > 0" class="alarm-num">{{
+                  item.AlarmNum
+                }}</span>
+                <c-svg
+                  class="position-icon"
+                  @click.native.stop="() => handleClick(item)"
+                  name="coordinates_fill"
+                ></c-svg>
+              </div>
+              <CProgress :data="handleProgressData(item)" />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </div>
       <div
         v-if="checkPermission([6]) || isEmptyAccount"
@@ -172,10 +189,6 @@
       <div v-if="showRepair" class="repair-panel">
         <div class="panel-header">
           维修统计
-          <!-- <span class="link-btn">
-            查看全部
-            <i class="el-icon-arrow-right"></i>
-          </span> -->
         </div>
         <div class="panel-body">
           <div>
@@ -329,10 +342,25 @@ export default {
       loading: false,
       projectDialogVisible: false,
       filterText: '',
-      subareaOptions: [],
-      subareaId: 0,
       projectListSource: [],
       projectStartList: [],
+      subareaIdNameMap: {},
+      groupTypes: [
+        {
+          label: '按分区分组',
+          value: 'subarea'
+        },
+        {
+          label: '按标签分组',
+          value: 'tag'
+        },
+        {
+          label: '按地区分组',
+          value: 'city'
+        }
+      ],
+      // 默认按分区分组
+      projectGroupBy: 'subarea',
 
       alarmNums: {},
       maintenanceNums: {},
@@ -344,31 +372,37 @@ export default {
     subarea() {
       return this.$store.state.app.subarea
     },
-    companyId() {
-      return this.$store.state.app.company.id
-    },
-    projectList() {
-      return this.projectListSource.filter(
+    projectGroup() {
+      const projectList = this.projectListSource.filter(
         item =>
           item.ProjectName.toLowerCase().indexOf(
             this.filterText.toLowerCase()
           ) > -1
       )
+      if (this.projectGroupBy === 'subarea') {
+        return this.orderProjectBySubarea(projectList)
+      } else if (this.projectGroupBy === 'city') {
+        return this.orderProjectByCity(projectList)
+      } else if (this.projectGroupBy === 'tag') {
+        return this.orderProjectByTag(projectList)
+      }
+      return []
     },
-    isEmptyAccount() {
-      return this.$store.state.app.isEmptyAccount
-    },
-    proList() {
-      return this.$store.state.app.proList
-    },
-    ...mapGetters(['preference'])
+    ...mapGetters(['preference', 'proList', 'companyId', 'isEmptyAccount'])
   },
   watch: {
     proList: {
-      handler: function(list) {
+      handler: async function(list) {
+        await this.fetchSubareaOptions()
         this.projectListSource = JSON.parse(JSON.stringify(list))
         this.projectListSource.forEach(item => {
-          item.adresss = item.adresss.split(';')[1] + item.adresss.split(';')[2]
+          try {
+            const addressItems = item.adresss.split(';')
+            item.adresss = `${addressItems[1]};${addressItems[2]}`
+            item.city = addressItems[1].split('/')[1]
+          } catch (err) {
+            console.error(err)
+          }
         })
         this.projectStartList = this.projectListSource.filter(
           item => item.Asterisk
@@ -376,9 +410,9 @@ export default {
       },
       immediate: true
     },
+
     companyId() {
       this.fetchOverviewData()
-      this.fetchSubareaOptions()
     },
     userGatewayList(val) {
       // 如果是空白账号，且账号下有网关，提示添加项目
@@ -409,11 +443,11 @@ export default {
     }
   },
   mounted() {
-    this.fetchSubareaOptions()
     this.fetchOverviewData()
-    this.fetchProjectList()
-
+    this.$store.dispatch('fetchProject')
     this.handleResize()
+
+    // 用户自定义了侧边栏的宽度
     if (this.preference.previewSidebarWidth) {
       this.sidebarWidth = this.preference.previewSidebarWidth
     }
@@ -458,15 +492,13 @@ export default {
       }
       this.$set(item, 'Asterisk', !item.Asterisk)
     },
-    filterBySubarea(id) {
-      this.subareaId = id
-      this.fetchProjectList()
+    changeGroupType(type) {
+      this.projectGroupBy = type
     },
     fetchProjectList() {
       this.loading = true
       getUserProjectAlarm({
         companyId: this.companyId,
-        SubareaId: this.subareaId,
         IsShow: true
       })
         .then(res => {
@@ -488,15 +520,119 @@ export default {
           this.loading = false
         })
     },
-    fetchSubareaOptions() {
-      getUserSubareaList({
-        companyId: this.companyId
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.subareaOptions = res.data.Data
-          this.subareaId = this.subareaOptions[0].Id
+    /** 项目按分区分组 */
+    orderProjectBySubarea(list) {
+      const unGroupItem = {
+        groupTitle: '未分组',
+        list: []
+      }
+      const group = {}
+      list.forEach(v => {
+        if (group[v.ParentSubareaId]) {
+          group[v.ParentSubareaId].push(v)
+        } else {
+          group[v.ParentSubareaId] = [v]
         }
       })
+
+      const groupList = []
+      Object.keys(group).forEach(key => {
+        if (this.subareaIdNameMap[key]) {
+          groupList.push({
+            groupTitle: this.subareaIdNameMap[key],
+            list: group[key]
+          })
+        } else {
+          unGroupItem.list.push(...group[key])
+        }
+      })
+      if (unGroupItem.list.length) {
+        groupList.push(unGroupItem)
+      }
+      return groupList
+    },
+    /** 项目按市区分组 */
+    orderProjectByCity(list) {
+      const unGroupItem = {
+        groupTitle: '未分组',
+        list: []
+      }
+      const group = {
+        无市区: []
+      }
+      list.forEach(v => {
+        if (!v.city) {
+          // 存在项目没有地址的情况
+          group['无市区'].push(v)
+          return
+        }
+        if (group[v.city]) {
+          group[v.city].push(v)
+        } else {
+          group[v.city] = [v]
+        }
+      })
+      const groupList = []
+      Object.keys(group).forEach(key => {
+        if (key !== '无市区') {
+          groupList.push({
+            groupTitle: key,
+            list: group[key]
+          })
+        } else {
+          unGroupItem.list.push(...group[key])
+        }
+      })
+      if (unGroupItem.list.length) {
+        groupList.push(unGroupItem)
+      }
+      return groupList
+    },
+    /** 项目按 tag 分组 */
+    orderProjectByTag(list) {
+      const unGroupItem = {
+        groupTitle: '未分组',
+        list: []
+      }
+
+      // 二维数组扁平化之后去重
+      const allTag = [
+        ...new Set(
+          list.map(v => v.TagList).reduce((acc, cur) => [...acc, ...cur], [])
+        )
+      ]
+      const group = {
+        无标签: []
+      }
+      allTag.forEach(tag => {
+        group[tag] = []
+      })
+      list.forEach(v => {
+        if (!v.TagList.length) {
+          // 项目没有 tag 的情况
+          group['无标签'].push(v)
+          return
+        }
+        v.TagList.forEach(tag => {
+          group[tag].push(v)
+        })
+      })
+      const groupList = []
+      Object.keys(group).forEach(key => {
+        if (key !== '无标签') {
+          groupList.push({
+            groupTitle: key,
+            list: group[key]
+          })
+        } else {
+          unGroupItem.list.push(...group[key])
+        }
+      })
+      if (unGroupItem.list.length) {
+        groupList.push(unGroupItem)
+      }
+      console.log('[630]-Sidebar.vue', groupList)
+      return groupList
     },
     fetchOverviewData() {
       getAlarmOverNum({
@@ -562,11 +698,30 @@ export default {
           this.$store.dispatch('fetchUserOwnSubareaTree')
         })
       } else {
-        this.fetchProjectList()
         this.$store.dispatch('fetchCompanyStruct')
         this.$store.dispatch('fetchProject')
         this.$store.dispatch('fetchUserOwnSubareaTree')
       }
+    },
+    fetchSubareaOptions() {
+      return new Promise(resolve => {
+        getUserSubareaList({
+          companyId: this.companyId
+        })
+          .then(res => {
+            if (res.data.Code === 200) {
+              const list = res.data.Data
+              const map = {}
+              list.forEach(v => {
+                map[v.Id] = v.Name
+              })
+              this.subareaIdNameMap = map
+            }
+          })
+          .finally(() => {
+            resolve()
+          })
+      })
     },
     handleResize() {
       const sidebar = document.querySelector('.map-sidebar')
@@ -577,7 +732,6 @@ export default {
       let startX, startWidth
       function initDrag(e) {
         startX = e.clientX
-        console.log(e.clientX)
         startWidth = parseInt(
           document.defaultView.getComputedStyle(sidebar).width,
           10
@@ -829,9 +983,29 @@ export default {
 .map-sidebar {
   .filter-input {
     .el-input__inner {
+      height: 40px;
+      line-height: 40px;
       border: none;
       border-radius: 0;
     }
+  }
+  .el-collapse {
+    border: none;
+  }
+  .el-collapse-item__content {
+    padding-bottom: 0px;
+  }
+  .el-collapse-item__header {
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    background-color: transparent;
+  }
+  .el-collapse-item__wrap {
+    background-color: transparent;
+  }
+  .el-collapse-item__header {
+    height: 40px;
+    line-height: 40px;
   }
 }
 </style>

@@ -244,16 +244,16 @@ export default {
     }
   }
   .section-wrap {
-    margin-top: 26px;
+    margin-top: 15px;
   }
   .section-head {
     margin: 0 11px;
+    padding: 7px;
+    margin-bottom: 14px;
     font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 7px;
-    margin-bottom: 10px;
     color: #fff;
     cursor: pointer;
   }

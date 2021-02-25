@@ -4,6 +4,8 @@ const getters = {
   project: state => state.app.project,
   pid: state => state.app.pid,
   userInfo: state => state.app.userInfo,
-  preference: state => state.user.preference
+  companyId: state => (state.app.company || {}).id,
+  preference: state => state.user.preference,
+  isEmptyAccount: state => state.app.isEmptyAccount
 }
 export default getters
