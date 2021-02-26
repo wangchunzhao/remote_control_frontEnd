@@ -1,269 +1,267 @@
 <template>
-  <div class="repair-analysis">
-    <div class="pdg" style="padding: 25px;">
-      <div class="row1">
-        <div class="line-chart">
-          <el-card shadow="never">
-            <div slot="header" class="clearfix">
-              <span class="card-title">报修数量趋势</span>
-            </div>
-            <div class="line-chart-wrap">
-              <line-chart
-                dom-id="chart1_1"
-                :loading="chart1_1Loading"
-                :data="chart1_1Data"
-                :date-type="filterForm.scope"
-                @drillDown="chart1_1DrillDown"
-              />
-              <div class="line-chart-right">
-                <div
+  <div
+    class="repair-analysis content-box"
+    style="padding: 0;background-color: transparent"
+  >
+    <div class="row1">
+      <div class="line-chart">
+        <el-card shadow="never">
+          <div slot="header" class="clearfix">
+            <span class="card-title">报修数量趋势</span>
+          </div>
+          <div class="line-chart-wrap">
+            <line-chart
+              dom-id="chart1_1"
+              :loading="chart1_1Loading"
+              :data="chart1_1Data"
+              :date-type="filterForm.scope"
+              @drillDown="chart1_1DrillDown"
+            />
+            <div class="line-chart-right">
+              <div
+                style="color: rgba(0, 0, 0, 0.85);font-size: 22px;font-weight: bold;"
+              >
+                {{ chart1_1Info.total }}
+              </div>
+              <div style="margin-top: 60px;margin-bottom: 6px;">
+                <span
                   style="color: rgba(0, 0, 0, 0.85);font-size: 22px;font-weight: bold;"
                 >
-                  {{ chart1_1Info.total }}
-                </div>
-                <div style="margin-top: 60px;margin-bottom: 6px;">
-                  <span
-                    style="color: rgba(0, 0, 0, 0.85);font-size: 22px;font-weight: bold;"
-                  >
-                    {{ chart1_1Info.raingRatio }}
-                  </span>
-                  <span style="color: rgba(0, 0, 0, 0.65);">%</span>
-                </div>
-                <div>
-                  <span style="color: rgba(0, 0, 0, 0.65);">环比</span>
-                  <i
-                    :style="{
-                      color:
-                        chart1_1Info.raingRatio > 0
-                          ? 'rgba(47, 194, 91, 1)'
-                          : 'rgba(245, 34, 45, 1)'
-                    }"
-                    :class="
-                      chart1_1Info.raingRatio < 0
-                        ? 'el-icon-caret-bottom'
-                        : 'el-icon-caret-top'
-                    "
-                  />
-                </div>
+                  {{ chart1_1Info.raingRatio }}
+                </span>
+                <span style="color: rgba(0, 0, 0, 0.65);">%</span>
               </div>
-            </div>
-          </el-card>
-        </div>
-        <div class="chart-form">
-          <el-card shadow="never" style="overflow: visible">
-            <div slot="header" class="clearfix">
-              <span class="card-title">数据筛选</span>
-              <el-button
-                type="text"
-                style="float: right;padding: 0;"
-                @click.native="resetForm"
-              >
-                清除筛选
-              </el-button>
-            </div>
-            <el-form
-              ref="filterForm"
-              :model="filterForm"
-              size="medium"
-              label-position="top"
-              class="thin-scroll"
-              style="height: 302px;overflow: auto;"
-            >
-              <el-form-item label="时间范围">
-                <el-radio-group
-                  v-model="filterForm.scope"
-                  @change="scopeChange"
-                >
-                  <el-radio label="day">
-                    日
-                  </el-radio>
-                  <el-radio label="week">
-                    周
-                  </el-radio>
-                  <el-radio label="month">
-                    月
-                  </el-radio>
-                </el-radio-group>
-                <el-date-picker
-                  v-show="filterForm.pickerType === 'date'"
-                  v-model="filterForm.time"
-                  type="date"
-                  placeholder=""
-                  style="width: 100%;"
-                  :clearable="false"
-                  :picker-options="{
-                    disabledDate(time) {
-                      return time.getTime() > Date.now() - 3600000 * 24
-                    }
-                  }"
-                  @change="timeChange"
-                />
-                <el-date-picker
-                  v-show="filterForm.pickerType === 'week'"
-                  v-model="filterForm.time"
-                  type="week"
-                  format="yyyy 第 WW 周"
-                  placeholder=""
-                  :clearable="false"
-                  :picker-options="{
-                    firstDayOfWeek: 1,
-                    disabledDate(time) {
-                      return time.getTime() > Date.now() - 3600 * 1000 * 24 * 7
-                    }
-                  }"
-                  style="width: 100%;"
-                  @change="timeChange"
-                />
-                <el-date-picker
-                  v-show="filterForm.pickerType === 'month'"
-                  v-model="filterForm.time"
-                  type="month"
-                  placeholder=""
-                  :clearable="false"
-                  style="width: 100%;"
-                  :picker-options="{
-                    firstDayOfWeek: 1,
-                    disabledDate(time) {
-                      return (
-                        time >
-                        dayjs()
-                          .subtract(1, 'month')
-                          .startOf('month')
-                      )
-                    }
-                  }"
-                  @change="timeChange"
-                />
-              </el-form-item>
-              <el-form-item label="地区">
-                <treeselect
-                  v-model="filterForm.area"
-                  :default-expand-level="1"
-                  :multiple="true"
-                  :options="treeOptions"
-                  style="line-height: 20px;"
-                  placeholder=""
-                  :normalizer="normalizer"
-                  :show-count="true"
-                  :append-to-body="true"
-                  @close="areaChange"
-                />
-              </el-form-item>
-              <el-form-item label="维修分类" style="margin-bottom: 18px;">
-                <el-select
-                  v-model="filterForm.type"
-                  placeholder=""
-                  style="width:100%;"
-                  clearable
-                  @change="typeChanage"
-                >
-                  <el-option
-                    v-for="item in typeOptions"
-                    :key="item.Id"
-                    :label="item.Name"
-                    :value="item.Id"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-form>
-          </el-card>
-        </div>
-      </div>
-      <el-row type="flex" :gutter="25">
-        <el-col :span="12">
-          <el-card shadow="never">
-            <div slot="header" class="clearfix">
-              <span class="card-title">维修数量排名</span>
-            </div>
-            <div>
-              <bar-chart
-                :data="chart2_1Data"
-                :loading="chart2_1Loading"
-                dom-id="chart2_1"
-                @drillDown="chart2_1DrillDown"
-              />
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :span="12">
-          <el-card shadow="never">
-            <div slot="header" class="clearfix">
-              <span class="card-title">维修分类</span>
-            </div>
-            <div>
-              <pie-chart
-                :data="chart2_2Data"
-                :loading="chart2_2Loading"
-                :type-id="filterForm.type"
-                dom-id="chart2_2"
-                @drillDown="chart2_2DrillDown"
-              />
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-row type="flex" :gutter="25">
-        <el-col :span="24">
-          <el-card shadow="never">
-            <div slot="header" class="clearfix">
-              <span class="card-title">维修数量详情表</span>
-              <el-tag size="small" type="info" style="margin-left: 15px;">
-                {{
-                  dayjs(filterForm.start).format('YYYY-MM-DD HH:mm') +
-                    ' 至 ' +
-                    dayjs(filterForm.end)
-                      .subtract(1, 'minute')
-                      .format('YYYY-MM-DD HH:mm')
-                }}
-              </el-tag>
-            </div>
-            <div>
               <div>
-                <el-button
-                  icon="el-icon-download"
-                  size="medium"
-                  @click.native="downloadExcel"
-                >
-                  导出
-                </el-button>
-                <el-input
-                  v-model="projectNameFilter"
-                  placeholder="请输入项目名称"
-                  size="medium"
-                  clearable
-                  style="width: 200px;float: right;"
+                <span style="color: rgba(0, 0, 0, 0.65);">环比</span>
+                <i
+                  :style="{
+                    color:
+                      chart1_1Info.raingRatio > 0
+                        ? 'rgba(47, 194, 91, 1)'
+                        : 'rgba(245, 34, 45, 1)'
+                  }"
+                  :class="
+                    chart1_1Info.raingRatio < 0
+                      ? 'el-icon-caret-bottom'
+                      : 'el-icon-caret-top'
+                  "
                 />
               </div>
-              <el-table
-                v-if="tableData.length"
-                v-loading="tableLoading"
-                :data="tableData"
-                style="width: 100%;margin-top: 20px;"
+            </div>
+          </div>
+        </el-card>
+      </div>
+      <div class="chart-form">
+        <el-card shadow="never" style="overflow: visible">
+          <div slot="header" class="clearfix">
+            <span class="card-title">数据筛选</span>
+            <el-button
+              type="text"
+              style="float: right;padding: 0;"
+              @click.native="resetForm"
+            >
+              清除筛选
+            </el-button>
+          </div>
+          <el-form
+            ref="filterForm"
+            :model="filterForm"
+            size="medium"
+            label-position="top"
+            class="thin-scroll"
+            style="height: 302px;overflow: auto;"
+          >
+            <el-form-item label="时间范围">
+              <el-radio-group v-model="filterForm.scope" @change="scopeChange">
+                <el-radio label="day">
+                  日
+                </el-radio>
+                <el-radio label="week">
+                  周
+                </el-radio>
+                <el-radio label="month">
+                  月
+                </el-radio>
+              </el-radio-group>
+              <el-date-picker
+                v-show="filterForm.pickerType === 'date'"
+                v-model="filterForm.time"
+                type="date"
+                placeholder=""
+                style="width: 100%;"
+                :clearable="false"
+                :picker-options="{
+                  disabledDate(time) {
+                    return time.getTime() > Date.now() - 3600000 * 24
+                  }
+                }"
+                @change="timeChange"
+              />
+              <el-date-picker
+                v-show="filterForm.pickerType === 'week'"
+                v-model="filterForm.time"
+                type="week"
+                format="yyyy 第 WW 周"
+                placeholder=""
+                :clearable="false"
+                :picker-options="{
+                  firstDayOfWeek: 1,
+                  disabledDate(time) {
+                    return time.getTime() > Date.now() - 3600 * 1000 * 24 * 7
+                  }
+                }"
+                style="width: 100%;"
+                @change="timeChange"
+              />
+              <el-date-picker
+                v-show="filterForm.pickerType === 'month'"
+                v-model="filterForm.time"
+                type="month"
+                placeholder=""
+                :clearable="false"
+                style="width: 100%;"
+                :picker-options="{
+                  firstDayOfWeek: 1,
+                  disabledDate(time) {
+                    return (
+                      time >
+                      dayjs()
+                        .subtract(1, 'month')
+                        .startOf('month')
+                    )
+                  }
+                }"
+                @change="timeChange"
+              />
+            </el-form-item>
+            <el-form-item label="地区">
+              <treeselect
+                v-model="filterForm.area"
+                :default-expand-level="1"
+                :multiple="true"
+                :options="treeOptions"
+                style="line-height: 20px;"
+                placeholder=""
+                :normalizer="normalizer"
+                :show-count="true"
+                :append-to-body="true"
+                @close="areaChange"
+              />
+            </el-form-item>
+            <el-form-item label="维修分类" style="margin-bottom: 18px;">
+              <el-select
+                v-model="filterForm.type"
+                placeholder=""
+                style="width:100%;"
+                clearable
+                @change="typeChanage"
               >
-                <el-table-column type="index" label="排名" width="50px" />
-
-                <el-table-column
-                  v-for="item in Object.keys(tableData[0])"
-                  :key="item"
-                  :prop="item"
-                  :label="item"
+                <el-option
+                  v-for="item in typeOptions"
+                  :key="item.Id"
+                  :label="item.Name"
+                  :value="item.Id"
                 />
-              </el-table>
-              <el-pagination
-                background
-                :current-page.sync="pagination.currentPage"
-                :page-size.sync="pagination.size"
-                :page-sizes="[10, 20, 50, 100]"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="pagination.total"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </div>
+    <el-row type="flex" :gutter="25">
+      <el-col :span="12">
+        <el-card shadow="never">
+          <div slot="header" class="clearfix">
+            <span class="card-title">维修数量排名</span>
+          </div>
+          <div>
+            <bar-chart
+              :data="chart2_1Data"
+              :loading="chart2_1Loading"
+              dom-id="chart2_1"
+              @drillDown="chart2_1DrillDown"
+            />
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card shadow="never">
+          <div slot="header" class="clearfix">
+            <span class="card-title">维修分类</span>
+          </div>
+          <div>
+            <pie-chart
+              :data="chart2_2Data"
+              :loading="chart2_2Loading"
+              :type-id="filterForm.type"
+              dom-id="chart2_2"
+              @drillDown="chart2_2DrillDown"
+            />
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row type="flex" :gutter="25">
+      <el-col :span="24">
+        <el-card shadow="never">
+          <div slot="header" class="clearfix">
+            <span class="card-title">维修数量详情表</span>
+            <el-tag size="small" type="info" style="margin-left: 15px;">
+              {{
+                dayjs(filterForm.start).format('YYYY-MM-DD HH:mm') +
+                  ' 至 ' +
+                  dayjs(filterForm.end)
+                    .subtract(1, 'minute')
+                    .format('YYYY-MM-DD HH:mm')
+              }}
+            </el-tag>
+          </div>
+          <div>
+            <div>
+              <el-button
+                icon="el-icon-download"
+                size="medium"
+                @click.native="downloadExcel"
+              >
+                导出
+              </el-button>
+              <el-input
+                v-model="projectNameFilter"
+                placeholder="请输入项目名称"
+                size="medium"
+                clearable
+                style="width: 200px;float: right;"
               />
             </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </div>
+            <el-table
+              v-if="tableData.length"
+              v-loading="tableLoading"
+              :data="tableData"
+              style="width: 100%;margin-top: 20px;"
+            >
+              <el-table-column type="index" label="排名" width="50px" />
+
+              <el-table-column
+                v-for="item in Object.keys(tableData[0])"
+                :key="item"
+                :prop="item"
+                :label="item"
+              />
+            </el-table>
+            <el-pagination
+              background
+              :current-page.sync="pagination.currentPage"
+              :page-size.sync="pagination.size"
+              :page-sizes="[10, 20, 50, 100]"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="pagination.total"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 

@@ -142,7 +142,13 @@
             <div class="part-item">
               <div class="part-top">
                 <div class="part-title">总能耗</div>
-                <el-button type="text" class="part-entry">
+                <el-button
+                  @click.native="
+                    () => $router.push('/analysis/energyConsumption')
+                  "
+                  type="text"
+                  class="part-entry"
+                >
                   跨项目对比
                   <i class="el-icon-arrow-right"></i>
                 </el-button>

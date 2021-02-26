@@ -1257,6 +1257,12 @@ const analysis = {
       meta: { showBackButton: true, title: '报警数量统计报告' }
     },
     {
+      path: 'energyConsumption',
+      component: _import('analysis/energyConsumption/index'),
+      name: 'energyConsumption',
+      meta: { showBackButton: true, title: '能耗分析' }
+    },
+    {
       path: 'repair',
       component: _import('analysis/repair/Index'),
       name: 'analysisRepair',

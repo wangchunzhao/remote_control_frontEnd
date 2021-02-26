@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="custom-date-pikcer-KJDSHFJ">
     <el-radio-group v-model="type" @change="scopeChange" size="small" border>
       <el-radio-button label="day" v-if="typeArr.indexOf('day') >= 0">
         日
@@ -22,6 +22,7 @@
       v-model="time"
       type="date"
       placeholder=""
+      size="small"
       style="width: 100%;margin-top: 5px"
       :clearable="false"
       :picker-options="{
@@ -34,6 +35,7 @@
       v-show="type === 'week'"
       v-model="time"
       type="week"
+      size="small"
       format="yyyy 第 WW 周"
       placeholder=""
       :clearable="false"
@@ -49,6 +51,7 @@
       v-show="type === 'month'"
       v-model="time"
       type="month"
+      size="small"
       placeholder=""
       :clearable="false"
       style="width: 100%;margin-top: 5px"
@@ -69,6 +72,7 @@
       v-model="time"
       type="year"
       placeholder=""
+      size="small"
       :clearable="false"
       style="width: 100%;margin-top: 5px"
       :picker-options="{
@@ -82,6 +86,7 @@
       v-show="type === 'custom'"
       v-model="dateRange"
       type="daterange"
+      size="small"
       style="width: 100%;margin-top: 5px"
       range-separator="至"
       startTime-placeholder="开始日期"
@@ -257,4 +262,16 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss">
+.custom-date-pikcer-KJDSHFJ {
+  .el-radio-group {
+    display: flex;
+  }
+  .el-radio-button {
+    flex: 1;
+  }
+  .el-radio-button__inner {
+    display: block;
+  }
+}
+</style>
