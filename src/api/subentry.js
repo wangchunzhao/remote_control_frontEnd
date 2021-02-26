@@ -6,7 +6,7 @@ export const setSubentryModelTreeSummary = ({
   isSummary
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Subentry/SetSubentryModelTreeSummary',
+    '/api/Subentry/SetSubentryModelTreeSummary',
     subentryModelTreeList,
     {
       params: {
@@ -25,7 +25,7 @@ export const getSubentryTree = ({
   isGetModelTree,
   subentryId = undefined
 }) => {
-  return fetch.get(BASE_URI + '/api/Subentry/GetSubentryTree', {
+  return fetch.get('/api/Subentry/GetSubentryTree', {
     params: {
       companyId,
       projectId,
@@ -43,17 +43,13 @@ export const updateSubentryModelTree = ({
   subentryId,
   modelTreeList
 }) => {
-  return fetch.post(
-    BASE_URI + '/api/Subentry/UpdateSubentryModelTree',
-    modelTreeList,
-    {
-      params: {
-        companyId,
-        projectId,
-        subentryId
-      },
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/Subentry/UpdateSubentryModelTree', modelTreeList, {
+    params: {
+      companyId,
+      projectId,
+      subentryId
+    },
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 变更设备和分项的关联 end

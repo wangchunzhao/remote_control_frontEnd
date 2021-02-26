@@ -7,7 +7,7 @@ export const batchAddCollector = ({
   CollectorNumberList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Collector/BatchAddCollector',
+    '/api/Collector/BatchAddCollector',
     {
       ProjectId,
       CollectorType,
@@ -22,7 +22,7 @@ export const batchAddCollector = ({
 
 // #region 验证采集器是否存在 true:已存在 start
 export const collectorIsExists = ({ collectorNumber }) => {
-  return fetch.get(BASE_URI + '/api/Collector/CollectorIsExists', {
+  return fetch.get('/api/Collector/CollectorIsExists', {
     params: {
       collectorNumber
     }
@@ -32,7 +32,7 @@ export const collectorIsExists = ({ collectorNumber }) => {
 
 // #region 获取可绑定采集器车辆 start
 export const getCollectorIsBinding = ({ projectID }) => {
-  return fetch.get(BASE_URI + '/api/Collector/GetCollectorIsBinding', {
+  return fetch.get('/api/Collector/GetCollectorIsBinding', {
     params: {
       projectID
     }
@@ -48,7 +48,7 @@ export const collectorBinding = ({
   ProjectId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Collector/CollectorBinding',
+    '/api/Collector/CollectorBinding',
     {
       CollectorID,
       mtid,
@@ -76,7 +76,7 @@ export const collectorList = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Collector/GetCollectorList',
+    '/api/Collector/GetCollectorList',
     {
       CollectorNumber,
       projectId,
@@ -98,19 +98,15 @@ export const collectorList = ({
 
 // #region 批量删除采集器 start
 export const batchDeleteCollector = ({ collectorIDList }) => {
-  return fetch.post(
-    BASE_URI + '/api/Collector/BatchDeleteCollector',
-    collectorIDList,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/Collector/BatchDeleteCollector', collectorIDList, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 批量删除采集器 end
 
 // #region 获取可绑定采集器车辆 start
 export const getSimMonthInfo = ({ sim }) => {
-  return fetch.get(BASE_URI + '/api/Collector/GetSimMonthInfo', {
+  return fetch.get('/api/Collector/GetSimMonthInfo', {
     params: {
       sim
     }
@@ -121,7 +117,7 @@ export const getSimMonthInfo = ({ sim }) => {
 // #region 获取可绑定采集器车辆 start
 export const collectorUntying = ({ CollectorID }) => {
   return fetch.post(
-    BASE_URI + '/api/Collector/CollectorUntying',
+    '/api/Collector/CollectorUntying',
     {
       CollectorID
     },
@@ -135,7 +131,7 @@ export const collectorUntying = ({ CollectorID }) => {
 // #region 采集器绑定SIM卡号 start
 export const collectorSIMBinding = ({ CollectorSIM, CollectorID }) => {
   return fetch.post(
-    BASE_URI + '/api/Collector/CollectorSIMBinding',
+    '/api/Collector/CollectorSIMBinding',
     {
       CollectorSIM,
       CollectorID

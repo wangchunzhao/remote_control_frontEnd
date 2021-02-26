@@ -2,18 +2,15 @@ import fetch from '@/utils/service'
 
 // #region 获取设备绑定的维保方 start
 export const getBindingMaintenanceUser = params => {
-  return fetch.get(
-    BASE_URI + `/api/NewRepairActive/GetBindingMaintenanceUser`,
-    {
-      params
-    }
-  )
+  return fetch.get(`/api/NewRepairActive/GetBindingMaintenanceUser`, {
+    params
+  })
 }
 // #endregion 获取设备绑定的维保方 end
 
 // #region 获取单个设备对应的维保单位 start
 export const getMaintenanceUnit = ({ projectID, typeID }) => {
-  return fetch.get(BASE_URI + '/api/NewRepairActive/GetMaintenanceUnitList', {
+  return fetch.get('/api/NewRepairActive/GetMaintenanceUnitList', {
     params: {
       projectID,
       typeID
@@ -24,7 +21,7 @@ export const getMaintenanceUnit = ({ projectID, typeID }) => {
 
 // #region 获取维保单位下的维修人 start
 export const getMaintenanceUserList = ({ maintenanceUnitID }) => {
-  return fetch.get(BASE_URI + '/api/NewRepairActive/GetMaintenanceUserList', {
+  return fetch.get('/api/NewRepairActive/GetMaintenanceUserList', {
     params: {
       maintenanceUnitID
     }
@@ -34,7 +31,7 @@ export const getMaintenanceUserList = ({ maintenanceUnitID }) => {
 
 // #region 获取设备故障现在列表 start
 export const getRepairFaultList = ({ devtypeID }) => {
-  return fetch.get(BASE_URI + '/api/NewRepairActive/GetRepairFaultList', {
+  return fetch.get('/api/NewRepairActive/GetRepairFaultList', {
     params: {
       devtypeID
     }
@@ -55,7 +52,7 @@ export const addRepair = ({
   Applicant
 }) => {
   return fetch.post(
-    BASE_URI + '/api/NewRepairActive/AddRepair',
+    '/api/NewRepairActive/AddRepair',
     {
       ProjectID,
       ALARM_ACTIVE_ID,
@@ -89,7 +86,7 @@ export const getRepairLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/NewRepairActive/GetRepairLogPage',
+    '/api/NewRepairActive/GetRepairLogPage',
     {
       CompanyId,
       ProjectIdList,
@@ -125,7 +122,7 @@ export const exportRepairLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/NewRepairActive/ExportRepairLogPage',
+    '/api/NewRepairActive/ExportRepairLogPage',
     {
       CompanyId,
       ProjectIdList,
@@ -150,7 +147,7 @@ export const exportRepairLogPage = ({
 // #region 获取维修记录页参数 start
 export const getRepairLogPageParameter = ({ CompanyId, ProjectIdList }) => {
   return fetch.post(
-    BASE_URI + '/api/NewRepairActive/GetRepairLogPageParameter',
+    '/api/NewRepairActive/GetRepairLogPageParameter',
     {
       CompanyId,
       ProjectIdList

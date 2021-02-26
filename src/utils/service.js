@@ -3,7 +3,6 @@ import qs from 'qs'
 import router from '@/router'
 // import store from '@/store'
 import { getToken, getRefreshToken } from '@/utils/auth'
-// import { _host } from '../config'
 import store from '@/store/index'
 
 // 创建一个axios实例

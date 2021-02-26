@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 添加模型 start
 export const addModel = ({ name, mtid }) => {
-  return fetch.post(BASE_URI + '/api/LocationTree/AddModel', null, {
+  return fetch.post('/api/LocationTree/AddModel', null, {
     params: {
       name,
       mtid
@@ -14,7 +14,7 @@ export const addModel = ({ name, mtid }) => {
 
 // #region 删除模型 start
 export const deleteModel = mtid => {
-  return fetch.post(BASE_URI + '/api/LocationTree/DeleteModel', null, {
+  return fetch.post('/api/LocationTree/DeleteModel', null, {
     params: {
       mtid
     },
@@ -25,7 +25,7 @@ export const deleteModel = mtid => {
 
 // #region 修改模型 start
 export const updateModel = ({ name, mtid }) => {
-  return fetch.post(BASE_URI + '/api/LocationTree/UpdateModel', null, {
+  return fetch.post('/api/LocationTree/UpdateModel', null, {
     params: {
       name,
       mtid

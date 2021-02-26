@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 添加运单存储 start
 export const addWaybillStorage = ({ waybillNumber, CompanyId }) => {
-  return fetch.post(BASE_URI + '/api/WaybillStorage/AddWaybillStorage', null, {
+  return fetch.post('/api/WaybillStorage/AddWaybillStorage', null, {
     params: {
       waybillNumber,
       CompanyId
@@ -15,7 +15,7 @@ export const addWaybillStorage = ({ waybillNumber, CompanyId }) => {
 // #region 批量添加运单存储文件 存在则覆盖 start
 export const batchAddWaybillStorageFile = formData => {
   return fetch.post(
-    BASE_URI + '/api/WaybillStorage/BatchAddWaybillStorageFile',
+    '/api/WaybillStorage/BatchAddWaybillStorageFile',
     formData,
     {
       headers: { 'Content-Type': 'multipart/form-data' }
@@ -34,7 +34,7 @@ export const getWaybillStoragePage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/WaybillStorage/GetWaybillStoragePage',
+    '/api/WaybillStorage/GetWaybillStoragePage',
     {
       CompanyId,
       WaybillNumber,

@@ -16,7 +16,7 @@ export const addProjectAsterisk = ({ projectId }) => {
 
 // #region 删除星标项目 start
 export const deleteProjectAsterisk = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Project/DeleteProjectAsterisk', {
+  return fetch.get('/api/Project/DeleteProjectAsterisk', {
     params: {
       projectId
     }
@@ -26,12 +26,8 @@ export const deleteProjectAsterisk = ({ projectId }) => {
 
 // #region 获取项目概览 start
 export const getProjectOverview = data => {
-  return fetch.post(
-    global.HC_BASE_URI + '/api/Project/GetProjectOverview',
-    data,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post(HC_BASE_URI + '/api/Project/GetProjectOverview', data, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 获取项目概览 end

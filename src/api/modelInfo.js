@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取项目设备监测信息详情 start
 export const getModelInfo = ({ projectId, modelId }) => {
-  return fetch.get(BASE_URI + '/api/ModelInfo/GetModelinfo', {
+  return fetch.get('/api/ModelInfo/GetModelinfo', {
     params: { projectId, modelId }
   })
 }
@@ -32,7 +32,7 @@ export const updateModelInfo = ({
   securityGuard = undefined
 }) => {
   return fetch.post(
-    BASE_URI + '/api/ModelInfo/UpdateModelInfo',
+    '/api/ModelInfo/UpdateModelInfo',
     {
       ReferencePictures,
       Drawing,

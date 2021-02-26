@@ -30,7 +30,6 @@ const baseUriDev = 'http://152.136.134.93:9183'
 const HCBaseUriProd = 'https://yun.sinocold.net:5001'
 const HCBaseUriDev = 'http://192.168.6.180:5200'
 
-export const _host = process.env.NODE_ENV === 'production' ? hostProd : hostDev
 export const BASE_URI =
   process.env.NODE_ENV === 'production' ? baseUriProd : baseUriDev
 
@@ -46,7 +45,6 @@ export const PROJECT_NAME = 'CoolCare-PC'
 //     : `http://dev.sinocold.com:30392` // 测试环境
 global.DATAV_PROJECT_URL = `http://dev.sinocold.com:30392`
 
-global._host = _host
 global.BASE_URI = BASE_URI
 global.HC_BASE_URI = HC_BASE_URI
 global.PROJECT_URLPROD = baseUriProd

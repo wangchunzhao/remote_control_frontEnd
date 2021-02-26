@@ -11,7 +11,7 @@ export const addOrUpdateMaintenanceTemplate = ({
   MaintenanceType
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceTemplate/AddOrUpdateMaintenanceTemplate',
+    '/api/MaintenanceTemplate/AddOrUpdateMaintenanceTemplate',
     {
       MaintenanceTemplateId,
       CompanyId,
@@ -40,7 +40,7 @@ export const getMaintenanceTemplatePage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceTemplate/GetMaintenanceTemplatePage',
+    '/api/MaintenanceTemplate/GetMaintenanceTemplatePage',
     {
       CompanyId,
       MaintenanceTemplateName,
@@ -69,7 +69,7 @@ export const addOrUpdateMaintenanceTemplateItem = ({
   Order
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceTemplate/AddOrUpdateMaintenanceTemplateItem',
+    '/api/MaintenanceTemplate/AddOrUpdateMaintenanceTemplateItem',
     {
       MaintenanceTemplateItemId,
       MaintenanceTemplateItemName,
@@ -88,27 +88,21 @@ export const addOrUpdateMaintenanceTemplateItem = ({
 
 // #region 删除维保模板 start
 export const deleteMaintenanceTemplate = ({ maintenanceTemplateId }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceTemplate/DeleteMaintenanceTemplate',
-    {
-      params: {
-        maintenanceTemplateId
-      }
+  return fetch.get('/api/MaintenanceTemplate/DeleteMaintenanceTemplate', {
+    params: {
+      maintenanceTemplateId
     }
-  )
+  })
 }
 // #endregion 删除维保模板 end
 
 // #region 获取维保模板项字典（通过GroupName分组之后的字典） start
 export const getMaintenanceTemplateItemList = ({ maintenanceTemplateId }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceTemplate/GetMaintenanceTemplateItemList',
-    {
-      params: {
-        maintenanceTemplateId
-      }
+  return fetch.get('/api/MaintenanceTemplate/GetMaintenanceTemplateItemList', {
+    params: {
+      maintenanceTemplateId
     }
-  )
+  })
 }
 // #endregion 获取维保模板项字典（通过GroupName分组之后的字典） end
 
@@ -116,14 +110,11 @@ export const getMaintenanceTemplateItemList = ({ maintenanceTemplateId }) => {
 export const deleteMaintenanceTemplateItem = ({
   maintenanceTemplateItemId
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceTemplate/DeleteMaintenanceTemplateItem',
-    {
-      params: {
-        maintenanceTemplateItemId
-      }
+  return fetch.get('/api/MaintenanceTemplate/DeleteMaintenanceTemplateItem', {
+    params: {
+      maintenanceTemplateItemId
     }
-  )
+  })
 }
 // #endregion 删除维保模板项 end
 
@@ -152,7 +143,7 @@ export const UpdateMaintenanceTemplateGroupName = ({
   newGroupName
 }) => {
   return fetch.get(
-    BASE_URI + '/api/MaintenanceTemplate/UpdateMaintenanceTemplateGroupName',
+    '/api/MaintenanceTemplate/UpdateMaintenanceTemplateGroupName',
     {
       params: {
         maintenanceTemplateId,
@@ -167,7 +158,7 @@ export const UpdateMaintenanceTemplateGroupName = ({
 // #region 更改维保项排序 start
 export const maintenanceTemplateItemOrder = form => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceTemplate/MaintenanceTemplateItemOrder',
+    '/api/MaintenanceTemplate/MaintenanceTemplateItemOrder',
     form,
     {
       headers: { 'Content-Type': 'application/json' }
@@ -182,7 +173,7 @@ export const updateMaintenanceTemplateUrl = ({
   htmlText
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceTemplate/UpdateMaintenanceTemplateUrl',
+    '/api/MaintenanceTemplate/UpdateMaintenanceTemplateUrl',
     htmlText,
     {
       params: {
@@ -200,7 +191,7 @@ export const getMaintenanceTemplateDropdownList = ({
   bigTypeId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceTemplate/GetMaintenanceTemplateDropdownList',
+    '/api/MaintenanceTemplate/GetMaintenanceTemplateDropdownList',
     companyIdList,
     {
       params: {
@@ -214,14 +205,11 @@ export const getMaintenanceTemplateDropdownList = ({
 
 // #region 获取维保模板信息 start
 export const getMaintenanceTemplateInfo = ({ maintenanceTemplateId }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceTemplate/GetMaintenanceTemplateInfo',
-    {
-      params: {
-        maintenanceTemplateId
-      }
+  return fetch.get('/api/MaintenanceTemplate/GetMaintenanceTemplateInfo', {
+    params: {
+      maintenanceTemplateId
     }
-  )
+  })
 }
 // #endregion 获取维保模板信息 end
 
@@ -235,7 +223,7 @@ export const CopyMaintenanceTemplate = ({
   MaintenanceCycle
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceTemplate/CopyMaintenanceTemplate',
+    '/api/MaintenanceTemplate/CopyMaintenanceTemplate',
     {
       MaintenanceTemplateId,
       CompanyId,
@@ -255,13 +243,10 @@ export const CopyMaintenanceTemplate = ({
 export const getTemplateRelateContractListGetTemplateRelateContractList = ({
   maintenanceTemplateId
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceTemplate/GetTemplateRelateContractList',
-    {
-      params: {
-        maintenanceTemplateId
-      }
+  return fetch.get('/api/MaintenanceTemplate/GetTemplateRelateContractList', {
+    params: {
+      maintenanceTemplateId
     }
-  )
+  })
 }
 // #endregion 获取维保关联合同列表 end

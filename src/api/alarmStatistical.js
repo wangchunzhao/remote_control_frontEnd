@@ -10,7 +10,7 @@ export const getAlarmNumBrokenLine = ({
   modelBigId,
   companyId
 }) => {
-  return fetch.get(BASE_URI + '/api/AlarmStatistical/GetAlarmNumBrokenLine', {
+  return fetch.get('/api/AlarmStatistical/GetAlarmNumBrokenLine', {
     params: {
       startTime,
       endTime,
@@ -35,7 +35,7 @@ export const getAlarmNumColumnare = ({
   subareaId,
   modelBigId
 }) => {
-  return fetch.get(BASE_URI + '/api/AlarmStatistical/GetAlarmNumColumnare', {
+  return fetch.get('/api/AlarmStatistical/GetAlarmNumColumnare', {
     params: {
       companyId,
       startTime,
@@ -60,7 +60,7 @@ export const getAlarmNumPie = ({
   subareaId,
   modelBigId
 }) => {
-  return fetch.get(BASE_URI + '/api/AlarmStatistical/GetAlarmNumPie', {
+  return fetch.get('/api/AlarmStatistical/GetAlarmNumPie', {
     params: {
       companyId,
       startTime,
@@ -87,7 +87,7 @@ export const getAlarmNumList = ({
   pageIndex,
   pageSize
 }) => {
-  return fetch.get(BASE_URI + '/api/AlarmStatistical/GetAlarmNumList', {
+  return fetch.get('/api/AlarmStatistical/GetAlarmNumList', {
     params: {
       companyId,
       startTime,
@@ -112,7 +112,7 @@ export const getAlarmTimePie = ({
   endTime,
   industry
 }) => {
-  return fetch.get(BASE_URI + '/api/AlarmStatistical/GetAlarmTimePie', {
+  return fetch.get('/api/AlarmStatistical/GetAlarmTimePie', {
     params: {
       companyId,
       startTime,
@@ -130,7 +130,7 @@ export const getAlarmLevelPie = ({
   endTime,
   industry
 }) => {
-  return fetch.get(BASE_URI + '/api/AlarmStatistical/GetAlarmLevelPie', {
+  return fetch.get('/api/AlarmStatistical/GetAlarmLevelPie', {
     params: {
       companyId,
       startTime,
@@ -150,7 +150,7 @@ export const getAlarmListStatistical = ({
   pageIndex,
   pageSize
 }) => {
-  return fetch.get(BASE_URI + '/api/AlarmStatistical/GetAlarmListStatistical', {
+  return fetch.get('/api/AlarmStatistical/GetAlarmListStatistical', {
     params: {
       startTime,
       endTime,

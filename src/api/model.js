@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取大类小类 start
 export const getBigSmallType = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Model/GetBigSmallType', {
+  return fetch.get('/api/Model/GetBigSmallType', {
     params: {
       companyId
     }
@@ -12,20 +12,16 @@ export const getBigSmallType = ({ companyId }) => {
 
 // #region 获取设备状态统计 start
 export const getModelTreeStatusTotal = ({ subareaIdList }) => {
-  return fetch.post(
-    BASE_URI + '/api/Model/GetModelTreeStatusTotal',
-    subareaIdList,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/Model/GetModelTreeStatusTotal', subareaIdList, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 获取设备状态统计 end
 
 // #region 获取设备分组统计 start
 export const getModelTreeGroupStatistics = ({ subareaIdList, Type }) => {
   return fetch.post(
-    BASE_URI + '/api/Model/GetModelTreeGroupStatistics',
+    '/api/Model/GetModelTreeGroupStatistics',
     { subareaIdList, Type },
     {
       headers: { 'Content-Type': 'application/json' }
@@ -41,7 +37,7 @@ export const getModelTreeProjectStatistics = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Model/GetModelTreeProjectStatistics',
+    '/api/Model/GetModelTreeProjectStatistics',
     {
       subareaIdList,
       PageIndex,
@@ -57,7 +53,7 @@ export const getModelTreeProjectStatistics = ({
 // #region 导出设备项目统计 start
 export const exportModelTreeProjectStatistics = ({ subareaIdList }) => {
   return fetch.post(
-    BASE_URI + '/api/Model/ExportModelTreeProjectStatistics',
+    '/api/Model/ExportModelTreeProjectStatistics',
     {
       subareaIdList
     },
@@ -86,7 +82,7 @@ export const getModelTreePage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + `/api/Model/GetModelTreePage`,
+    `/api/Model/GetModelTreePage`,
     {
       SubareaIdList,
       ProjectId,
@@ -122,7 +118,7 @@ export const exportModelTreePage = ({
   IsMonitor
 }) => {
   return fetch.post(
-    BASE_URI + `/api/Model/ExportModelTreePage`,
+    `/api/Model/ExportModelTreePage`,
     {
       SubareaIdList,
       ProjectId,
@@ -144,7 +140,7 @@ export const exportModelTreePage = ({
 
 // #region 根据项目得到子系统 start
 export const getModelListByProject = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Model/GetChild', {
+  return fetch.get('/api/Model/GetChild', {
     params: {
       projectId
     }
@@ -154,7 +150,7 @@ export const getModelListByProject = ({ projectId }) => {
 
 // #region 获取用户拥有的设备权限 start
 export const getUserModel = ({ projectId, userId }) => {
-  return fetch.get(BASE_URI + '/api/Model/GetUserModel', {
+  return fetch.get('/api/Model/GetUserModel', {
     params: {
       projectId,
       userId
@@ -165,7 +161,7 @@ export const getUserModel = ({ projectId, userId }) => {
 
 // #region 获取子系统下的小类 start
 export const getTab = ({ projectId, bigTypeId }) => {
-  return fetch.get(BASE_URI + `/api/Model/getTab`, {
+  return fetch.get(`/api/Model/getTab`, {
     params: {
       projectId,
       bigTypeId
@@ -192,7 +188,7 @@ export const getTableListRead = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + `/api/Model/GetTableListRead`,
+    `/api/Model/GetTableListRead`,
     {
       ProjectId,
       BigTypeId,
@@ -234,7 +230,7 @@ export const getTableListReadScreen = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + `/api/Model/GetTableListReadScreen`,
+    `/api/Model/GetTableListReadScreen`,
     {
       ProjectId,
       BigTypeId,
@@ -280,7 +276,7 @@ export const queryPoint = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + `/api/Model/QueryPoint`,
+    `/api/Model/QueryPoint`,
     {
       mtid,
       mtidList,
@@ -321,7 +317,7 @@ export const queryDeviceInfo = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + `/api/Model/QueryDeviceInfo`,
+    `/api/Model/QueryDeviceInfo`,
     {
       UId,
       ProjectId,
@@ -348,7 +344,7 @@ export const resetUserModel = ({
   StorageSpaceExtendList
 }) => {
   return fetch.post(
-    BASE_URI + `/api/Model/ResetUserModel`,
+    `/api/Model/ResetUserModel`,
     {
       UserModelList,
       ProjectId,
@@ -364,17 +360,13 @@ export const resetUserModel = ({
 
 // #region 获取设备和点位类型下拉框 start
 export const getModelTreeAndPointTypeDropdown = ({ bigTypeId, projectId }) => {
-  return fetch.post(
-    BASE_URI + `/api/Model/GetModelTreeAndPointTypeDropdown`,
-    null,
-    {
-      params: {
-        bigTypeId,
-        projectId
-      },
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post(`/api/Model/GetModelTreeAndPointTypeDropdown`, null, {
+    params: {
+      bigTypeId,
+      projectId
+    },
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 获取设备和点位类型下拉框 end
 
@@ -393,7 +385,7 @@ export const getTableList = ({
   UId = undefined
 }) => {
   return fetch.post(
-    BASE_URI + `/api/model/getTableList`,
+    `/api/model/getTableList`,
     {
       ProjectId,
       BigTypeId,
@@ -422,7 +414,7 @@ export const queryPointTypeInDmpListDropdownList = ({
   PointStatusList
 }) => {
   return fetch.post(
-    BASE_URI + `/api/Model/QueryPointTypeInDmpListDropdownList`,
+    `/api/Model/QueryPointTypeInDmpListDropdownList`,
     {
       mtid,
       LevelList,
@@ -438,7 +430,7 @@ export const queryPointTypeInDmpListDropdownList = ({
 
 // #region  start
 export const getMtIdList = ({ projectId, bigTypeId, smallTypeId }) => {
-  return fetch.get(BASE_URI + `/api/Model/GetMtIdList`, {
+  return fetch.get(`/api/Model/GetMtIdList`, {
     params: {
       projectId,
       bigTypeId,
@@ -451,7 +443,7 @@ export const getMtIdList = ({ projectId, bigTypeId, smallTypeId }) => {
 
 // #region 设备信息 start
 export const deviceInfo = modelTreeId => {
-  return fetch.get(BASE_URI + '/api/Model/DeviceInfo', {
+  return fetch.get('/api/Model/DeviceInfo', {
     params: {
       modelTreeId
     }
@@ -462,7 +454,7 @@ export const deviceInfo = modelTreeId => {
 // 获取供配电卡片显示
 export const getCard = (project, sid, model, inp, page, num) => {
   return fetch.post(
-    BASE_URI + `/api/Model/getCard`,
+    `/api/Model/getCard`,
     {
       ProjectId: project,
       BigTypeId: sid,
@@ -479,7 +471,7 @@ export const getCard = (project, sid, model, inp, page, num) => {
 
 // 获取区域历史数据
 export const getAreaList = (projectId, bigTypeId, startTime, endTime) => {
-  return fetch.get(BASE_URI + `/api/model/GetArealist`, {
+  return fetch.get(`/api/model/GetArealist`, {
     params: {
       projectId,
       bigTypeId,
@@ -491,7 +483,7 @@ export const getAreaList = (projectId, bigTypeId, startTime, endTime) => {
 
 // 客流统计获取历史数据
 export const getDmpList = (projectId, bigTypeId, startTime, endTime, type) => {
-  return fetch.get(BASE_URI + `/api/model/GetDmpList`, {
+  return fetch.get(`/api/model/GetDmpList`, {
     params: {
       projectId,
       bigTypeId,
@@ -510,7 +502,7 @@ export const getPersonList = (
   endTime,
   type
 ) => {
-  return fetch.get(BASE_URI + `/api/model/GetPersonList`, {
+  return fetch.get(`/api/model/GetPersonList`, {
     params: {
       projectId,
       bigTypeId,

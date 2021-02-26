@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 电表拉合闸 start
 export const meterSwitch = ({ meterIdList, isSwitch }) => {
-  return fetch.post(BASE_URI + '/api/Meter/MeterSwitch', meterIdList, {
+  return fetch.post('/api/Meter/MeterSwitch', meterIdList, {
     params: {
       isSwitch
     },
@@ -24,7 +24,7 @@ export const getMeterPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/GetMeterPage',
+    '/api/Meter/GetMeterPage',
     {
       ProjectId,
       ShopName,
@@ -46,7 +46,7 @@ export const getMeterPage = ({
 // #region 获取电表用电记录 start
 export const getMeterPayPage = ({ MeterId, Month, PageIndex, PageSize }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/GetMeterPayPage',
+    '/api/Meter/GetMeterPayPage',
     {
       MeterId,
       Month,
@@ -68,7 +68,7 @@ export const getMeterPayDetailPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/GetMeterPayDetailPage',
+    '/api/Meter/GetMeterPayDetailPage',
     {
       MeterId,
       Month,
@@ -99,7 +99,7 @@ export const getMeterOrderPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/GetMeterOrderPage',
+    '/api/Meter/GetMeterOrderPage',
     {
       ProjectId,
       ShopId,
@@ -137,7 +137,7 @@ export const exportMeterOrder = ({
   IsAsc
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/ExportMeterOrder',
+    '/api/Meter/ExportMeterOrder',
     {
       ProjectId,
       ShopId,
@@ -160,7 +160,7 @@ export const exportMeterOrder = ({
 
 // #region 获取项目下商户列表 start
 export const getShopDropdownList = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Meter/GetShopDropdownList', {
+  return fetch.get('/api/Meter/GetShopDropdownList', {
     params: {
       projectId
     }
@@ -170,7 +170,7 @@ export const getShopDropdownList = ({ projectId }) => {
 
 // #region 获取订单分页参数 start
 export const getMeterOrderPageParameter = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Meter/GetMeterOrderPageParameter', {
+  return fetch.get('/api/Meter/GetMeterOrderPageParameter', {
     params: {
       projectId
     }
@@ -185,7 +185,7 @@ export const getMeterStatisticsTotal = ({
   IsStatisticsShop
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/GetMeterStatisticsTotal',
+    '/api/Meter/GetMeterStatisticsTotal',
     {
       ProjectIdList,
       Month,
@@ -207,7 +207,7 @@ export const getMeterSubareaStatisticsPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/GetMeterSubareaStatisticsPage',
+    '/api/Meter/GetMeterSubareaStatisticsPage',
     {
       ProjectIdList,
       Month,
@@ -229,7 +229,7 @@ export const exportMeterSubareaStatistics = ({
   IsStatisticsShop
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/ExportMeterSubareaStatistics',
+    '/api/Meter/ExportMeterSubareaStatistics',
     {
       ProjectIdList,
       Month,
@@ -249,7 +249,7 @@ export const exportMeterShopStatistics = ({
   IsStatisticsShop
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/ExportMeterShopStatistics',
+    '/api/Meter/ExportMeterShopStatistics',
     {
       ProjectIdList,
       Month,
@@ -264,7 +264,7 @@ export const exportMeterShopStatistics = ({
 
 // #region 获取公司电表结算截止日期 start
 export const getCompanyDeadline = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Meter/GetCompanyDeadline', {
+  return fetch.get('/api/Meter/GetCompanyDeadline', {
     params: {
       companyId
     }
@@ -275,7 +275,7 @@ export const getCompanyDeadline = ({ companyId }) => {
 // #region 批量添加集中器 start
 export const batchAddConcentrator = ({ ProjectId, ConcentratorNoList }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/BatchAddConcentrator',
+    '/api/Meter/BatchAddConcentrator',
     {
       ProjectId,
       ConcentratorNoList
@@ -289,13 +289,9 @@ export const batchAddConcentrator = ({ ProjectId, ConcentratorNoList }) => {
 
 // #region 批量删除采集器 start
 export const batchDeleteConcentrator = ({ deviceIdList }) => {
-  return fetch.post(
-    BASE_URI + '/api/Meter/BatchDeleteConcentrator',
-    deviceIdList,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/Meter/BatchDeleteConcentrator', deviceIdList, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 批量删除采集器 end
 
@@ -308,7 +304,7 @@ export const getConcentratorPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Meter/GetConcentratorPage',
+    '/api/Meter/GetConcentratorPage',
     {
       CompanyId,
       ProjectId,

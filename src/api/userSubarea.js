@@ -14,7 +14,7 @@ export const addMember = ({
   ProjectRole
 }) => {
   return fetch.post(
-    BASE_URI + '/api/User_Subarea/AddUser_Role_Subarea',
+    '/api/User_Subarea/AddUser_Role_Subarea',
     {
       Avatar,
       Nickname,
@@ -36,13 +36,9 @@ export const addMember = ({
 
 // #region 批量新增用户 start
 export const addMembers = members => {
-  return fetch.post(
-    BASE_URI + '/api/User_Subarea/AddUser_Role_SubareaList',
-    members,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/User_Subarea/AddUser_Role_SubareaList', members, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 批量新增用户 end
 
@@ -61,7 +57,7 @@ export const getMemberList = ({
   pageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/User_Subarea/GetUser_Role_SubareaList',
+    '/api/User_Subarea/GetUser_Role_SubareaList',
     {
       CompanyId,
       UserType,
@@ -90,7 +86,7 @@ export const deleteMember = ({
   StorageSpace
 }) => {
   return fetch.post(
-    BASE_URI + '/api/User_Subarea/DeleteUser_Role_Subarea',
+    '/api/User_Subarea/DeleteUser_Role_Subarea',
     {
       CompanyId,
       SubareaId,
@@ -106,7 +102,7 @@ export const deleteMember = ({
 
 // #region 根据公司与角色获取可关联用户列表 start
 export const getUsersConnectSource = ({ roleId, companyId }) => {
-  return fetch.get(BASE_URI + '/api/User_Subarea/GetUser_RoleList', {
+  return fetch.get('/api/User_Subarea/GetUser_RoleList', {
     params: {
       companyId,
       roleId
@@ -118,7 +114,7 @@ export const getUsersConnectSource = ({ roleId, companyId }) => {
 // #region 角色关联用户 start
 export const roleConnectUser = ({ UserRoleSubareaIds, RoleId, CompanyId }) => {
   return fetch.post(
-    BASE_URI + '/api/User_Subarea/RelationUser_Role_Subarea',
+    '/api/User_Subarea/RelationUser_Role_Subarea',
     {
       RoleId,
       UserRoleSubareaIds,
@@ -138,7 +134,7 @@ export const getConnectedUser = ({
   pageIndex,
   pageSize
 }) => {
-  return fetch.get(BASE_URI + '/api/User_Subarea/GetRole_UserList', {
+  return fetch.get('/api/User_Subarea/GetRole_UserList', {
     params: {
       RoleId,
       companyId,
@@ -151,7 +147,7 @@ export const getConnectedUser = ({
 
 // #region 删除用户与角色的关联 start
 export const disConnectUser = ({ UserRoleIdS }) => {
-  return fetch.delete(BASE_URI + '/api/User_Subarea/DeleteUser_RoleList', {
+  return fetch.delete('/api/User_Subarea/DeleteUser_RoleList', {
     params: {
       UserRoleIdS
     }
@@ -161,7 +157,7 @@ export const disConnectUser = ({ UserRoleIdS }) => {
 
 // #region 根据用户id获取项目列表 start
 export const getProjectsByUser = ({ userId, companyId }) => {
-  return fetch.get(BASE_URI + '/api/User_Subarea/GetUser_ProjectList', {
+  return fetch.get('/api/User_Subarea/GetUser_ProjectList', {
     params: {
       userId,
       companyId
@@ -172,13 +168,13 @@ export const getProjectsByUser = ({ userId, companyId }) => {
 
 // #region 根据用户id获取企业列表 start
 export const getCompanysByUser = () => {
-  return fetch.get(BASE_URI + '/api/User_Subarea/GetUser_CompanyList', {})
+  return fetch.get('/api/User_Subarea/GetUser_CompanyList', {})
 }
 // #endregion 根据用户id获取企业列表 end
 
 // #region 获取公司成员信息 start
 export const getUserInfo = ({ UserRoleSubareaId }) => {
-  return fetch.get(BASE_URI + '/api/User_Subarea/GetUser_SubareaModel', {
+  return fetch.get('/api/User_Subarea/GetUser_SubareaModel', {
     params: {
       UserRoleSubareaId
     }
@@ -196,7 +192,7 @@ export const editUserInfo = ({
   CompanyId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/User_Subarea/UpdateDelUser_Subarea',
+    '/api/User_Subarea/UpdateDelUser_Subarea',
     {
       Nickname,
       Mobile,
@@ -219,7 +215,7 @@ export const importProjectUser = ({
   isSystemImport,
   form
 }) => {
-  return fetch.post(BASE_URI + '/api/User_Subarea/ImportProjectUser', form, {
+  return fetch.post('/api/User_Subarea/ImportProjectUser', form, {
     params: {
       companyId,
       projectSubareaId,
@@ -232,7 +228,7 @@ export const importProjectUser = ({
 
 // #region 导入企业成员 start
 export const importCompanyUser = ({ companyId, form }) => {
-  return fetch.post(BASE_URI + '/api/User_Subarea/ImportCompanyUser', form, {
+  return fetch.post('/api/User_Subarea/ImportCompanyUser', form, {
     params: {
       companyId
     },
@@ -243,7 +239,7 @@ export const importCompanyUser = ({ companyId, form }) => {
 
 // #region 获取项目成员列表 start
 export const getProjectUserList = ({ projectId, pageIndex, pageSize }) => {
-  return fetch.get(BASE_URI + '/api/User_Subarea/GetProject_UserList', {
+  return fetch.get('/api/User_Subarea/GetProject_UserList', {
     params: {
       projectId,
       pageIndex,
@@ -255,7 +251,7 @@ export const getProjectUserList = ({ projectId, pageIndex, pageSize }) => {
 
 // #region 获取公司下的用户（下拉框） start
 export const getCompanyUserDropdown = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/User_Subarea/GetCompanyUserDropdown', {
+  return fetch.get('/api/User_Subarea/GetCompanyUserDropdown', {
     params: {
       companyId
     }
@@ -265,7 +261,7 @@ export const getCompanyUserDropdown = ({ companyId }) => {
 
 // #region 获取公司下所有成员，包含待分配成员 start
 export const getCompanyAllUserDropdown = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/User_Subarea/GetCompanyAllUserDropdown', {
+  return fetch.get('/api/User_Subarea/GetCompanyAllUserDropdown', {
     params: {
       companyId
     }

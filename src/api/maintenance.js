@@ -11,7 +11,7 @@ export const addOrUpdateMaintenance = ({
   SubsystemIdList = undefined
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Maintenance/AddOrUpdateMaintenance',
+    '/api/Maintenance/AddOrUpdateMaintenance',
     {
       MaintenanceId,
       CompanyId,
@@ -30,7 +30,7 @@ export const addOrUpdateMaintenance = ({
 
 // #region 批量删除维保团队 start
 export const deleteMaintenance = ({ ids }) => {
-  return fetch.post(BASE_URI + '/api/Maintenance/DeleteMaintenance', ids, {
+  return fetch.post('/api/Maintenance/DeleteMaintenance', ids, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -38,7 +38,7 @@ export const deleteMaintenance = ({ ids }) => {
 
 // #region 获取公司所有维保团队成员 start
 export const getMaintenancePageParameter = ({ companyId, maintenanceId }) => {
-  return fetch.get(BASE_URI + '/api/Maintenance/GetMaintenancePageParameter', {
+  return fetch.get('/api/Maintenance/GetMaintenancePageParameter', {
     params: {
       companyId,
       maintenanceId
@@ -60,7 +60,7 @@ export const getMaintenancePage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Maintenance/GetMaintenancePage',
+    '/api/Maintenance/GetMaintenancePage',
     {
       CompanyId,
       MaintenanceName,
@@ -83,21 +83,18 @@ export const getMaintenanceDropdownBySubsystemId = ({
   projectId,
   subsystemId
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/Maintenance/GetMaintenanceDropdownBySubsystemId',
-    {
-      params: {
-        projectId,
-        subsystemId
-      }
+  return fetch.get('/api/Maintenance/GetMaintenanceDropdownBySubsystemId', {
+    params: {
+      projectId,
+      subsystemId
     }
-  )
+  })
 }
 // #endregion 通过子系统id获取维保团队下拉框 end
 
 // #region 设置维保管理员 start
 export const setMaintenanceAdmin = ({ maintenanceId, userId }) => {
-  return fetch.get(BASE_URI + '/api/Maintenance/SetMaintenanceAdmin', {
+  return fetch.get('/api/Maintenance/SetMaintenanceAdmin', {
     params: {
       maintenanceId,
       userId

@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 点位类型列表 start
 export const getTypeList = ({ mtid }) => {
-  return fetch.get(BASE_URI + '/api/Plan/GetTypeList', {
+  return fetch.get('/api/Plan/GetTypeList', {
     params: {
       mtid
     }
@@ -12,7 +12,7 @@ export const getTypeList = ({ mtid }) => {
 
 // #region 平面图数据 start
 export const getPlanItems = ({ mtid, sid = 0, typeId }) => {
-  return fetch.get(BASE_URI + '/api/Plan/showInfo', {
+  return fetch.get('/api/Plan/showInfo', {
     params: {
       mtid,
       sid,
@@ -24,7 +24,7 @@ export const getPlanItems = ({ mtid, sid = 0, typeId }) => {
 
 // #region 平面图结构树 start
 export const getPlanStructTree = ({ project }) => {
-  return fetch.get(BASE_URI + '/api/Plan/plantrees', {
+  return fetch.get('/api/Plan/plantrees', {
     params: {
       project
     }
@@ -34,7 +34,7 @@ export const getPlanStructTree = ({ project }) => {
 
 // #region 显示测点参数信息 start
 export const showlevInfo = mtid => {
-  return fetch.get(BASE_URI + '/api/Plan/showlevInfo', {
+  return fetch.get('/api/Plan/showlevInfo', {
     params: {
       mtid
     }
@@ -44,7 +44,7 @@ export const showlevInfo = mtid => {
 
 // #region 删除设备或者删除点 start
 export const deleteInfo = form => {
-  return fetch.post(BASE_URI + '/api/Plan/deleteInfo', form, {
+  return fetch.post('/api/Plan/deleteInfo', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -52,7 +52,7 @@ export const deleteInfo = form => {
 
 // #region 修改坐标位置 start
 export const updateArea = form => {
-  return fetch.post(BASE_URI + '/api/Plan/updateArea', form, {
+  return fetch.post('/api/Plan/updateArea', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -60,7 +60,7 @@ export const updateArea = form => {
 
 // #region 上传图片 start
 export const setPlanBg = ({ url, mtid }) => {
-  return fetch.post(BASE_URI + '/api/Plan/uploadImg', null, {
+  return fetch.post('/api/Plan/uploadImg', null, {
     params: {
       url,
       mtid
@@ -71,7 +71,7 @@ export const setPlanBg = ({ url, mtid }) => {
 
 // #region 上传图片 start
 export const uploadImg = ({ img, id, height, width }) => {
-  return fetch.get(BASE_URI + '/api/Plan/uploadImg', {
+  return fetch.get('/api/Plan/uploadImg', {
     params: {
       img,
       id,
@@ -84,7 +84,7 @@ export const uploadImg = ({ img, id, height, width }) => {
 
 // #region 得到未分配的信息 start
 export const getUndistr = mtid => {
-  return fetch.get(BASE_URI + '/api/Plan/getUndistr', {
+  return fetch.get('/api/Plan/getUndistr', {
     params: {
       mtid,
       sid: ''
@@ -95,7 +95,7 @@ export const getUndistr = mtid => {
 
 // #region  start
 export const getDistr = mtid => {
-  return fetch.get(BASE_URI + '/api/Plan/getDistr', {
+  return fetch.get('/api/Plan/getDistr', {
     params: {
       mtid,
       sid: ''
@@ -106,7 +106,7 @@ export const getDistr = mtid => {
 
 // #region  start
 export const deleteImg = id => {
-  return fetch.get(BASE_URI + '/api/Plan/deleteImg', {
+  return fetch.get('/api/Plan/deleteImg', {
     params: {
       id
     }
@@ -116,7 +116,7 @@ export const deleteImg = id => {
 
 // #region  start
 export const existPlan = ({ mtid }) => {
-  return fetch.get(BASE_URI + '/api/Plan/existImg', {
+  return fetch.get('/api/Plan/existImg', {
     params: {
       mtid
     }

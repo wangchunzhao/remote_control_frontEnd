@@ -2,13 +2,9 @@ import fetch from '@/utils/service'
 
 // #region 批量删除一体机 start
 export const batchDeleteTerminal = ({ terminalIDList }) => {
-  return fetch.post(
-    BASE_URI + '/api/Terminal/BatchDeleteTerminal',
-    terminalIDList,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/Terminal/BatchDeleteTerminal', terminalIDList, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 批量删除一体机 end
 
@@ -40,7 +36,7 @@ export function getTerminalList({
   PageSize
 }) {
   return fetch.post(
-    BASE_URI + '/api/Terminal/TerminalList',
+    '/api/Terminal/TerminalList',
     {
       terminalNumber,
       terminalType,
@@ -73,7 +69,7 @@ export function batchAddTerminal({
   TerminalType
 }) {
   return fetch.post(
-    BASE_URI + '/api/Terminal/BatchAddTerminal',
+    '/api/Terminal/BatchAddTerminal',
     {
       ProjectId,
       TerminalType,
@@ -88,7 +84,7 @@ export function batchAddTerminal({
 
 // #region 验证终端是否存在 true:已存在 start
 export const terminalIsExists = ({ terminalNumber }) => {
-  return fetch.get(BASE_URI + '/api/Terminal/TerminalIsExists', {
+  return fetch.get('/api/Terminal/TerminalIsExists', {
     params: {
       terminalNumber
     }
@@ -98,7 +94,7 @@ export const terminalIsExists = ({ terminalNumber }) => {
 
 // #region 导入采集器 start
 export const importTerminal = formData => {
-  return fetch.post(BASE_URI + '/api/Terminal/ImportTerminal', formData, {
+  return fetch.post('/api/Terminal/ImportTerminal', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
@@ -107,7 +103,7 @@ export const importTerminal = formData => {
 // #region  start
 export const terminalSIMBinding = ({ terminalID, terminalSIM }) => {
   return fetch.post(
-    BASE_URI + '/api/Terminal/TerminalSIMBinding',
+    '/api/Terminal/TerminalSIMBinding',
     {
       terminalID,
       terminalSIM

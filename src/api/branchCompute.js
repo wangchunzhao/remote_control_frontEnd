@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 删除支路 start
 export const deleteBranch = ({ modelTreeId }) => {
-  return fetch.get(BASE_URI + '/api/BranchCompute/DeleteBranch', {
+  return fetch.get('/api/BranchCompute/DeleteBranch', {
     params: {
       modelTreeId
     }
@@ -19,7 +19,7 @@ export const getBranchPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/BranchCompute/GetBranchPage',
+    '/api/BranchCompute/GetBranchPage',
     {
       CompanyId,
       ProjectId,
@@ -46,7 +46,7 @@ export const addOrUpdateBranch = ({
   BranchComputeList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/BranchCompute/AddOrUpdateBranch',
+    '/api/BranchCompute/AddOrUpdateBranch',
     {
       ModelTreeId,
       CompanyId,
@@ -72,7 +72,7 @@ export const generateBranchData = ({
   TimeTypeList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/BranchCompute/GenerateBranchData',
+    '/api/BranchCompute/GenerateBranchData',
     {
       StartTime,
       EndTime,

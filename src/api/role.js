@@ -4,7 +4,7 @@ import fetch from '@/utils/service'
 // RoleType: 1:企业角色 2:项目角色
 export const addRole = ({ RoleName, CompanyId, RoleType }) => {
   return fetch.post(
-    BASE_URI + '/api/Role/AddRole',
+    '/api/Role/AddRole',
     {
       RoleName,
       CompanyId,
@@ -19,7 +19,7 @@ export const addRole = ({ RoleName, CompanyId, RoleType }) => {
 
 // #region 获取公司角色列表 start
 export const getRoleList = ({ companyId, roleType }) => {
-  return fetch.get(BASE_URI + '/api/Role/GetCompany_RoleList', {
+  return fetch.get('/api/Role/GetCompany_RoleList', {
     params: {
       companyId,
       roleType
@@ -30,7 +30,7 @@ export const getRoleList = ({ companyId, roleType }) => {
 
 // #region 删除角色 start
 export const daleteRole = ({ roleId }) => {
-  return fetch.get(BASE_URI + '/api/Role/DaleteRole', {
+  return fetch.get('/api/Role/DaleteRole', {
     params: {
       roleId
     }
@@ -40,7 +40,7 @@ export const daleteRole = ({ roleId }) => {
 
 // #region 更新角色 start
 export const updateRole = ({ roleId, roleName }) => {
-  return fetch.get(BASE_URI + '/api/Role/UpdateRole', {
+  return fetch.get('/api/Role/UpdateRole', {
     params: {
       roleId,
       roleName
@@ -51,7 +51,7 @@ export const updateRole = ({ roleId, roleName }) => {
 
 // #region 设置默认角色 start
 export const setDefaultRole = ({ roleId }) => {
-  return fetch.get(BASE_URI + '/api/Role/SetDefaultRole', {
+  return fetch.get('/api/Role/SetDefaultRole', {
     params: {
       roleId
     }
@@ -61,7 +61,7 @@ export const setDefaultRole = ({ roleId }) => {
 
 // #region 获取公司下的角色下拉框 start
 export const getRoleDropdownList = ({ companyId, roleType }) => {
-  return fetch.get(BASE_URI + '/api/Role/GetRoleDropdownList', {
+  return fetch.get('/api/Role/GetRoleDropdownList', {
     params: {
       companyId,
       roleType

@@ -3,7 +3,7 @@ import qs from 'qs'
 
 // #region 获取能耗监测数量信息 start
 export const getEnergyNum = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/EnergyStatistical/GetEnergyNum', {
+  return fetch.get('/api/EnergyStatistical/GetEnergyNum', {
     params: {
       projectId
     }
@@ -19,7 +19,7 @@ export const getEnergyContrastColumnare = ({
   modelTreeIdList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/GetEnergyContrastColumnare',
+    '/api/EnergyStatistical/GetEnergyContrastColumnare',
     modelTreeIdList,
     {
       params: {
@@ -42,7 +42,7 @@ export const getEnergySubentryColumnare = ({
   subentryId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/GetEnergySubentryColumnare',
+    '/api/EnergyStatistical/GetEnergySubentryColumnare',
     modelTreeIdList,
     {
       params: {
@@ -64,7 +64,7 @@ export const getEnergyTimeContrastColumnare = ({
   modelTreeIdList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/GetEnergyTimeContrastColumnare',
+    '/api/EnergyStatistical/GetEnergyTimeContrastColumnare',
     timeQuantumList,
     {
       params: {
@@ -88,7 +88,7 @@ export const getEnergyTimeContrastBrokenLine = ({
   isGetSummary = false
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/GetEnergyTimeContrastBrokenLine',
+    '/api/EnergyStatistical/GetEnergyTimeContrastBrokenLine',
     timeQuantumList,
     {
       params: {
@@ -107,7 +107,7 @@ export const getEnergyTimeContrastBrokenLine = ({
 
 // #region 获取能耗指标 start
 export const getEnergyQuota = ({ projectId, subentryId, modelTreeIdList }) => {
-  return fetch.post(BASE_URI + '/api/EnergyStatistical/GetEnergyQuota', null, {
+  return fetch.post('/api/EnergyStatistical/GetEnergyQuota', null, {
     params: {
       projectId,
       subentryId,
@@ -127,29 +127,25 @@ export const exportEnergyQuota = ({
   subentryId,
   modelTreeIdList
 }) => {
-  return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/ExportEnergyQuota',
-    null,
-    {
-      params: {
-        projectId,
-        subentryId,
-        modelTreeIdList
-      },
-      paramsSerializer: function(params) {
-        return qs.stringify(params, { indices: false })
-      },
-      responseType: 'blob',
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/EnergyStatistical/ExportEnergyQuota', null, {
+    params: {
+      projectId,
+      subentryId,
+      modelTreeIdList
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
+    },
+    responseType: 'blob',
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 导出能耗指标 end
 
 // #region 功率需量列表 start
 export const getPowerEnergyDemandList = ({ projectId, modelTreeIdList }) => {
   return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/GetPowerEnergy_demandList',
+    '/api/EnergyStatistical/GetPowerEnergy_demandList',
     modelTreeIdList,
     {
       params: {
@@ -163,20 +159,16 @@ export const getPowerEnergyDemandList = ({ projectId, modelTreeIdList }) => {
 
 // #region 更新能耗需量 start
 export const updateEnergyDemand = ({ list }) => {
-  return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/UpdateEnergy_demand',
-    list,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/EnergyStatistical/UpdateEnergy_demand', list, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 更新能耗需量 end
 
 // #region 导出需量数据 start
 export const exportEnergyDemand = ({ projectId, modelTreeIdList }) => {
   return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/ExportEnergy_demand',
+    '/api/EnergyStatistical/ExportEnergy_demand',
     modelTreeIdList,
     {
       params: {
@@ -197,7 +189,7 @@ export const getEnergyPowerBrokenLine = ({
   modelTreeList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EnergyStatistical/GetEnergyPowerBrokenLine',
+    '/api/EnergyStatistical/GetEnergyPowerBrokenLine',
     {
       modelTreeList,
       IsYesterday,
@@ -217,15 +209,12 @@ export const getProjectEnergyPowerScatterPlot = ({
   startDate,
   endDate
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/EnergyStatistical/GetProjectEnergyPowerScatterPlot',
-    {
-      params: {
-        startDate,
-        endDate,
-        projectId
-      }
+  return fetch.get('/api/EnergyStatistical/GetProjectEnergyPowerScatterPlot', {
+    params: {
+      startDate,
+      endDate,
+      projectId
     }
-  )
+  })
 }
 // #endregion 获取用电量功率散点图 end

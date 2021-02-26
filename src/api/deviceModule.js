@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取模块下拉框（IsSelect 0：自定义模块 1：系统模块） start
 export const getDeviceModuleDropdown = ({ companyId, projectId }) => {
-  return fetch.get(BASE_URI + '/api/DeviceModule/GetDeviceModuleDropdown', {
+  return fetch.get('/api/DeviceModule/GetDeviceModuleDropdown', {
     params: {
       companyId,
       projectId
@@ -16,7 +16,7 @@ export const getDeviceModuleDropdown = ({ companyId, projectId }) => {
  * 获取模块信息
  */
 export const getDeviceModule = ({ deviceModuleId }) => {
-  return fetch.get(BASE_URI + '/api/DeviceModule/GetDeviceModule', {
+  return fetch.get('/api/DeviceModule/GetDeviceModule', {
     params: {
       deviceModuleId
     }
@@ -34,7 +34,7 @@ export const getDeviceModulePage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/DeviceModule/GetDeviceModulePage',
+    '/api/DeviceModule/GetDeviceModulePage',
     {
       DeviceModuleId,
       DeviceModuleName,
@@ -52,7 +52,7 @@ export const getDeviceModulePage = ({
 
 // #region 更新网关模块所属品类 start
 export const updateDeviceModuleModel = data => {
-  return fetch.get(BASE_URI + '/api/DeviceModule/UpdateDeviceModuleModel', {
+  return fetch.get('/api/DeviceModule/UpdateDeviceModuleModel', {
     params: data
   })
 }
@@ -63,7 +63,7 @@ export const addOrUpdateDeviceModule = ({
   DeviceModuleId,
   UserId,
   DeviceModuleName,
-                                          SmallTypeId,
+  SmallTypeId,
   PointNum,
   BaudRate,
   DataBit,
@@ -73,7 +73,7 @@ export const addOrUpdateDeviceModule = ({
   IsUpdateDevice = false
 }) => {
   return fetch.post(
-    BASE_URI + '/api/DeviceModule/AddOrUpdateDeviceModule',
+    '/api/DeviceModule/AddOrUpdateDeviceModule',
     {
       DeviceModuleId,
       UserId,
@@ -98,7 +98,7 @@ export const addOrUpdateDeviceModule = ({
 
 // #region 删除模块 start
 export const deleteDeviceModule = ({ deviceModuleId }) => {
-  return fetch.post(BASE_URI + '/api/DeviceModule/DeleteDeviceModule', null, {
+  return fetch.post('/api/DeviceModule/DeleteDeviceModule', null, {
     params: {
       deviceModuleId
     },
@@ -109,7 +109,7 @@ export const deleteDeviceModule = ({ deviceModuleId }) => {
 
 // #region 获取网关模块下的点位 start
 export const getDeviceModulePointList = ({ deviceModuleId, isGetAll }) => {
-  return fetch.get(BASE_URI + '/api/DeviceModule/GetDeviceModulePointList', {
+  return fetch.get('/api/DeviceModule/GetDeviceModulePointList', {
     params: {
       isGetAll,
       deviceModuleId
@@ -124,7 +124,7 @@ export const updateDeviceModuleGorgeParameter = ({
   deviceModuleGorgeParameter
 }) => {
   return fetch.post(
-    BASE_URI + '/api/DeviceModule/UpdateDeviceModuleGorgeParameter',
+    '/api/DeviceModule/UpdateDeviceModuleGorgeParameter',
     deviceModuleGorgeParameter,
     {
       params: {
@@ -141,7 +141,7 @@ export const updateDeviceModuleName = ({
   deviceModuleId,
   deviceModuleName
 }) => {
-  return fetch.get(BASE_URI + '/api/DeviceModule/UpdateDeviceModuleName', {
+  return fetch.get('/api/DeviceModule/UpdateDeviceModuleName', {
     params: {
       deviceModuleName,
       deviceModuleId
@@ -156,15 +156,12 @@ export const updateDeviceModulePermissionScope = ({
   permissionType,
   permissionId
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/DeviceModule/UpdateDeviceModulePermissionScope',
-    {
-      params: {
-        permissionType,
-        deviceModuleId,
-        permissionId
-      }
+  return fetch.get('/api/DeviceModule/UpdateDeviceModulePermissionScope', {
+    params: {
+      permissionType,
+      deviceModuleId,
+      permissionId
     }
-  )
+  })
 }
 // #endregion 更新网关模块权限范围 end

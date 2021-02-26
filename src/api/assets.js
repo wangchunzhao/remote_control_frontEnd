@@ -3,7 +3,7 @@ import qs from 'qs'
 
 // #region 添加资产信息 start
 export const addAssetsDevice = form => {
-  return fetch.post(BASE_URI + '/api/Assets/AddAssetsDevice', form, {
+  return fetch.post('/api/Assets/AddAssetsDevice', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -11,7 +11,7 @@ export const addAssetsDevice = form => {
 
 // #region 添加资产信息 start
 export const addAssetsDeviceNew = form => {
-  return fetch.post(BASE_URI + '/api/Assets/AddAssetsDeviceNew', form, {
+  return fetch.post('/api/Assets/AddAssetsDeviceNew', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -19,7 +19,7 @@ export const addAssetsDeviceNew = form => {
 
 // #region 获取设备扩展信息 start
 export const getModelTreeExtend = ({ modelTreeId, assetsCode }) => {
-  return fetch.get(BASE_URI + '/api/Assets/GetModelTreeExtend', {
+  return fetch.get('/api/Assets/GetModelTreeExtend', {
     params: {
       modelTreeId,
       assetsCode
@@ -30,7 +30,7 @@ export const getModelTreeExtend = ({ modelTreeId, assetsCode }) => {
 
 // #region 获取经销商列表 start
 export const getDealerDropdownList = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Assets/GetDealerDropdownList', {
+  return fetch.get('/api/Assets/GetDealerDropdownList', {
     params: {
       companyId
     }
@@ -40,7 +40,7 @@ export const getDealerDropdownList = ({ companyId }) => {
 
 // #region 资产信息更新 start
 export const updateAssets = form => {
-  return fetch.post(BASE_URI + '/api/Assets/UpdateAssets_mdtree', form, {
+  return fetch.post('/api/Assets/UpdateAssets_mdtree', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -52,26 +52,22 @@ export const deleteAssetsInfo = ({
   modelTreeIdList,
   operateType
 }) => {
-  return fetch.post(
-    BASE_URI + '/api/Assets/DeleteAssetsInfo',
-    storageSpaceExtendList,
-    {
-      params: {
-        modelTreeIdList,
-        operateType
-      },
-      paramsSerializer: function(params) {
-        return qs.stringify(params, { indices: false })
-      },
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/Assets/DeleteAssetsInfo', storageSpaceExtendList, {
+    params: {
+      modelTreeIdList,
+      operateType
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
+    },
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 删除资产 end
 
 // #region 导入资产 start
 export const uploadAssetsExcel = formData => {
-  return fetch.post(BASE_URI + '/api/Assets/Upload_AssetsExcel', formData, {
+  return fetch.post('/api/Assets/Upload_AssetsExcel', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
@@ -79,7 +75,7 @@ export const uploadAssetsExcel = formData => {
 
 // #region 资产存放位置列表。 start
 export const getAssetsAddress = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Assets/GetAssetsAddress', {
+  return fetch.get('/api/Assets/GetAssetsAddress', {
     params: {
       projectId
     }
@@ -89,17 +85,13 @@ export const getAssetsAddress = ({ projectId }) => {
 
 // #region 修改资产状态 start
 export const updateAssetsInfo = ({ modelTreeIdList, status, userName }) => {
-  return fetch.post(
-    BASE_URI + '/api/Assets/UpdateAssetsInfo',
-    modelTreeIdList,
-    {
-      params: {
-        status,
-        userName
-      },
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/Assets/UpdateAssetsInfo', modelTreeIdList, {
+    params: {
+      status,
+      userName
+    },
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 修改资产状态 end
 
@@ -122,7 +114,7 @@ export const getAssetsList = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Assets/GetAssetsList',
+    '/api/Assets/GetAssetsList',
     {
       userID,
       project,
@@ -149,7 +141,7 @@ export const getAssetsList = ({
 
 // #region 获取资产的状态变更纪录 start
 export const getAssetsStatusLog = ({ modelTreeId }) => {
-  return fetch.get(BASE_URI + '/api/Assets/GetAssets_StatusLog', {
+  return fetch.get('/api/Assets/GetAssets_StatusLog', {
     params: {
       modelTreeId
     }
@@ -159,7 +151,7 @@ export const getAssetsStatusLog = ({ modelTreeId }) => {
 
 // #region 获取资产的维保记录 start
 export const getAssetsMaintenance = ({ modelTreeId }) => {
-  return fetch.get(BASE_URI + '/api/Assets/GetAssets_Maintenance', {
+  return fetch.get('/api/Assets/GetAssets_Maintenance', {
     params: {
       modelTreeId
     }
@@ -169,7 +161,7 @@ export const getAssetsMaintenance = ({ modelTreeId }) => {
 
 // #region 获取资产信息 start
 export const getAssetsInfo = ({ modelTreeId }) => {
-  return fetch.get(BASE_URI + '/api/Assets/GetAssets_Info', {
+  return fetch.get('/api/Assets/GetAssets_Info', {
     params: {
       modelTreeId
     }
@@ -179,7 +171,7 @@ export const getAssetsInfo = ({ modelTreeId }) => {
 
 // #region 如果用户自定义编号的话， 要判断编号是否已经存在 start
 export const existCode = ({ assetsCode }) => {
-  return fetch.get(BASE_URI + '/api/Assets/ExistsAssetsCode', {
+  return fetch.get('/api/Assets/ExistsAssetsCode', {
     params: {
       assetsCode
     }
@@ -196,7 +188,7 @@ export const existCode = ({ assetsCode }) => {
 // monitorID		//监控分类ID（大类）
 // devtypeID
 export const updateAssetProp = form => {
-  return fetch.post(BASE_URI + '/api/Assets/UpModel_TreeS', form, {
+  return fetch.post('/api/Assets/UpModel_TreeS', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -210,7 +202,7 @@ export const getAssetsListApp = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Assets/GetAssetsListApp',
+    '/api/Assets/GetAssetsListApp',
     {
       ProjectIdList,
       DeviceNameOrAssetsCode,
@@ -239,7 +231,7 @@ export const exportAssetsList = ({
   companyId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Assets/ExportAssetsList',
+    '/api/Assets/ExportAssetsList',
     {
       userID,
       project,
@@ -279,7 +271,7 @@ export const exportAssetsLabel = ({
   companyId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Assets/Export_AssetsLabel',
+    '/api/Assets/Export_AssetsLabel',
     {
       userID,
       project,
@@ -306,7 +298,7 @@ export const exportAssetsLabel = ({
 
 // #region 导入资产 start
 export const importAssetsExcel = (formData, companyId) => {
-  return fetch.post(BASE_URI + '/api/Assets/ImportAssetsExcel', formData, {
+  return fetch.post('/api/Assets/ImportAssetsExcel', formData, {
     params: {
       companyId
     },
@@ -333,7 +325,7 @@ export const exportAssetsListNew = ({
   ModelTreeIdList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Assets/ExportAssetsListNew',
+    '/api/Assets/ExportAssetsListNew',
     {
       userID,
       project,
@@ -360,7 +352,7 @@ export const exportAssetsListNew = ({
 
 // #region 批量修改资产属性 start
 export const batchUpdateAssetsProperty = form => {
-  return fetch.post(BASE_URI + '/api/Assets/BatchUpdateAssetsProperty', form, {
+  return fetch.post('/api/Assets/BatchUpdateAssetsProperty', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -383,7 +375,7 @@ export const updateAssetsDeviceNew = ({
   StorageSpaceExtendList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Assets/UpdateAssetsDeviceNew',
+    '/api/Assets/UpdateAssetsDeviceNew',
     {
       ModelTreeId,
       AssetsCode,

@@ -11,23 +11,20 @@ export const getMaintenanceBrokenLine = ({
   industry,
   companyId
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceStatistical/GetMaintenanceBrokenLine',
-    {
-      params: {
-        dateType,
-        startDate,
-        endDate,
-        subareaId,
-        modelBigId,
-        industry,
-        companyId
-      },
-      paramsSerializer: function(params) {
-        return qs.stringify(params, { indices: false })
-      }
+  return fetch.get('/api/MaintenanceStatistical/GetMaintenanceBrokenLine', {
+    params: {
+      dateType,
+      startDate,
+      endDate,
+      subareaId,
+      modelBigId,
+      industry,
+      companyId
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
-  )
+  })
 }
 // #endregion 获取维保折线图 end
 
@@ -41,29 +38,26 @@ export const getMaintenanceColumnare = ({
   industry,
   companyId
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceStatistical/GetMaintenanceColumnare',
-    {
-      params: {
-        dateType,
-        startDate,
-        endDate,
-        subareaId,
-        modelBigId,
-        industry,
-        companyId
-      },
-      paramsSerializer: function(params) {
-        return qs.stringify(params, { indices: false })
-      }
+  return fetch.get('/api/MaintenanceStatistical/GetMaintenanceColumnare', {
+    params: {
+      dateType,
+      startDate,
+      endDate,
+      subareaId,
+      modelBigId,
+      industry,
+      companyId
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
-  )
+  })
 }
 // #endregion 获取维保柱状图 end
 
 // #region 根据行业id获取设备大类 start
 export const getModelBigList = ({ industry }) => {
-  return fetch.get(BASE_URI + '/api/MaintenanceStatistical/GetModelBigList', {
+  return fetch.get('/api/MaintenanceStatistical/GetModelBigList', {
     params: {
       industry
     }
@@ -80,7 +74,7 @@ export const getMaintenancePie = ({
   modelBigId,
   companyId
 }) => {
-  return fetch.get(BASE_URI + '/api/MaintenanceStatistical/GetMaintenancePie', {
+  return fetch.get('/api/MaintenanceStatistical/GetMaintenancePie', {
     params: {
       startDate,
       endDate,
@@ -131,14 +125,11 @@ export const getMaintenanceStatisticalDetailList = ({
 
 // #region 获取用电分项下拉框 start
 export const getElectricTypeList = ({ companyId }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceStatistical/GetElectricTypeList',
-    {
-      params: {
-        companyId
-      }
+  return fetch.get('/api/MaintenanceStatistical/GetElectricTypeList', {
+    params: {
+      companyId
     }
-  )
+  })
 }
 // #endregion 获取用电分项下拉框 end
 
@@ -153,24 +144,21 @@ export const getElectricBrokenLine = ({
   isShopMeter = false,
   meterType
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceStatistical/GetElectricBrokenLine',
-    {
-      params: {
-        dateType,
-        startDate,
-        endDate,
-        subareaId,
-        electricType,
-        companyId,
-        isShopMeter,
-        meterType
-      },
-      paramsSerializer: function(params) {
-        return qs.stringify(params, { indices: false })
-      }
+  return fetch.get('/api/MaintenanceStatistical/GetElectricBrokenLine', {
+    params: {
+      dateType,
+      startDate,
+      endDate,
+      subareaId,
+      electricType,
+      companyId,
+      isShopMeter,
+      meterType
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
-  )
+  })
 }
 // #endregion 获取用电量折线图 end
 
@@ -183,22 +171,19 @@ export const getElectricColumnare = ({
   electricType,
   companyId
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceStatistical/GetElectricColumnare',
-    {
-      params: {
-        dateType,
-        startDate,
-        endDate,
-        subareaId,
-        electricType,
-        companyId
-      },
-      paramsSerializer: function(params) {
-        return qs.stringify(params, { indices: false })
-      }
+  return fetch.get('/api/MaintenanceStatistical/GetElectricColumnare', {
+    params: {
+      dateType,
+      startDate,
+      endDate,
+      subareaId,
+      electricType,
+      companyId
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
-  )
+  })
 }
 // #endregion 获取用电量柱状图 end
 
@@ -210,7 +195,7 @@ export const getElectricPie = ({
   dateType,
   companyId
 }) => {
-  return fetch.get(BASE_URI + '/api/MaintenanceStatistical/GetElectricPie', {
+  return fetch.get('/api/MaintenanceStatistical/GetElectricPie', {
     params: {
       dateType,
       startDate,
@@ -236,7 +221,7 @@ export const getElectricStatisticalDetailList = ({
   companyId
 }) => {
   return fetch.get(
-    BASE_URI + '/api/MaintenanceStatistical/GetElectricStatisticalDetailList',
+    '/api/MaintenanceStatistical/GetElectricStatisticalDetailList',
     {
       params: {
         startDate,
@@ -262,17 +247,14 @@ export const getMaintenanceOverview = ({
   endDate,
   idType
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceStatistical/GetMaintenanceOverview',
-    {
-      params: {
-        projectId,
-        startDate,
-        endDate,
-        idType
-      }
+  return fetch.get('/api/MaintenanceStatistical/GetMaintenanceOverview', {
+    params: {
+      projectId,
+      startDate,
+      endDate,
+      idType
     }
-  )
+  })
 }
 // #endregion 获取项目下的保养概况 end
 
@@ -282,7 +264,7 @@ export const getRepairOverview = ({
   idType,
   subareaIdList = undefined
 }) => {
-  return fetch.get(BASE_URI + '/api/MaintenanceStatistical/GetRepairOverview', {
+  return fetch.get('/api/MaintenanceStatistical/GetRepairOverview', {
     params: {
       projectId,
       idType,

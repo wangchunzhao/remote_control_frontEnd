@@ -14,7 +14,7 @@ export const getMaintenanceOrderPage = ({
   PageIndex
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceOrder/GetMaintenanceOrderPage',
+    '/api/MaintenanceOrder/GetMaintenanceOrderPage',
     {
       CompanyId,
       ContractName,
@@ -41,7 +41,7 @@ export const batchUpdateMaintenanceOrderTime = ({
   acceptanceUserId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceOrder/BatchUpdateMaintenanceOrderTime',
+    '/api/MaintenanceOrder/BatchUpdateMaintenanceOrderTime',
     maintenanceOrderIdList,
     {
       params: {
@@ -57,7 +57,7 @@ export const batchUpdateMaintenanceOrderTime = ({
 // #region 获取维保工单项目下拉框 start
 export const getMaintenanceOrderProjectDropdownList = ({ companyId }) => {
   return fetch.get(
-    BASE_URI + '/api/MaintenanceOrder/GetMaintenanceOrderProjectDropdownList',
+    '/api/MaintenanceOrder/GetMaintenanceOrderProjectDropdownList',
     {
       params: {
         companyId
@@ -80,7 +80,7 @@ export const getMaintenanceContractDropdownList = ({
   PageIndex
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintenanceOrder/GetMaintenanceContractDropdownList',
+    '/api/MaintenanceOrder/GetMaintenanceContractDropdownList',
     {
       CompanyId,
       ContractName,
@@ -105,15 +105,12 @@ export const getMaintenanceOrderOverview = ({
   startTime,
   endTime
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintenanceOrder/GetMaintenanceOrderOverview',
-    {
-      params: {
-        companyId,
-        startTime,
-        endTime
-      }
+  return fetch.get('/api/MaintenanceOrder/GetMaintenanceOrderOverview', {
+    params: {
+      companyId,
+      startTime,
+      endTime
     }
-  )
+  })
 }
 // #endregion 获取保养概览信息 end
