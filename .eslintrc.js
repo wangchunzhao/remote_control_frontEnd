@@ -10,6 +10,7 @@ module.exports = {
     XLSX: true,
     echarts: true,
     _host: true,
+    HC_BASE_URI: true,
     BASE_URI: true,
     BMap: true,
     ckplayer: true,

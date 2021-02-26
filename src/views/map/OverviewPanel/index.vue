@@ -4,7 +4,11 @@
       <div class="top-tool">
         <el-dropdown @command="filterBySubarea">
           <div class="subarea-select-trigger">
-            所有项目
+            {{
+              subareaId
+                ? subareaOptions.find(v => v.Id === subareaId).Name
+                : '所有分区'
+            }}
             <i class="el-icon-caret-bottom"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
@@ -21,28 +25,45 @@
       <div class="flex-row">
         <div class="item1">
           <div class="value-text">
-            188
+            {{ getProjectNum() }}
             <c-svg style="color: #00EE9F;" class="icon" name="mendian"></c-svg>
           </div>
           <div class="label-text">门店数量</div>
         </div>
         <div class="item1">
           <div class="value-text">
-            188
+            {{ typeof currentAlarmNum === 'number' ? currentAlarmNum : '-' }}
             <c-svg style="color: #FFCF02;" class="icon" name="baojing"></c-svg>
           </div>
           <div class="label-text">当前报警</div>
         </div>
         <div class="item1">
           <div class="value-text">
-            188
+            {{
+              typeof energyOverviewData !== 'undefined'
+                ? numberFormat(energyOverviewData.ToDayEnergy, [
+                    '度',
+                    '万度',
+                    '亿度',
+                    '万亿度'
+                  ]).value
+                : '-'
+            }}
+            <span class="secondary-text">
+              {{
+                numberFormat(
+                  energyOverviewData && energyOverviewData.LastMonthEnergy,
+                  ['度', '万度', '亿度', '万亿度']
+                ).unit
+              }}
+            </span>
             <c-svg style="color: #00C0FF;" class="icon" name="nenghao1"></c-svg>
           </div>
           <div class="label-text">今日能耗</div>
         </div>
       </div>
 
-      <div class="section-wrap">
+      <div v-show="showDevice" class="section-wrap">
         <div class="section-head" style="background-color: #15D37B;">
           <span>
             设备运行
@@ -54,20 +75,44 @@
           <div>
             <div class="label-text">在线末端设备</div>
             <div class="value-text">
-              540
-              <span style="font-size: 20px;margin-left: -10px;">/640</span>
+              {{
+                typeof deviceOverviewData !== 'undefined'
+                  ? deviceOverviewData.OnlineCooler +
+                    deviceOverviewData.OnlineRefrigeratory
+                  : '-'
+              }}
+              <span style="font-size: 22px;margin-left: -10px;">
+                /
+                {{
+                  typeof deviceOverviewData !== 'undefined'
+                    ? deviceOverviewData.CoolerTotal +
+                      deviceOverviewData.RefrigeratoryTotal
+                    : '-'
+                }}
+              </span>
             </div>
           </div>
           <div>
             <div class="label-text">在线机组</div>
             <div class="value-text">
-              74
-              <span style="font-size: 20px;margin-left: -10px;">/90</span>
+              {{
+                typeof deviceOverviewData !== 'undefined'
+                  ? deviceOverviewData.OnlineAircrew
+                  : '-'
+              }}
+              <span style="font-size: 22px;margin-left: -10px;">
+                /
+                {{
+                  typeof deviceOverviewData !== 'undefined'
+                    ? deviceOverviewData.AircrewTotal
+                    : '-'
+                }}
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="section-wrap">
+      <div v-if="showAlarm" class="section-wrap">
         <div class="section-head" style="background-color: #FFCF02;">
           <span>
             报警统计
@@ -78,25 +123,37 @@
           <div>
             <div class="label-text">今日报警</div>
             <div class="value-text">
-              188
+              {{
+                typeof alarmOverviewData !== 'undefined'
+                  ? alarmOverviewData.AlarmNum.toLocaleString('en-US')
+                  : '-'
+              }}
             </div>
           </div>
           <div>
             <div class="label-text">本月报警</div>
             <div class="value-text">
-              188
+              {{
+                typeof alarmOverviewData !== 'undefined'
+                  ? alarmOverviewData.MonthAlarmNum.toLocaleString('en-US')
+                  : '-'
+              }}
             </div>
           </div>
           <div>
             <div class="label-text">上月报警</div>
             <div class="value-text">
-              188
+              {{
+                typeof alarmOverviewData !== 'undefined'
+                  ? alarmOverviewData.LastMonthAlarmNum.toLocaleString('en-US')
+                  : '-'
+              }}
             </div>
           </div>
         </div>
       </div>
 
-      <div class="section-wrap">
+      <div v-if="showEnergy" class="section-wrap">
         <div class="section-head" style="background-color: #00C0FF;">
           <span>
             能耗统计
@@ -108,28 +165,76 @@
           <div>
             <div class="label-text">今日能耗</div>
             <div class="value-text">
-              188
-              <span class="secondary-text">万度</span>
+              {{
+                typeof energyOverviewData !== 'undefined'
+                  ? numberFormat(energyOverviewData.ToDayEnergy, [
+                      '度',
+                      '万度',
+                      '亿度',
+                      '万亿度'
+                    ]).value
+                  : '-'
+              }}
+              <span class="secondary-text">
+                {{
+                  numberFormat(
+                    energyOverviewData && energyOverviewData.LastMonthEnergy,
+                    ['度', '万度', '亿度', '万亿度']
+                  ).unit
+                }}
+              </span>
             </div>
           </div>
           <div>
             <div class="label-text">本月能耗</div>
             <div class="value-text">
-              188
-              <span class="secondary-text">万度</span>
+              {{
+                typeof energyOverviewData !== 'undefined'
+                  ? numberFormat(energyOverviewData.MonthEnergy, [
+                      '度',
+                      '万度',
+                      '亿度',
+                      '万亿度'
+                    ]).value
+                  : '-'
+              }}
+              <span class="secondary-text">
+                {{
+                  numberFormat(
+                    energyOverviewData && energyOverviewData.LastMonthEnergy,
+                    ['度', '万度', '亿度', '万亿度']
+                  ).unit
+                }}
+              </span>
             </div>
           </div>
           <div>
             <div class="label-text">上月能耗</div>
             <div class="value-text">
-              188
-              <span class="secondary-text">万度</span>
+              {{
+                typeof energyOverviewData !== 'undefined'
+                  ? numberFormat(energyOverviewData.LastMonthEnergy, [
+                      '度',
+                      '万度',
+                      '亿度',
+                      '万亿度'
+                    ]).value
+                  : '-'
+              }}
+              <span class="secondary-text">
+                {{
+                  numberFormat(
+                    energyOverviewData && energyOverviewData.LastMonthEnergy,
+                    ['度', '万度', '亿度', '万亿度']
+                  ).unit
+                }}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="section-wrap">
+      <div v-if="showRepair" class="section-wrap">
         <div class="section-head" style="background-color: #782BFF;">
           <span>
             维修统计
@@ -140,62 +245,120 @@
           <div>
             <div class="label-text">待接单</div>
             <div class="value-text">
-              188
+              {{
+                typeof repairOverviewData !== 'undefined'
+                  ? repairOverviewData.WaitOrderTotal.toLocaleString('en-US')
+                  : '-'
+              }}
             </div>
           </div>
           <div>
             <div class="label-text">待签到</div>
             <div class="value-text">
-              188
+              {{
+                typeof repairOverviewData !== 'undefined'
+                  ? repairOverviewData.WaitSignTotal.toLocaleString('en-US')
+                  : '-'
+              }}
             </div>
           </div>
           <div>
             <div class="label-text">维保中</div>
             <div class="value-text">
-              188
+              {{
+                typeof repairOverviewData !== 'undefined'
+                  ? repairOverviewData.RepairingTotal.toLocaleString('en-US')
+                  : '-'
+              }}
             </div>
           </div>
           <div>
             <div class="label-text">待验收</div>
             <div class="value-text">
-              188
+              {{
+                typeof repairOverviewData !== 'undefined'
+                  ? repairOverviewData.WaitAcceptanceTotal.toLocaleString(
+                      'en-US'
+                    )
+                  : '-'
+              }}
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="footer">
-      <div class="edit-btn">
+      <div @click="onClickConfig" class="edit-btn">
         编辑
       </div>
     </div>
+    <ConfigDialog ref="configDialog" @change="handleConfigChange" />
   </div>
 </template>
 
 <script>
 import { getUserSubareaList } from '@/api/subarea'
+import { mapGetters } from 'vuex'
+import { getAlarmMessageByUserId } from '@/api/alarmActive'
+import { getRepairOverview } from '@/api/maintenanceStatistical'
+import { getAlarmOverNum } from '@/api/alarmActive'
+import { getEnergyTotal } from '@/api/energy'
+import { getModelTreeRun } from '@/api/modelTree'
+import ConfigDialog from './ConfigDialog'
+import { getCompanyTotalList } from '@/api/companyTotal'
 
 export default {
+  components: {
+    ConfigDialog
+  },
   data() {
     return {
       subareaOptions: [],
-      subareaId: ''
+      subareaId: undefined,
+      currentAlarmNum: undefined,
+      deviceOverviewData: undefined,
+      alarmOverviewData: undefined,
+      repairOverviewData: undefined,
+      energyOverviewData: undefined,
+
+      showAlarm: false,
+      showRepair: false,
+      showDevice: false,
+      showEnergy: false
     }
   },
   computed: {
-    companyId() {
-      return this.$store.state.app.company.id
-    }
+    ...mapGetters(['proList', 'companyId'])
   },
   watch: {
-    companyId() {
-      this.fetchSubareaOptions()
+    companyId: {
+      handler: function() {
+        this.fetchSubareaOptions()
+        this.fetchConfig()
+        this.subareaId = undefined
+        this.fetchAllData()
+      },
+      immediate: true
     }
   },
-  mounted() {
-    this.fetchSubareaOptions()
-  },
   methods: {
+    fetchAllData() {
+      this.getAlarmCount()
+      this.fetchAlarmOverviewData()
+      this.fetchRepaorOverviewData()
+      this.fetchEnergyOverviewData()
+      this.fetchDeviceOverviewData()
+    },
+    getProjectNum() {
+      if (!this.subareaId && !this.proList) {
+        return '-'
+      }
+      if (this.subareaId) {
+        return this.proList.filter(v => v.ParentSubareaId === this.subareaId)
+          .length
+      }
+      return this.proList.length
+    },
     fetchSubareaOptions() {
       getUserSubareaList({
         companyId: this.companyId
@@ -208,6 +371,147 @@ export default {
     },
     filterBySubarea(id) {
       this.subareaId = id
+      this.fetchAllData()
+    },
+    async getAlarmCount() {
+      try {
+        const { data } = await getAlarmMessageByUserId({
+          pageIndex: 1,
+          pageSize: 1,
+          companyId: this.companyId,
+          subareaIdList: this.subareaId ? [this.subareaId] : undefined
+        })
+        if (data.Code === 200) {
+          this.currentAlarmNum = data.Data.TotalCount
+        } else {
+          this.currentAlarmNum = undefined
+        }
+      } catch (err) {
+        this.currentAlarmNum = undefined
+        console.error(err)
+      }
+    },
+    async fetchDeviceOverviewData() {
+      try {
+        const { data } = await getModelTreeRun({
+          CompanyId: this.companyId,
+          SubareaIdList: this.subareaId ? [this.subareaId] : []
+        })
+        if (data.Code === 200) {
+          this.deviceOverviewData = data.Data
+        } else {
+          this.deviceOverviewData = undefined
+        }
+      } catch (err) {
+        console.error(err)
+        this.deviceOverviewData = undefined
+      }
+    },
+    async fetchAlarmOverviewData() {
+      try {
+        const { data } = await getAlarmOverNum({
+          companyId: this.companyId,
+          subareaIdList: this.subareaId ? [this.subareaId] : undefined
+        })
+        if (data.Code === 200) {
+          this.alarmOverviewData = data.Data
+        } else {
+          this.alarmOverviewData = undefined
+        }
+      } catch (err) {
+        console.error(err)
+        this.alarmOverviewData = undefined
+      }
+    },
+    async fetchRepaorOverviewData() {
+      try {
+        const { data } = await getRepairOverview({
+          projectId: this.companyId,
+          idType: 1,
+          subareaIdList: this.subareaId ? [this.subareaId] : undefined
+        })
+        if (data.Code === 200) {
+          this.repairOverviewData = data.Data
+        } else {
+          this.repairOverviewData = undefined
+        }
+      } catch (err) {
+        console.error(err)
+        this.repairOverviewData = undefined
+      }
+    },
+    async fetchEnergyOverviewData() {
+      try {
+        const { data } = await getEnergyTotal({
+          CompanyId: this.companyId,
+          SubareaIdList: this.subareaId ? [this.subareaId] : []
+        })
+        if (data.Code === 200) {
+          this.energyOverviewData = data.Data
+        } else {
+          this.energyOverviewData = undefined
+        }
+      } catch (err) {
+        console.error(err)
+        this.energyOverviewData = undefined
+      }
+    },
+    handleConfigChange(payload) {
+      // 下面代码类似：this['showAlarm'] = true
+      this[payload.type] = payload.val
+    },
+    fetchConfig() {
+      getCompanyTotalList({
+        companyId: this.companyId
+      })
+        .then(res => {
+          if (res.data.Code === 200) {
+            const data = res.data.Data
+            data.forEach(v => {
+              if (v.TotalType === 0) {
+                this.showAlarm = v.IsEnabled
+              } else if (v.TotalType === 1) {
+                this.showRepair = v.IsEnabled
+              } else if (v.TotalType === 3) {
+                this.showDevice = v.IsEnabled
+              } else if (v.TotalType === 4) {
+                this.showEnergy = v.IsEnabled
+              }
+            })
+          }
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    onClickConfig() {
+      this.$refs.configDialog.openDialog({
+        showDevice: this.showDevice,
+        showAlarm: this.showAlarm,
+        showRepair: this.showRepair,
+        showEnergy: this.showEnergy
+      })
+    },
+    numberFormat(value, units) {
+      if (typeof value !== 'number') {
+        return {
+          value: '-',
+          unit: units[0]
+        }
+      } else if (value === 0) {
+        return {
+          value: 0,
+          unit: units[0]
+        }
+      }
+      const param = {}
+      const k = 10000
+      const index = Math.floor(Math.log(value) / Math.log(k))
+      param.value = (value / Math.pow(k, index))
+        .toFixed(1)
+        .toLocaleString('en-US')
+      param.unit = units[index]
+      return param
     }
   }
 }

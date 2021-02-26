@@ -631,7 +631,6 @@ export default {
       if (unGroupItem.list.length) {
         groupList.push(unGroupItem)
       }
-      console.log('[630]-Sidebar.vue', groupList)
       return groupList
     },
     fetchOverviewData() {

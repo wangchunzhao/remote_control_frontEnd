@@ -277,11 +277,19 @@ export const getMaintenanceOverview = ({
 // #endregion 获取项目下的保养概况 end
 
 // #region 获取项目下的维修和报警概况 start
-export const getRepairOverview = ({ projectId, idType }) => {
+export const getRepairOverview = ({
+  projectId,
+  idType,
+  subareaIdList = undefined
+}) => {
   return fetch.get(BASE_URI + '/api/MaintenanceStatistical/GetRepairOverview', {
     params: {
       projectId,
-      idType
+      idType,
+      subareaIdList
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
   })
 }

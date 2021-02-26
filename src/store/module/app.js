@@ -19,7 +19,7 @@ const app = {
     sidebar: !+sessionStorage.getItem(storageName('sidebarStatus')),
     pid: sessionStorage.getItem(storageName('project'))
       ? JSON.parse(sessionStorage.getItem(storageName('project'))).id
-      : '',
+      : '', // 当前 项目 id
     company: sessionStorage.getItem(storageName('company'))
       ? JSON.parse(sessionStorage.getItem(storageName('company')))
       : {}, // 当前公司信息

@@ -1,22 +1,36 @@
 import fetch from '@/utils/service'
+import qs from 'qs'
 
 // #region 获取报警消息页 start
-export const getAlarmMessageByUserId = ({ pageIndex, pageSize, companyId }) => {
+export const getAlarmMessageByUserId = ({
+  pageIndex,
+  pageSize,
+  companyId,
+  subareaIdList
+}) => {
   return fetch.get(BASE_URI + '/api/AlarmActive/GetAlarmMessageByUserId', {
     params: {
       pageIndex,
       pageSize,
-      companyId
+      companyId,
+      subareaIdList
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
   })
 }
 // #endregion 获取报警消息页 end
 
 // #region 获取报警概览信息 start
-export const getAlarmOverNum = ({ companyId }) => {
+export const getAlarmOverNum = ({ companyId, subareaIdList = undefined }) => {
   return fetch.get(BASE_URI + '/api/AlarmActive/GetAlarmOverNum', {
     params: {
-      companyId
+      companyId,
+      subareaIdList
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
   })
 }

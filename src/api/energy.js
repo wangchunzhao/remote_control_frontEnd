@@ -55,3 +55,18 @@ export const queryData_InputList = query => {
 export const queryData_InputCount = query => {
   return fetch.post(`/api/Energy/QueryData_InputCount`, query)
 }
+
+// #region 获取能耗统计 start
+export const getEnergyTotal = ({ CompanyId, SubareaIdList }) => {
+  return fetch.post(
+    HC_BASE_URI + `/api/Energy/GetEnergyTotal`,
+    {
+      SubareaIdList,
+      CompanyId
+    },
+    {
+      headers: { 'Content-Type': 'application/json' }
+    }
+  )
+}
+// #endregion 获取能耗统计 end

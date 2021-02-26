@@ -250,6 +250,7 @@ export default {
       getAlarmMessageByUserId({
         pageSize: 99,
         pageIndex: 1,
+        subareaIdList: undefined,
         companyId: this.companyId
       })
         .then(res => {

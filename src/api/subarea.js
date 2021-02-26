@@ -281,3 +281,15 @@ export const getAllSubareaTree = ({ isGetProject, isPermission }) => {
   })
 }
 // #endregion 获取所有分区树 end
+
+// #region 获取分区标签 start
+export const getSubareaTagPage = ({ CompanyId, PageIndex, PageSize }) => {
+  return fetch.post(BASE_URI + '/api/Subarea/GetSubareaTagPage', {
+    params: {
+      CompanyId,
+      PageIndex,
+      PageSize
+    }
+  })
+}
+// #endregion 获取分区标签 end
