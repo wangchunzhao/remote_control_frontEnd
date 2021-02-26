@@ -282,12 +282,6 @@ const energyManage = {
         companyIds: [2],
         projectPermissionId: [153, 155]
       }
-    },
-    {
-      path: 'dataEnter',
-      component: _import('energyManage/dataEnter/Index'),
-      name: 'energyManage_DataEnter',
-      meta: { title: '数据录入', projectPermissionId: [122] }
     }
   ]
 }
