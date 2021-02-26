@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 查询车辆轨迹 start
 export const getBaiduAttactPoints = params => {
-  return fetch.get(BASE_URI + '/api/Forward/ForwardBaidu', {
+  return fetch.get('/api/Forward/ForwardBaidu', {
     params
   })
 }
@@ -10,7 +10,7 @@ export const getBaiduAttactPoints = params => {
 
 // #region 查询车辆最新的一个点位 start
 export const forwardBaiduGetlatestpoint = ({ service_id, entity_name }) => {
-  return fetch.get(BASE_URI + '/api/Forward/ForwardBaiduGetlatestpoint', {
+  return fetch.get('/api/Forward/ForwardBaiduGetlatestpoint', {
     params: {
       service_id,
       entity_name
@@ -22,7 +22,7 @@ export const forwardBaiduGetlatestpoint = ({ service_id, entity_name }) => {
 // #region 转发百度地图请求 start
 export const forwardBaiduRequest = ({ Url, QueryString }) => {
   return fetch.post(
-    BASE_URI + '/api/Forward/ForwardBaiduRequest',
+    '/api/Forward/ForwardBaiduRequest',
     {
       Url,
       QueryString

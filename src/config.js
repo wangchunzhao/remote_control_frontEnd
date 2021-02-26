@@ -30,6 +30,7 @@ const baseUriDev = 'http://152.136.134.93:9183'
 const HCBaseUriProd = 'https://yun.sinocold.net:5001'
 const HCBaseUriDev = 'http://192.168.6.180:5200'
 
+export const _host = process.env.NODE_ENV === 'production' ? hostProd : hostDev
 export const BASE_URI =
   process.env.NODE_ENV === 'production' ? baseUriProd : baseUriDev
 

@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取今日鸡舍统计信息 start
 export const getTodayHenhouse = ({ projectId, mtid, queryPoint }) => {
-  return fetch.get(BASE_URI + '/api/Breed/GetTodayHenhouse', {
+  return fetch.get('/api/Breed/GetTodayHenhouse', {
     params: {
       projectId,
       mtid,
@@ -14,7 +14,7 @@ export const getTodayHenhouse = ({ projectId, mtid, queryPoint }) => {
 
 // #region 获取鸡舍今日详细信息 start
 export const getHenhouseInfo = ({ projectId, mtid, queryPoint }) => {
-  return fetch.get(BASE_URI + '/api/Breed/GetHenhouseInfo', {
+  return fetch.get('/api/Breed/GetHenhouseInfo', {
     params: {
       projectId,
       mtid,
@@ -26,7 +26,7 @@ export const getHenhouseInfo = ({ projectId, mtid, queryPoint }) => {
 
 // #region 获取7日鸡舍统计信息 start
 export const getWeekHenhouse = ({ projectId, mtid, queryPoint }) => {
-  return fetch.get(BASE_URI + '/api/Breed/GetWeekHenhouse', {
+  return fetch.get('/api/Breed/GetWeekHenhouse', {
     params: {
       projectId,
       mtid,
@@ -38,7 +38,7 @@ export const getWeekHenhouse = ({ projectId, mtid, queryPoint }) => {
 
 // #region 获取鸡舍设置参数 start
 export const getHenhouseSetting = ({ mtid }) => {
-  return fetch.get(BASE_URI + '/api/Breed/GetHenhouseSetting', {
+  return fetch.get('/api/Breed/GetHenhouseSetting', {
     params: {
       mtid
     }
@@ -48,7 +48,7 @@ export const getHenhouseSetting = ({ mtid }) => {
 
 // #region 获取鸡舍鸡只当前日龄信息 start
 export const getHenhouseAgeOfDayData = ({ projectId, mtid }) => {
-  return fetch.get(BASE_URI + '/api/Breed/GetHenhouseAgeOfDayData', {
+  return fetch.get('/api/Breed/GetHenhouseAgeOfDayData', {
     params: {
       projectId,
       mtid
@@ -65,7 +65,7 @@ export const getHenhousePointData = ({
   end,
   pointType
 }) => {
-  return fetch.get(BASE_URI + '/api/Breed/GetHenhousePointData', {
+  return fetch.get('/api/Breed/GetHenhousePointData', {
     params: {
       projectId,
       mtid,
@@ -85,7 +85,7 @@ export const getHenhouseStrPointData = ({
   end,
   pointType
 }) => {
-  return fetch.get(BASE_URI + '/api/Breed/GetHenhouseStrPointData', {
+  return fetch.get('/api/Breed/GetHenhouseStrPointData', {
     params: {
       projectId,
       mtid,
@@ -99,7 +99,7 @@ export const getHenhouseStrPointData = ({
 
 // #region 获取鸡舍通风点位数据 start
 export const getHenhouseVentilatePointData = ({ projectId, mtid }) => {
-  return fetch.get(BASE_URI + '/api/Breed/GetHenhouseVentilatePointData', {
+  return fetch.get('/api/Breed/GetHenhouseVentilatePointData', {
     params: {
       projectId,
       mtid
