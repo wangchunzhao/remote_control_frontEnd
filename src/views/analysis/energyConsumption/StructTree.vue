@@ -3,7 +3,7 @@
     <el-input size="small" placeholder="搜索项目名称" v-model="filterText">
     </el-input>
     <div
-      style="margin-top: 18px;max-height: 400px;overflow: auto"
+      style="margin-top: 15px;max-height: 400px;overflow: auto"
       class="thin-scroll"
     >
       <el-tree

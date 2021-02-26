@@ -1,17 +1,29 @@
 <template>
-  <div>
-    <!-- 因为可能会从地图总览页跳转到当前页面，所以要定制一下返回事件 -->
+  <div class="device-analysis">
     <page-header
       :title="$route.meta.title"
       showBack
       :onClickBack="() => $router.push('/analysis/home')"
-    />
+    >
+      <template v-slot:right>
+        <div style="flex: 1;display: flex;justify-content: flex-end">
+          <el-button
+            @click.native="$refs.timeIntervalSetDialog.openDialog()"
+            style="margin-left: 15px;"
+            size="mini"
+          >
+            <c-svg name="time-circle" style="font-size: 13px;"></c-svg>
+            时段设置
+          </el-button>
+        </div>
+      </template>
+    </page-header>
     <div
       class="device-analysis content-box"
       style="padding: 0;background-color: transparent"
     >
-      <el-row style="background-color: #fff">
-        <el-col :span="16">
+      <div style="background-color: #fff;display: flex">
+        <div style="flex: 1">
           <el-card shadow="never" style="border-bottom: none">
             <!--图-->
             <div class="line-chart-wrap" v-if="keyPointList.length">
@@ -89,9 +101,9 @@
               <div class="no-data-remark">您可通过右边「筛选条件」添加</div>
             </div>
           </el-card>
-        </el-col>
+        </div>
         <!--        筛选条件-->
-        <el-col :span="8">
+        <div style="width: 346px">
           <el-card shadow="never" style="border-bottom: none">
             <div slot="header" class="clearfix">
               <span class="card-title">筛选条件</span>
@@ -111,101 +123,12 @@
               class="thin-scroll"
             >
               <el-form-item label="日期">
-                <el-radio-group
-                  v-model="filterForm.scope"
-                  @change="scopeChange"
-                  size="small"
-                  border
-                >
-                  <el-radio-button label="day">
-                    日
-                  </el-radio-button>
-                  <!--                  <el-radio-button label="week">-->
-                  <!--                    周-->
-                  <!--                  </el-radio-button>-->
-                  <el-radio-button label="month">
-                    月
-                  </el-radio-button>
-                  <el-radio-button label="year">
-                    年
-                  </el-radio-button>
-                  <el-radio-button label="timeCustom">
-                    自定义
-                  </el-radio-button>
-                </el-radio-group>
-                <el-date-picker
-                  v-show="filterForm.scope === 'day'"
-                  v-model="filterForm.time"
-                  type="date"
-                  placeholder=""
-                  style="width: 100%;margin-top: 5px"
-                  :clearable="false"
-                  :picker-options="{
-                    disabledDate(time) {
-                      return time.getTime() > Date.now() - 3600000 * 24
-                    }
-                  }"
-                  @change="timeChange"
-                />
-                <!--                <el-date-picker-->
-                <!--                  v-show="filterForm.scope === 'week'"-->
-                <!--                  v-model="filterForm.time"-->
-                <!--                  type="week"-->
-                <!--                  format="yyyy 第 WW 周"-->
-                <!--                  placeholder=""-->
-                <!--                  :clearable="false"-->
-                <!--                  :picker-options="{-->
-                <!--                    firstDayOfWeek: 1,-->
-                <!--                    disabledDate(time) {-->
-                <!--                      return time.getTime() > Date.now() - 3600 * 1000 * 24 * 7-->
-                <!--                    }-->
-                <!--                  }"-->
-                <!--                  style="width: 100%;margin-top: 5px"-->
-                <!--                  @change="timeChange"-->
-                <!--                />-->
-                <el-date-picker
-                  v-show="filterForm.scope === 'month'"
-                  v-model="filterForm.time"
-                  type="month"
-                  placeholder=""
-                  :clearable="false"
-                  style="width: 100%;margin-top: 5px"
-                  :picker-options="{
-                    firstDayOfWeek: 1,
-                    disabledDate(time) {
-                      return (
-                        time >
-                        dayjs()
-                          .subtract(1, 'month')
-                          .startOf('month')
-                      )
-                    }
-                  }"
-                  @change="timeChange"
-                />
-                <el-date-picker
-                  v-show="filterForm.scope === 'year'"
-                  v-model="filterForm.time"
-                  type="year"
-                  placeholder=""
-                  :clearable="false"
-                  style="width: 100%;margin-top: 5px"
-                  :picker-options="{
-                    firstDayOfWeek: 1,
-                    disabledDate(time) {
-                      return time > dayjs().startOf('year')
-                    }
-                  }"
-                  @change="timeChange"
-                />
-                <!--                <el-date-picker-->
-                <!--                    v-show="filterForm.scope === 'timeCustom'"-->
-                <!--                    v-model="dateRange"-->
-                <!--                    type="daterange"-->
-                <!--                    range-separator="至"-->
-                <!--                    start-placeholder="开始日期"-->
-                <!--                    end-placeholder="结束日期">-->
-                <!--                </el-date-picker>-->
+                <CustomDatePicker
+                  :typeArr="['day', 'month', 'year', 'custom']"
+                  @timeChange="timeChange"
+                  @typeChange="timeTypeChange"
+                  ref="customDatePicker"
+                ></CustomDatePicker>
               </el-form-item>
               <el-form-item label="时段">
                 <el-radio-group
@@ -214,10 +137,10 @@
                   size="small"
                   border
                 >
-                  <el-radio-button label="dateRangeDefault">
+                  <el-radio-button label="default">
                     已设置时段
                   </el-radio-button>
-                  <el-radio-button label="dateRangeCustom">
+                  <el-radio-button label="custom">
                     自定义时段
                   </el-radio-button>
                 </el-radio-group>
@@ -236,7 +159,10 @@
                     :value="item.Id"
                   />
                 </el-select>
-                <div v-show="filterForm.timeIntervalType === 'custom'">
+                <div
+                  v-show="filterForm.timeIntervalType === 'custom'"
+                  style="display: flex;align-items: center;margin-top: 5px"
+                >
                   <el-time-select
                     placeholder="起始时间"
                     v-model="filterForm.startTimeInterval"
@@ -247,6 +173,7 @@
                     }"
                   >
                   </el-time-select>
+                  <div style="margin: 0 10px">-</div>
                   <el-time-select
                     placeholder="结束时间"
                     v-model="filterForm.endTimeInterval"
@@ -362,9 +289,10 @@
               </el-form-item>
             </el-form>
           </el-card>
-        </el-col>
-      </el-row>
+        </div>
+      </div>
     </div>
+    <TimeIntervalSetDialog ref="timeIntervalSetDialog"></TimeIntervalSetDialog>
   </div>
 </template>
 
@@ -380,16 +308,23 @@ import {
   getElectricTypeList,
   getElectricStatisticalDetailList
 } from '@/api/maintenanceStatistical'
-import { getModelTreePage, queryPointRead } from '@/api/model_new'
+import {
+  getModelTreePage,
+  queryPointRead,
+  getModelTreeShowPoint
+} from '@/api/model_new'
+import CustomDatePicker from '@/components/CustomDatePicker'
+import TimeIntervalSetDialog from '@/components/TimeIntervalSetDialog'
 
 export default {
   components: {
     LineChart,
-    Treeselect
+    Treeselect,
+    CustomDatePicker,
+    TimeIntervalSetDialog
   },
   data() {
     return {
-      dataRange: [],
       treeOptions: [],
       typeOptions: [],
       normalizer(node) {
@@ -400,23 +335,21 @@ export default {
         }
       },
 
-      filterLoading: false, //筛选
-      filterDeviceList: [],
-      deviceList: [],
-      filterPointList: [],
-      pointList: [],
-      chooseDeviceIdList: [],
-      choosePointIdList: [],
-      keyPointList: [], //关键点位列表
-      keyPointChartList: [], //关键点位实例列表
+      filterLoading: false, //筛选区域loading
+      filterDeviceList: [], // 筛选后的设备列表
+      deviceList: [], // 设备列表
+      filterPointList: [], // 筛选后的点位列表
+      pointList: [], //点位列表
+      chooseDeviceIdList: [], // 已选择的设备ID列表
+      choosePointIdList: [], // 已选择的点位ID列表
+      keyPointList: [], //图列表
+      keyPointChartList: [], //图实例列表
 
       filterForm: {
         scope: 'day', // 日期 默认日
-        time: dayjs().subtract(1, 'week'), //选中日期
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs()
-          .add(1, 'day')
-          .format('YYYY-MM-DD'),
+        time: '', //选中日期
+        start: '',
+        end: '',
         timeIntervalType: 'default', //时段类型 默认已设置时段
         timeInterval: '', //已有时段
         startTimeInterval: '', //开始时段
@@ -440,7 +373,7 @@ export default {
         showThreshold: false // 显示阈值
       },
 
-      projectNameFilter: '',
+      projectNameFilter: '', // 表格 项目名称筛选值
       pagination: {
         currentPage: 1,
         size: 10,
@@ -458,43 +391,12 @@ export default {
     }
   },
   watch: {
-    'filterForm.time'(time) {
-      if (time) {
-        switch (this.filterForm.scope) {
-          case 'day':
-            this.filterForm.start = dayjs(time).format('YYYY-MM-DD')
-            this.filterForm.end = dayjs(time)
-              .add(1, 'day')
-              .format('YYYY-MM-DD')
-            break
-          case 'week':
-            this.filterForm.start = dayjs(time)
-              .startOf('week')
-              .format('YYYY-MM-DD')
-            this.filterForm.end = dayjs(time)
-              .endOf('week')
-              .add(1, 'millisecond')
-              .format('YYYY-MM-DD')
-            break
-          case 'month':
-            this.filterForm.start = dayjs(time)
-              .startOf('month')
-              .format('YYYY-MM-DD')
-            this.filterForm.end = dayjs(time)
-              .endOf('month')
-              .add(1, 'millisecond')
-              .format('YYYY-MM-DD')
-            break
-          default:
-            break
-        }
-      }
-    },
     projectNameFilter() {
       this.fetchTableData()
     }
   },
   mounted() {
+    this.$refs.customDatePicker.init('day', true)
     // 获取项目树
     getUserOwnSubareaTree({
       companyId: this.companyId
@@ -545,18 +447,29 @@ export default {
       }
     },
     KeyPointRequestReg() {},
+    // 设备列表筛选
     filterDeviceListFun(v) {
       if (v) {
         this.filterDeviceList = this.deviceList.filter(
           item =>
-            item.ModelTreeName &&
-            item.ModelTreeName.indexOf &&
-            item.ModelTreeName.indexOf(v) >= 0
+            (item.ModelTreeName &&
+              item.ModelTreeName.indexOf &&
+              item.ModelTreeName.indexOf(v) >= 0) ||
+            (item.ModelTreePropertyList.length &&
+              item.ModelTreePropertyList.filter(
+                item1 =>
+                  item1.Key === '温区' &&
+                  item1.Value &&
+                  item1.Value.indexOf &&
+                  item1.Value.indexOf(v) >= 0
+              ).length) ||
+            (item.Tag && item.Tag.indexOf && item.Tag.indexOf(v) >= 0)
         )
       } else {
         this.filterDeviceList = this.deviceList
       }
     },
+    // 点位列表筛选
     filterPointListFun(v) {
       if (v) {
         this.filterPointList = this.pointList.filter(
@@ -571,54 +484,11 @@ export default {
       this.filterForm.scope = 'day'
       this.filterForm.area = [this.treeOptions[0].SubareaId]
       this.filterForm.timeInterval = ''
-      this.filterForm.time = dayjs().subtract(1, 'day')
-      this.filterForm.start = dayjs()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD')
-      this.filterForm.end = dayjs().format('YYYY-MM-DD')
+      this.filterForm.time = ''
+      this.filterForm.start = ''
+      this.filterForm.end = ''
     },
-    scopeChange(val) {
-      if (val === 'day') {
-        this.filterForm.time = dayjs().subtract(1, 'day')
-        this.filterForm.start = dayjs()
-          .subtract(1, 'day')
-          .format('YYYY-MM-DD')
-        this.filterForm.end = dayjs().format('YYYY-MM-DD')
-      } else if (val === 'week') {
-        this.filterForm.time = dayjs().subtract(1, 'week')
-        this.filterForm.start = dayjs()
-          .subtract(1, 'week')
-          .startOf('week')
-          .format('YYYY-MM-DD')
-        this.filterForm.end = dayjs()
-          .subtract(1, 'week')
-          .startOf('week')
-          .add(7, 'day')
-          .format('YYYY-MM-DD')
-      } else if (val === 'month') {
-        this.filterForm.time = dayjs().subtract(1, 'month')
-        this.filterForm.start = dayjs()
-          .subtract(1, 'month')
-          .startOf('month')
-          .format('YYYY-MM-DD')
-        this.filterForm.end = dayjs()
-          .startOf('month')
-          .format('YYYY-MM-DD')
-      } else if (val === 'year') {
-        this.filterForm.time = dayjs().subtract(1, 'year')
-        this.filterForm.start = dayjs()
-          .subtract(1, 'month')
-          .startOf('month')
-          .format('YYYY-MM-DD')
-        this.filterForm.end = dayjs()
-          .startOf('month')
-          .format('YYYY-MM-DD')
-      } else if (val === 'timeCustom') {
-      } else if (val === 'dateRangeDefault') {
-      } else if (val === 'dateRangeCustom') {
-      }
-      this.renderChart()
-    },
+    // 清楚图表数据
     resertReviewList() {
       this.tableData = []
       this.keyPointList = []
@@ -629,6 +499,7 @@ export default {
       if (this.filterForm.area.length) {
         getModelTreePage({
           SubareaIdList: this.filterForm.area,
+          IsGetStaticProperty: true,
           PageIndex: 1,
           PageSize: 9999
         })
@@ -688,7 +559,27 @@ export default {
         })
         .finally(() => {
           this.resertReviewList()
-          this.pointVisibleChange(false)
+          getModelTreeShowPoint({
+            mtidList: this.chooseDeviceIdList
+          })
+            .then(res => {
+              if (res.data.Code === 200) {
+                let data = res.data.Data
+                this.choosePointIdList = data.length
+                  ? data.map(item => item.Key)
+                  : []
+              } else {
+                this.choosePointIdList = []
+                this.$message.error('获取默认选中点位列表失败')
+              }
+            })
+            .catch(err => {
+              console.error(err)
+              this.$message.error('获取默认选中点位列表失败')
+            })
+            .finally(err => {
+              this.pointVisibleChange(false)
+            })
         })
     },
     // 更换点位
@@ -697,22 +588,52 @@ export default {
         for (let i = 0; i < this.keyPointList.length; i++) {
           this.$refs[`keyPointHistoryDialog${i}`][0].toggleDialog(this.form)
         }
-        this.fetchTableData()
+        this.renderChart(true)
       } else {
         this.resertReviewList()
       }
     },
-    timeChange() {
+    // 更换时间类型
+    timeTypeChange(val) {
+      this.scope = val
+    },
+    // 更换时间
+    timeChange(val) {
+      this.filterForm.time = val.time ? val.time : ''
+      this.filterForm.start = val.dateRange.length > 1 ? val.dateRange[0] : ''
+      this.filterForm.end = val.dateRange.length > 1 ? val.dateRange[1] : ''
+      console.log('时间更新')
       this.renderChart()
     },
+    // 更换时段类型
+    scopeChange(val) {
+      if (val === 'default') {
+      } else if (val === 'custom') {
+      }
+    },
+    // 更换时段
     typeChanage() {
+      console.log('时段更新')
       this.renderChart()
     },
-    renderChart() {
-      if (this.choosePointIdList) {
-        this.fetchTableData()
+    // 图标更新验证
+    renderChart(init = false) {
+      if (
+        this.filterForm.start &&
+        this.filterForm.end &&
+        this.filterForm.timeInterval
+      ) {
+        console.log('图表更新')
+      }
+
+      if (this.choosePointIdList.length) {
+        this.handleSizeChange()
         for (let i = 0; i < this.keyPointList.length; i++) {
-          this.$refs[`keyPointHistoryDialog${i}`][0].updateDialog(this.form)
+          if (init) {
+            this.$refs[`keyPointHistoryDialog${i}`][0].toggleDialog(this.form)
+          } else {
+            this.$refs[`keyPointHistoryDialog${i}`][0].updateDialog(this.form)
+          }
         }
       }
     },

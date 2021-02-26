@@ -15,25 +15,10 @@
           @click.native="() => (model = 'table')"
           :underline="false"
           :type="model === 'table' ? 'primary' : undefined"
-          style="margin-left: 10px;"
+          style="margin-left: 10px;    color: #BFBFBF;"
         >
           <c-svg name="table1" style="font-size: 17px;" />
         </el-link>
-        <el-select
-          v-model="filterForm.branchId"
-          size="mini"
-          filterable
-          style="margin-left: 20px; width: 100px;"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in structTree"
-            :key="item.SubentryId"
-            :label="item.Name"
-            :value="item.SubentryId"
-          >
-          </el-option>
-        </el-select>
       </div>
       <div>
         <span class="desc"
@@ -301,6 +286,9 @@ export default {
                     } else {
                       item.name = '昨日'
                       this.lastDayNum = item.Total
+                      this.$store.commit('UPDATE_PREVIEW_DATA', {
+                        lastDayElectricityUse: item.Total
+                      })
                     }
 
                     item.type = 'line'
@@ -374,11 +362,14 @@ export default {
   }
   .desc {
     padding-left: 25px;
+    color: #BFBFBF;
+    font-size: 14px;
   }
   .desc-bold {
-    padding: 0 5px;
-    font-size: 18px;
+    padding: 0 12px;
+    font-size: 20px;
     font-weight: 500;
+    color: #000;
   }
 }
 </style>

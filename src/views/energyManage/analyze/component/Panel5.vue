@@ -189,20 +189,6 @@ export default {
           containLabel: !0
         },
         xAxis: {
-          type: 'value',
-          name: '',
-          boundaryGap: false,
-          splitLine: {
-            show: true,
-            lineStyle: {
-              color: ['#f5f5f5']
-            }
-          },
-          axisLine: {
-            show: false
-          }
-        },
-        yAxis: {
           type: 'category',
           data: [],
           axisLabel: {
@@ -223,6 +209,20 @@ export default {
             show: false
           },
           axisTick: {
+            show: false
+          }
+        },
+        yAxis: {
+          type: 'value',
+          name: '',
+          boundaryGap: false,
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: ['#f5f5f5']
+            }
+          },
+          axisLine: {
             show: false
           }
         },
@@ -381,8 +381,8 @@ export default {
                 let yAxisData = dates.map(function(t) {
                   return ''.concat(t.StartDate, '至').concat(t.EndDate)
                 })
-                this.options.yAxis.data = yAxisData
-                this.options.xAxis.name =
+                this.options.xAxis.data = yAxisData
+                this.options.yAxis.name =
                   data.UnitAndDescription.UnitDesc +
                   '/' +
                   data.UnitAndDescription.Unit

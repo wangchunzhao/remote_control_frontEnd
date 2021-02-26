@@ -267,6 +267,10 @@ export default {
   .el-radio-group {
     display: flex;
   }
+  .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+    background-color: #fff;
+    color: #1890ff;
+  }
   .el-radio-button {
     flex: 1;
   }

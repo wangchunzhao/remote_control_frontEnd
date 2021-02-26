@@ -17,7 +17,7 @@
           :type="model === 'table' ? 'primary' : undefined"
           style="margin-left: 10px;"
         >
-          <c-svg name="table1" style="font-size: 17px;" />
+          <c-svg name="table1" style="font-size: 17px;color: #BFBFBF;" />
         </el-link>
         <span style="color: rgb(96, 98, 102);padding: 0 10px 0 20px;"
           >用能支路:
@@ -403,6 +403,12 @@ export default {
               if (200 === res.data.Code) {
                 this.isNoData = false
                 var data = res.data.Data
+                if (data.Data.length) {
+                  data.Data.map(item => {
+                    item.type = 'line'
+                    item.symbol = 'none'
+                  })
+                }
                 this.options.series = data.Data
                 this.options.xAxis.data = data.Name
                 this.options.yAxis.name =

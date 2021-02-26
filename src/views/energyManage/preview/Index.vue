@@ -3,7 +3,6 @@
     <Header />
     <Panel1 />
     <Panel2 />
-    <Panel3 />
     <Panel4 />
   </div>
 </template>
@@ -12,14 +11,12 @@
 import Header from './component/Header'
 import Panel1 from './component/Panel1'
 import Panel2 from './component/Panel2'
-import Panel3 from './component/Panel3'
 import Panel4 from './component/Panel4'
 export default {
   components: {
     Header,
     Panel1,
     Panel2,
-    Panel3,
     Panel4
   }
 }

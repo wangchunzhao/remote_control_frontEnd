@@ -2,7 +2,7 @@
   <div class="energy_manage-panel energy_manage-preview-panel2">
     <div class="panel-header">
       <div>
-        <span class="title">日用电分项</span>
+        <span class="title">分组用能日占比</span>
         <el-link
           @click.native="() => (model = 'chart')"
           :underline="false"
@@ -15,20 +15,12 @@
           @click.native="() => (model = 'table')"
           :underline="false"
           :type="model === 'table' ? 'primary' : undefined"
-          style="margin-left: 10px;"
+          style="margin-left: 10px;color: #BFBFBF;"
         >
           <c-svg name="table1" style="font-size: 17px;" />
         </el-link>
       </div>
-      <div>
-        <el-link
-          @click.native="() => $refs.branchManageDialog.openDialog()"
-          type="primary"
-          :underline="false"
-        >
-          <c-svg name="shezhi"></c-svg> 管理分项</el-link
-        >
-      </div>
+      <div></div>
     </div>
     <div v-loading="loading">
       <div
