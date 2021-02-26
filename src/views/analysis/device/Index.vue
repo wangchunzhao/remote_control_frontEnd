@@ -1,6 +1,15 @@
 <template>
-  <div class="device-analysis">
-    <div class="pdg" style="padding: 25px;">
+  <div>
+    <!-- 因为可能会从地图总览页跳转到当前页面，所以要定制一下返回事件 -->
+    <page-header
+      :title="$route.meta.title"
+      showBack
+      :onClickBack="() => $router.push('/analysis/home')"
+    />
+    <div
+      class="device-analysis content-box"
+      style="padding: 0;background-color: transparent"
+    >
       <el-row style="background-color: #fff">
         <el-col :span="16">
           <el-card shadow="never" style="border-bottom: none">
@@ -189,14 +198,14 @@
                   }"
                   @change="timeChange"
                 />
-<!--                <el-date-picker-->
-<!--                    v-show="filterForm.scope === 'timeCustom'"-->
-<!--                    v-model="dateRange"-->
-<!--                    type="daterange"-->
-<!--                    range-separator="至"-->
-<!--                    start-placeholder="开始日期"-->
-<!--                    end-placeholder="结束日期">-->
-<!--                </el-date-picker>-->
+                <!--                <el-date-picker-->
+                <!--                    v-show="filterForm.scope === 'timeCustom'"-->
+                <!--                    v-model="dateRange"-->
+                <!--                    type="daterange"-->
+                <!--                    range-separator="至"-->
+                <!--                    start-placeholder="开始日期"-->
+                <!--                    end-placeholder="结束日期">-->
+                <!--                </el-date-picker>-->
               </el-form-item>
               <el-form-item label="时段">
                 <el-radio-group
@@ -292,7 +301,9 @@
                       "
                     >
                       <div>
-                        <div class="option-title">{{ item.ModelTreeName }}</div>
+                        <div class="option-title">
+                          {{ item.ModelTreeName }}
+                        </div>
                         <div class="option-text">
                           {{ item.ProjectName }}
                         </div>

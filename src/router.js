@@ -1248,7 +1248,7 @@ const analysis = {
       path: 'device',
       component: _import('analysis/device/Index'),
       name: 'analysisDevice',
-      meta: { showBackButton: true, title: '设备运行分析' }
+      meta: { customHeader: true, title: '设备运行分析' }
     },
     {
       path: 'alarm',

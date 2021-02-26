@@ -758,7 +758,6 @@ export default {
       this.filterForm.area.forEach(item => {
         query += `&subareaId=${item}`
       })
-
       window.location = `${BASE_URI}/api/AlarmStatistical/ExportAlarmNumList?startTime=${this.filterForm.start}&endTime=${this.filterForm.end}&industry=${this.$store.state.app.company.industry}&projectName=${this.projectNameFilter}&companyId=${this.companyId}&userId=${this.$store.state.app.userInfo.uid}${query}`
     },
     fetchTableData() {

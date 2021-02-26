@@ -224,9 +224,6 @@ export default {
     userInfo() {
       return this.$store.state.app.userInfo
     },
-    proList() {
-      return this.$store.state.app.proList
-    },
     projectPath() {
       return this.$store.state.app.projectPath
     },
@@ -389,9 +386,6 @@ export default {
       this.$store.commit('UPDATE_COMPANY_PERMISSIONS', null)
       this.$store.commit('UPDATE_PLATFORM', '')
       this.$store.commit('CHANGE_PROJECT', null)
-      // this.$router.push({
-      //   name: 'triggerRouterGuard'
-      // })
 
       this.$store
         .dispatch('fetchProject', {
@@ -402,7 +396,7 @@ export default {
           this.$router.push({
             name: 'triggerRouterGuard',
             query: {
-              behavior: 'switchToBusiness'
+              goPage: '/map/index'
             }
           })
           resetRouter()
@@ -445,7 +439,7 @@ export default {
           this.$router.push({
             name: 'triggerRouterGuard',
             query: {
-              behavior: 'switchToBusiness'
+              goPage: '/map/index'
             }
           })
         } else {
@@ -453,7 +447,6 @@ export default {
             name: 'triggerRouterGuard'
           })
         }
-
         resetRouter()
       } else if (this.company.id === 64 || this.company.id === 55) {
         // 定制大屏

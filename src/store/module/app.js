@@ -14,6 +14,8 @@ import { getPathById } from '@/utils/index'
 import { getSubareaTree } from '@/api/subarea'
 import { getPreferences } from '@/api/preferences'
 import { message, Message } from 'element-ui'
+import router, { resetRouter } from '@/router'
+
 const app = {
   state: {
     sidebar: !+sessionStorage.getItem(storageName('sidebarStatus')),
@@ -156,6 +158,36 @@ const app = {
       commit('UPDATE_COMPANY_PERMISSIONS', null)
       commit('CHANGE_PROJECT', data)
       dispatch('fetchEnergyStruct')
+    },
+    /** 切换平台之后跳转页面, 不传 pagePath, 默认跳转第一个页面 */
+    ChangePlatfromAndGoPage: ({ commit, rootState }, payload) => {
+      const { platform, pagePath } = payload
+      if (!platform) {
+        console.error(new Error('请输入要跳转的平台'))
+        return
+      }
+      if (rootState.permissions.platform !== platform) {
+        commit('UPDATE_PLATFORM', platform)
+        // 清空项目和公司权限
+        commit('UPDATE_PROJECT_PERMISSIONS', null)
+        commit('UPDATE_COMPANY_PERMISSIONS', null)
+        if (platform === PLATFORM.business) {
+          router.push({
+            name: 'triggerRouterGuard',
+            query: {
+              goPage: '/map/index'
+            }
+          })
+        } else {
+          router.push({
+            name: 'triggerRouterGuard',
+            query: {
+              goPage: pagePath
+            }
+          })
+        }
+        resetRouter()
+      }
     },
     fetchStructTree({ commit, state }, data) {
       return new Promise((resolve, reject) => {

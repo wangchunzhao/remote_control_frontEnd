@@ -5,7 +5,15 @@
         type="primary"
         :underline="false"
         v-if="showBack"
-        @click.native="$router.go(-1)"
+        @click.native="
+          () => {
+            if (onClickBack) {
+              onClickBack()
+              return
+            }
+            $router.go(-1)
+          }
+        "
       >
         <c-svg name="jiantou" class="back-icon" />
       </el-link>
@@ -28,6 +36,15 @@ export default {
       default: function() {
         return false
       }
+    },
+    onClickBack: {
+      type: Function
+    }
+  },
+  methods: {
+    foo() {
+      console.log('[44]-PageHeader.vue', this.onClickBack)
+      // this.onClickBack()
     }
   }
 }

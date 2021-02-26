@@ -64,7 +64,17 @@
       </div>
 
       <div v-show="showDevice" class="section-wrap">
-        <div class="section-head" style="background-color: #15D37B;">
+        <div
+          @click="
+            () =>
+              $store.dispatch('ChangePlatfromAndGoPage', {
+                platform: PLATFORM.dataAnalysis,
+                pagePath: '/analysis/device'
+              })
+          "
+          class="section-head"
+          style="background-color: #15D37B;"
+        >
           <span>
             设备运行
             <c-svg name="info-circle"></c-svg>
@@ -113,7 +123,11 @@
         </div>
       </div>
       <div v-if="showAlarm" class="section-wrap">
-        <div class="section-head" style="background-color: #FFCF02;">
+        <div
+          @click="() => $router.push('/alarmManageWithAllProject/index')"
+          class="section-head"
+          style="background-color: #FFCF02;"
+        >
           <span>
             报警统计
           </span>
@@ -154,7 +168,17 @@
       </div>
 
       <div v-if="showEnergy" class="section-wrap">
-        <div class="section-head" style="background-color: #00C0FF;">
+        <div
+          @click="
+            () =>
+              $store.dispatch('ChangePlatfromAndGoPage', {
+                platform: PLATFORM.dataAnalysis,
+                pagePath: '/analysis/energyConsumption'
+              })
+          "
+          class="section-head"
+          style="background-color: #00C0FF;"
+        >
           <span>
             能耗统计
             <c-svg name="info-circle"></c-svg>
@@ -239,7 +263,6 @@
           <span>
             维修统计
           </span>
-          <i class="el-icon-arrow-right"></i>
         </div>
         <div class="flex-row" style="padding: 0 16px;">
           <div>
@@ -324,7 +347,9 @@ export default {
       showAlarm: false,
       showRepair: false,
       showDevice: false,
-      showEnergy: false
+      showEnergy: false,
+
+      PLATFORM
     }
   },
   computed: {
