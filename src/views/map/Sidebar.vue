@@ -134,144 +134,6 @@
     <div class="indicator" @click="() => (visible = !visible)">
       <c-svg :name="visible ? 'doubleleft' : 'doubleright'" />
     </div>
-    <div class="data-panel-wrap" :style="{ left: sidebarWidth + 25 + 'px' }">
-      <div v-if="showAlarm" class="alarm-panel">
-        <div class="alarm-panel-header panel-header">
-          报警统计
-          <span
-            class="link-btn"
-            v-permission="[116]"
-            @click="() => $router.push({ name: 'alarmManageWithAllProject' })"
-          >
-            查看全部
-            <i class="el-icon-arrow-right"></i>
-          </span>
-        </div>
-        <div class="panel-body">
-          <div>
-            <div class="label">
-              今日新增
-            </div>
-            <div class="value">
-              {{
-                alarmNums.AlarmNum !== undefined
-                  ? alarmNums.AlarmNum.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              本月报警
-            </div>
-            <div class="value">
-              {{
-                alarmNums.MonthAlarmNum !== undefined
-                  ? alarmNums.MonthAlarmNum.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              上月报警
-            </div>
-            <div class="value">
-              {{
-                alarmNums.LastMonthAlarmNum !== undefined
-                  ? alarmNums.LastMonthAlarmNum.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="showRepair" class="repair-panel">
-        <div class="panel-header">
-          维修统计
-        </div>
-        <div class="panel-body">
-          <div>
-            <div class="label">
-              待接单
-            </div>
-            <div class="value">
-              {{
-                repairNums.WaitOrderTotal !== undefined
-                  ? repairNums.WaitOrderTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              待签到
-            </div>
-            <div class="value">
-              {{
-                repairNums.WaitSignTotal !== undefined
-                  ? repairNums.WaitSignTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              维修中
-            </div>
-            <div class="value">
-              {{
-                repairNums.RepairingTotal !== undefined
-                  ? repairNums.RepairingTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              待验收
-            </div>
-            <div class="value">
-              {{
-                repairNums.WaitAcceptanceTotal !== undefined
-                  ? repairNums.WaitAcceptanceTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="showMaintenance" class="maintenance-panel">
-        <div class="alarm-panel-header panel-header">
-          保养统计
-          <!-- <span class="link-btn">
-            查看全部
-            <i class="el-icon-arrow-right"></i>
-          </span> -->
-        </div>
-        <div class="panel-body">
-          <div>
-            <div class="label">
-              本月保养任务
-            </div>
-            <div class="value">
-              {{
-                maintenanceNums.NoMaintenanceTotal !== undefined
-                  ? maintenanceNums.NoMaintenanceTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-              /
-              {{
-                maintenanceNums.MaintenanceTotal !== undefined
-                  ? maintenanceNums.MaintenanceTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <el-dialog
       title="添加项目"
       width="580px"
@@ -302,26 +164,17 @@
 <script>
 import { getUserProjectAlarm, getUserSubareaList } from '@/api/subarea'
 import { addProjectAsterisk, deleteProjectAsterisk } from '@/api/project'
-import { getAlarmOverNum } from '@/api/alarmActive'
 import { mapGetters } from 'vuex'
-import {
-  getMaintenanceOverview,
-  getRepairOverview
-} from '@/api/maintenanceStatistical'
 import CProgress from './CProgress'
 import { getPathById } from '@/utils/index'
 import ProjectEditForm from '@/components/ProjectEditForm'
 import { checkPermission } from '@/utils/permissions'
-import Driver from 'driver.js' // import driver.js
+import Driver from 'driver.js'
 import EllipsisTooltip from '@/components/EllipsisTooltip'
-import 'driver.js/dist/driver.min.css' // import driver.js css
+import 'driver.js/dist/driver.min.css'
 
-import dayjs from 'dayjs'
 export default {
   props: {
-    showAlarm: Boolean,
-    showRepair: Boolean,
-    showMaintenance: Boolean,
     handleClick: Function,
     userGatewayList: {
       type: Array,
@@ -361,10 +214,6 @@ export default {
       ],
       // 默认按分区分组
       projectGroupBy: 'subarea',
-
-      alarmNums: {},
-      maintenanceNums: {},
-      repairNums: {},
       checkPermission
     }
   },
@@ -410,10 +259,6 @@ export default {
       },
       immediate: true
     },
-
-    companyId() {
-      this.fetchOverviewData()
-    },
     userGatewayList(val) {
       // 如果是空白账号，且账号下有网关，提示添加项目
       if (this.isEmptyAccount && val.length) {
@@ -443,7 +288,6 @@ export default {
     }
   },
   mounted() {
-    this.fetchOverviewData()
     this.$store.dispatch('fetchProject')
     this.handleResize()
 
@@ -633,37 +477,6 @@ export default {
       }
       return groupList
     },
-    fetchOverviewData() {
-      getAlarmOverNum({
-        companyId: this.companyId
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.alarmNums = res.data.Data
-        }
-      })
-
-      getMaintenanceOverview({
-        // 这里的传参没错，233
-        projectId: this.companyId,
-        startDate: dayjs()
-          .startOf('month')
-          .format('YYYY-MM-DD HH:mm'),
-        endDate: this._dateFormat(new Date(), 'YYYY-MM-DD HH:mm'),
-        idType: 1
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.maintenanceNums = res.data.Data
-        }
-      })
-      getRepairOverview({
-        projectId: this.companyId,
-        idType: 1
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.repairNums = res.data.Data
-        }
-      })
-    },
     // 组合progress组件需要的数据
     handleProgressData(item) {
       const total =
@@ -739,11 +552,8 @@ export default {
         document.documentElement.addEventListener('mouseup', stopDrag, false)
       }
       function doDrag(e) {
-        // sidebar.style.width = startWidth + e.clientX - startX + 'px'
-
         const width = startWidth + e.clientX - startX
         if (width < 400 && width > 240) {
-          // sidebar.style.width = width + 'px'
           that.sidebarWidth = width
         }
       }
@@ -839,9 +649,6 @@ export default {
       flex: 1;
       font-weight: 500;
       font-size: 14px;
-      // overflow: hidden;
-      // white-space: nowrap;
-      // text-overflow: ellipsis;
       margin: 0 5px;
       color: rgba(0, 0, 0, 0.8);
     }
@@ -901,79 +708,6 @@ export default {
     padding: 20px 0 35px 0;
     color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
-  }
-  .data-panel-wrap {
-    position: absolute;
-    top: 10px;
-    display: flex;
-  }
-  .alarm-panel {
-    width: 270px;
-    .panel-header {
-      background: linear-gradient(
-        90deg,
-        rgba(207, 19, 34, 1) 0%,
-        rgba(207, 19, 34, 0.65) 100%
-      );
-    }
-  }
-  .repair-panel {
-    width: 270px;
-    .panel-header {
-      background: linear-gradient(
-        90deg,
-        rgba(250, 140, 22, 1) 0%,
-        rgba(250, 140, 22, 0.65) 100%
-      );
-    }
-  }
-  .maintenance-panel {
-    width: 200px;
-    .panel-header {
-      background: linear-gradient(
-        90deg,
-        rgba(24, 144, 255, 1) 0%,
-        rgba(24, 144, 255, 0.65) 100%
-      );
-    }
-  }
-  .alarm-panel,
-  .repair-panel,
-  .maintenance-panel {
-    box-shadow: 0 0 11px rgba(0, 0, 0, 0.2);
-    margin-right: 25px;
-    border-radius: 4px;
-    overflow: hidden;
-    .panel-header {
-      padding: 10px 12px 10px 16px;
-      color: #fff;
-      font-size: 16px;
-    }
-
-    .link-btn {
-      float: right;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .panel-body {
-      padding: 20px 0 24px 0;
-      display: flex;
-      align-items: center;
-      background-color: #fff;
-      & > div {
-        flex: 1;
-        text-align: center;
-      }
-      .label {
-        margin-bottom: 8px;
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.45);
-      }
-      .value {
-        font-size: 20px;
-        font-weight: 500;
-      }
-    }
   }
 }
 </style>

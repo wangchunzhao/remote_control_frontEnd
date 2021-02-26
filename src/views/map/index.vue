@@ -1,22 +1,8 @@
 <template>
   <div id="amap-cointainer" class="mymap" v-loading="loading">
     <div id="map-container" />
-    <Sidebar
-      :handleClick="setCenter"
-      :show-alarm="showAlarm"
-      :show-repair="showRepair"
-      :userGatewayList="userGatewayList"
-      :show-maintenance="showMaintenance"
-    />
+    <Sidebar :handleClick="setCenter" :userGatewayList="userGatewayList" />
     <OverviewPanel />
-    <ConfigDialog ref="configDialog" @change="handleSetChange" />
-    <!-- <div
-      v-permission="[130]"
-      @click="handleOpenSetDialog"
-      class="setting-handle-button"
-    >
-      <c-svg name="setting-fill"> </c-svg>
-    </div> -->
     <PactSignDialog @refresh="handlePactSign" ref="pactSignDialog" />
     <div
       class="empty-gateway"
@@ -48,8 +34,6 @@
 import { getPathById } from '@/utils/index'
 import Sidebar from './Sidebar'
 import OverviewPanel from './OverviewPanel'
-import ConfigDialog from './ConfigDialog'
-import { getCompanyTotalList } from '@/api/companyTotal'
 import { maintainContractList } from '@/api/maintainContract'
 import PactSignDialog from './PactSignDialog'
 import dayjs from 'dayjs'
@@ -65,7 +49,6 @@ import mapConfigJson from '@/assets/json/custom_map_config.json'
 export default {
   components: {
     Sidebar,
-    ConfigDialog,
     PactSignDialog,
     DialogAddGateway,
     OverviewPanel
@@ -80,9 +63,6 @@ export default {
         enableMessage: true // 设置允许信息窗发送短息
       },
       gatewayId: undefined,
-      showAlarm: false,
-      showRepair: false,
-      showMaintenance: false,
       dataScreen: null,
 
       userGatewayList: null,
@@ -155,27 +135,6 @@ export default {
     }
   },
   mounted() {
-    getCompanyTotalList({
-      companyId: this.companyId
-    })
-      .then(res => {
-        if (res.data.Code === 200) {
-          const data = res.data.Data
-          data.forEach(v => {
-            if (v.TotalType === 0) {
-              this.showAlarm = v.IsEnabled
-            } else if (v.TotalType === 1) {
-              this.showRepair = v.IsEnabled
-            } else if (v.TotalType === 2) {
-              this.showMaintenance = v.IsEnabled
-            }
-          })
-        }
-      })
-      .catch(err => {
-        console.error(err)
-      })
-
     maintainContractList({
       QueryType: 1,
       PartyA: undefined,
@@ -352,17 +311,6 @@ export default {
       if (instance) {
         instance.close()
       }
-    },
-    handleOpenSetDialog() {
-      this.$refs.configDialog.openDialog({
-        showAlarm: this.showAlarm,
-        showRepair: this.showRepair,
-        showMaintenance: this.showMaintenance
-      })
-    },
-    handleSetChange(payload) {
-      // 下面代码类似：this['showAlarm'] = true
-      this[payload.type] = payload.val
     },
     // 初始化地图信息
     mapInit(list) {
@@ -629,25 +577,6 @@ export default {
         }
       }
     }
-  }
-}
-.setting-handle-button {
-  z-index: 1000;
-  position: fixed;
-  right: 0;
-  top: 100px;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-  cursor: pointer;
-  background-color: rgba(132, 132, 132, 0.8);
-  .icon {
-    color: #fff;
-    font-size: 24px;
   }
 }
 </style>
