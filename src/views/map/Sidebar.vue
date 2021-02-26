@@ -237,7 +237,13 @@ export default {
       }
       return []
     },
-    ...mapGetters(['preference', 'proList', 'companyId', 'isEmptyAccount'])
+    ...mapGetters([
+      'preference',
+      'proList',
+      'companyId',
+      'isEmptyAccount',
+      'mapOverviewHeaderVisible'
+    ])
   },
   watch: {
     proList: {
@@ -576,10 +582,9 @@ export default {
 
 <style lang="scss" scoped>
 .map-sidebar {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
-  margin-top: 50px;
   transition: transform 210ms;
   background-color: #f0f2f5;
   .main-wrap {

@@ -19,6 +19,9 @@ import router, { resetRouter } from '@/router'
 const app = {
   state: {
     sidebar: !+sessionStorage.getItem(storageName('sidebarStatus')),
+    mapOverviewHeaderVisible: !+sessionStorage.getItem(
+      storageName('mapOverviewHeaderVisible')
+    ), // 地图总览页- header 是否可见
     pid: sessionStorage.getItem(storageName('project'))
       ? JSON.parse(sessionStorage.getItem(storageName('project'))).id
       : '', // 当前 项目 id
@@ -72,6 +75,14 @@ const app = {
         sessionStorage.setItem(storageName('sidebarStatus'), 0)
       }
       state.sidebar = !state.sidebar
+    },
+    TOGGLE_MAP_OVERVIEW_HEADER_VISIBLE: state => {
+      if (state.sidebar) {
+        sessionStorage.setItem(storageName('mapOverviewHeaderVisible'), 1)
+      } else {
+        sessionStorage.setItem(storageName('mapOverviewHeaderVisible'), 0)
+      }
+      state.mapOverviewHeaderVisible = !state.mapOverviewHeaderVisible
     },
     CLOSE_SIDEBAR: state => {
       state.sidebar = false

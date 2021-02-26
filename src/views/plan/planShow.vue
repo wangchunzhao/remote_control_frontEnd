@@ -114,7 +114,7 @@
               size="mini"
               @click.native="screenFull($event)"
             >
-              <c-svg name="quanping" />
+              <c-svg name="fullscreen" />
               {{ fullScreenStatus ? '退出' : '全屏' }}
             </el-button>
           </div>

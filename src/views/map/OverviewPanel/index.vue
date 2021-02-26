@@ -20,7 +20,13 @@
             >
           </el-dropdown-menu>
         </el-dropdown>
-        <c-svg class="full-screen-btn" name="quanping"></c-svg>
+        <c-svg
+          @click.native="
+            () => $store.commit('TOGGLE_MAP_OVERVIEW_HEADER_VISIBLE')
+          "
+          class="full-screen-btn"
+          name="fullscreen"
+        ></c-svg>
       </div>
       <div class="flex-row">
         <div class="item1">
@@ -544,12 +550,11 @@ export default {
 
 <style lang="scss" scoped>
 .map-overview {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   width: 340px;
-  margin-top: 50px;
   backdrop-filter: blur(6px);
   display: flex;
   flex-direction: column;
@@ -569,6 +574,7 @@ export default {
       font-size: 18px;
     }
     .full-screen-btn {
+      font-size: 20px;
       cursor: pointer;
     }
   }
