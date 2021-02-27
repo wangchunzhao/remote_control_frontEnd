@@ -26,12 +26,15 @@
         <Tab2 v-if="activeName === 'second'"></Tab2>
       </el-tab-pane>
     </el-tabs>
-    <TimeIntervalSetDialog ref="timeIntervalSetDialog"></TimeIntervalSetDialog>
+    <TimeIntervalSetDialog
+      ref="timeIntervalSetDialog"
+      :projectId="projectId"
+    ></TimeIntervalSetDialog>
   </div>
 </template>
 
 <script>
-import TimeIntervalSetDialog from '@/components/TimeIntervalSetDialog'
+import TimeIntervalSetDialog from '@components/TimeIntervalSetDialog/TimeIntervalSetDialog'
 import Tab1 from './preview/Index'
 import Tab2 from './analyze/Index'
 export default {
@@ -40,6 +43,11 @@ export default {
     TimeIntervalSetDialog,
     Tab1,
     Tab2
+  },
+  computed: {
+    projectId() {
+      return this.$store.state.app.project.id
+    }
   },
   data() {
     return {

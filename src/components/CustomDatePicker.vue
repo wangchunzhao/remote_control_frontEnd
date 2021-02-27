@@ -1,6 +1,12 @@
 <template>
-  <div>
-    <el-radio-group v-model="type" @change="scopeChange" size="small" border>
+  <div :class="direction === 'row' ? 'row' : ''">
+    <el-radio-group
+      v-model="type"
+      @change="scopeChange"
+      size="small"
+      border
+      :class="direction === 'row' ? 'radio-group-box' : ''"
+    >
       <el-radio-button label="day" v-if="typeArr.indexOf('day') >= 0">
         日
       </el-radio-button>
@@ -22,12 +28,16 @@
       v-model="time"
       type="date"
       placeholder=""
-      style="width: 100%;margin-top: 5px"
       :clearable="false"
       :picker-options="{
         disabledDate(val) {
           return val.getTime() > Date.now() - 3600000 * 24
         }
+      }"
+      size="small"
+      :style="{
+        'margin-top': direction === 'column' ? '5px' : '0',
+        width: pickerWidth ? pickerWidth + 'px' : '100%'
       }"
     />
     <el-date-picker
@@ -43,7 +53,11 @@
           return val.getTime() > Date.now() - 3600 * 1000 * 24 * 7
         }
       }"
-      style="width: 100%;margin-top: 5px"
+      size="small"
+      :style="{
+        'margin-top': direction === 'column' ? '5px' : '0',
+        width: pickerWidth ? pickerWidth + 'px' : '100%'
+      }"
     />
     <el-date-picker
       v-show="type === 'month'"
@@ -51,7 +65,6 @@
       type="month"
       placeholder=""
       :clearable="false"
-      style="width: 100%;margin-top: 5px"
       :picker-options="{
         firstDayOfWeek: 1,
         disabledDate(val) {
@@ -63,6 +76,11 @@
           )
         }
       }"
+      size="small"
+      :style="{
+        'margin-top': direction === 'column' ? '5px' : '0',
+        width: pickerWidth ? pickerWidth + 'px' : '100%'
+      }"
     />
     <el-date-picker
       v-show="type === 'year'"
@@ -70,19 +88,22 @@
       type="year"
       placeholder=""
       :clearable="false"
-      style="width: 100%;margin-top: 5px"
       :picker-options="{
         firstDayOfWeek: 1,
         disabledDate(val) {
           return val > dayjs().startOf('year')
         }
       }"
+      size="small"
+      :style="{
+        'margin-top': direction === 'column' ? '5px' : '0',
+        width: pickerWidth ? pickerWidth + 'px' : '100%'
+      }"
     />
     <el-date-picker
       v-show="type === 'custom'"
       v-model="dateRange"
       type="daterange"
-      style="width: 100%;margin-top: 5px"
       range-separator="至"
       startTime-placeholder="开始日期"
       endTime-placeholder="结束日期"
@@ -90,6 +111,11 @@
         disabledDate(val) {
           return val.getTime() > Date.now() - 3600000 * 24
         }
+      }"
+      size="small"
+      :style="{
+        'margin-top': direction === 'column' ? '5px' : '0',
+        width: pickerWidth ? pickerWidth * 1.6 + 'px' : '100%'
       }"
     >
     </el-date-picker>
@@ -106,6 +132,18 @@ export default {
       type: Array,
       default: function() {
         return ['day', 'week', 'month', 'year', 'custom']
+      }
+    },
+    direction: {
+      type: String,
+      default: function() {
+        return 'column'
+      }
+    },
+    pickerWidth: {
+      type: Number,
+      default: function() {
+        return null
       }
     }
   },
@@ -257,4 +295,15 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.row {
+  display: flex;
+  align-items: center;
+}
+.radio-group-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-right: 10px;
+}
+</style>

@@ -305,7 +305,7 @@ import {
   getModelTreeShowPoint
 } from '@/api/model_new'
 import CustomDatePicker from '@/components/CustomDatePicker'
-import TimeIntervalSetDialog from '@/components/TimeIntervalSetDialog'
+import TimeIntervalSetDialog from '@components/TimeIntervalSetDialog/TimeIntervalSetDialog'
 
 export default {
   components: {

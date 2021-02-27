@@ -2,7 +2,10 @@
   <div class="content-box energy_manage-analyze">
     <div class="energy_manage-panel panel-header">
       <el-form style="display: flex;align-items: center">
-        <el-form-item label="用能支路" style="display: flex;align-items: center">
+        <el-form-item
+          label="用能支路"
+          style="display: flex;align-items: center"
+        >
           <el-radio-group
             v-model="type"
             @change="typeChange"
@@ -21,7 +24,7 @@
             v-model="groupId"
             placeholder=""
             style="width:100px;margin-left: 5px"
-            size="mini"
+            size="small"
             clearable
             @change="groupChange"
           >
@@ -65,9 +68,14 @@
               ></c-svg> </template
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="日期范围" style="display: flex;align-items: center;margin-left: 15px">
+        <el-form-item
+          label="日期范围"
+          style="display: flex;align-items: center;margin-left: 15px"
+        >
           <CustomDatePicker
             :typeArr="['day', 'week', 'month', 'custom']"
+            :direction="'row'"
+            :pickerWidth="150"
             @timeChange="timeChange"
             @typeChange="timeTypeChange"
             ref="customDatePicker"
@@ -117,6 +125,13 @@ export default {
       time: '', // 选择的日期
       startTime: '', // 日期开始时间
       endTime: '', // 日期结束时间
+
+      filterForm: {
+        branchIds: [],
+        startDate: '',
+        endDate: '',
+        dateType: 'date'
+      },
 
       cascaderProps: {
         multiple: true,
