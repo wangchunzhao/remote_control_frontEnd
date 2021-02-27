@@ -30,8 +30,8 @@
           id="timeIntervalSetDialogCanvasBox"
           v-show="keyDown"
           @mousemove.self="mouseMove"
-          @mousedown.self="mouseDown"
-          @mouseup.self="mouseUp"
+          @mousedown="mouseDown"
+          @mouseup="mouseUp"
         >
           <div class="choose-area-box"></div>
         </div>
@@ -159,9 +159,6 @@ export default {
       if (val - 0 < 2) {
         this.$message.error('时段分类最小值为2')
         this.type = '2'
-      } else if (val - 0 > 24) {
-        this.$message.error('时段分类最大值为24')
-        this.type = '24'
       } else {
         this.timeIntervalList.map(item => {
           if (val) {
@@ -244,7 +241,6 @@ export default {
     //松开鼠标
     mouseUp(e) {
       this.isDown = false
-      console.log('松开鼠标');
       this.filterTimeInterval()
     },
     // 按下鼠标
@@ -260,20 +256,21 @@ export default {
     },
     // 筛选框选的单元
     filterTimeInterval() {
-      console.log(111);
       let isNomal = this.startX < this.endX
       let startX = isNomal ? this.startX : this.endX
       let startY = isNomal ? this.startY : this.endY
       let endX = isNomal ? this.endX : this.startX
       let endY = isNomal ? this.endY : this.startY
-      let startRow = Math.ceil(startY / 35)
-      let startColumn = Math.ceil(startX / 95)
-      let endRow = Math.ceil(endY / 35)
-      let endColumn = Math.ceil(endX / 95)
-      console.log(startRow, 'startRow')
-      console.log(startColumn, 'startRow')
-      console.log(endRow, 'startRow')
-      console.log(endColumn, 'startRow')
+      let startRowNum = Math.ceil(startY / 35)
+      let startColumnNum = Math.ceil(startX / 95)
+      let endRowNum = Math.ceil(endY / 35)
+      let endColumnNum = Math.ceil(endX / 95)
+      let startRow = startRowNum < endRowNum ? startRowNum : endRowNum
+      let startColumn =
+        startColumnNum < endColumnNum ? startColumnNum : endColumnNum
+      let endRow = startRowNum < endRowNum ? endRowNum : startRowNum
+      let endColumn =
+        startColumnNum < endColumnNum ? endColumnNum : startColumnNum
       let chooseList = []
       for (let i = 1; i <= 24; i++) {
         if (i >= startRow && i <= endRow) {
@@ -287,7 +284,6 @@ export default {
           }
         }
       }
-      console.log(chooseList, 'chooseList')
       if (chooseList.length) {
         this.chooseList = chooseList
         this.changeBoxShowStatus = true
@@ -431,9 +427,6 @@ export default {
         return
       } else if (this.type - 0 < 2) {
         this.$message.error('时段分类最小值为2')
-        return
-      } else if (this.type - 0 > 24) {
-        this.$message.error('时段分类最大值为24')
         return
       }
       let timeIntervalList = []
