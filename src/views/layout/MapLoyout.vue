@@ -1,9 +1,13 @@
 <template>
   <div class="app-wrapper">
     <!--头部-->
-    <Header />
+    <Header v-show="mapOverviewHeaderVisible" />
     <!--主体-->
-    <div class="main thin-scroll" :class="{ hideSidebar: !sidebar }">
+    <div
+      class="main thin-scroll"
+      :style="{ top: mapOverviewHeaderVisible ? '50px' : 0 }"
+      :class="{ hideSidebar: !sidebar }"
+    >
       <transition name="el-fade-in" mode="out-in">
         <router-view />
       </transition>
@@ -13,6 +17,7 @@
 
 <script>
 import Header from '@/views/layout/Header'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     Header
@@ -23,9 +28,7 @@ export default {
     }
   },
   computed: {
-    sidebar() {
-      return this.$store.state.app.sidebar
-    }
+    ...mapGetters(['mapOverviewHeaderVisible', 'sidebar'])
   },
   mounted() {
     // 监听窗口大小调节侧边栏开关

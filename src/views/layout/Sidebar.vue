@@ -3,8 +3,8 @@
     <el-menu
       mode="vertical"
       :default-active="$route.path"
-      :class="{ 'is-collapse': isNest }"
-      :collapse="!isNest"
+      :class="{ 'is-collapse': sidebar }"
+      :collapse="!sidebar"
       background-color="#fff"
       text-color="rgba(0,0,0,0.65)"
       active-text-color="#1890ff"
@@ -78,7 +78,7 @@
           <el-menu-item
             v-else
             :index="item.redirect"
-            :class="{ 'submenu-title-noDropdown': !isNest }"
+            :class="{ 'submenu-title-noDropdown': !sidebar }"
           >
             <c-svg :name="item.meta.icon" class-name="nav-icon" />
             <span>{{ item.meta && item.meta.title }}</span>
@@ -91,6 +91,7 @@
 <script>
 import { getFirstRouterPath } from '@/utils/permissions'
 import uuidv1 from 'uuid/v1'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -101,18 +102,7 @@ export default {
     routerMap() {
       return this.$store.state.permissions.routerMap
     },
-    pid() {
-      return (this.$store.state.app.project || {}).id
-    },
-    isNest() {
-      return this.$store.state.app.sidebar
-    },
-    platform() {
-      return this.$store.state.permissions.platform
-    },
-    industry() {
-      return (this.$store.state.app.project || {}).Industry
-    }
+    ...mapGetters(['sidebar', 'industry', 'platform'])
   },
   methods: {
     selectMenuItem(path, indexPath, item) {

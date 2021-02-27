@@ -17,7 +17,7 @@ export const getPointPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Point/GetPointPage',
+    '/api/Point/GetPointPage',
     {
       ProjectId,
       PointName,
@@ -42,14 +42,11 @@ export const getPointPage = ({
 
 // #region 获取大类-&gt;小类-&gt;设备 start
 export const getSubsystemAndModelTreeDropdownList = ({ projectId }) => {
-  return fetch.get(
-    BASE_URI + '/api/Point/GetSubsystemAndModelTreeDropdownList',
-    {
-      params: {
-        projectId
-      }
+  return fetch.get('/api/Point/GetSubsystemAndModelTreeDropdownList', {
+    params: {
+      projectId
     }
-  )
+  })
 }
 // #endregion 获取大类-&gt;小类-&gt;设备 end
 
@@ -60,7 +57,7 @@ export const addPointRelevance = ({
   PointRelevanceList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Point/AddPointRelevance',
+    '/api/Point/AddPointRelevance',
     {
       PointIdA,
       ModelTreeIdA,
@@ -75,7 +72,7 @@ export const addPointRelevance = ({
 
 // #region 获取点位关联的点位 start
 export const getPointRelevance = ({ modelTreeId, pointId }) => {
-  return fetch.post(BASE_URI + '/api/Point/GetPointRelevance', null, {
+  return fetch.post('/api/Point/GetPointRelevance', null, {
     params: {
       modelTreeId,
       pointId
@@ -95,7 +92,7 @@ export const batchAddModelTree = ({
   OperateType
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Point/BatchAddModelTree',
+    '/api/Point/BatchAddModelTree',
     {
       ProjectId,
       BigTypeId,
@@ -117,7 +114,7 @@ export const pointCancelRelevanceModelTreeOrLocation = ({
   cancelType
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Point/PointCancelRelevanceModelTreeOrLocation',
+    '/api/Point/PointCancelRelevanceModelTreeOrLocation',
     pointIdList,
     {
       params: {
@@ -131,7 +128,7 @@ export const pointCancelRelevanceModelTreeOrLocation = ({
 
 // #region 取消点位关联设备或区域 start
 export const pointCancelRelevance = ({ pointIdList, modelTreeId }) => {
-  return fetch.post(BASE_URI + '/api/Point/PointCancelRelevance', pointIdList, {
+  return fetch.post('/api/Point/PointCancelRelevance', pointIdList, {
     params: {
       modelTreeId
     },
@@ -149,7 +146,7 @@ export const batchUpdateModelTree = ({
   MName
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Point/BatchUpdateModelTree',
+    '/api/Point/BatchUpdateModelTree',
     {
       BigTypeId,
       SmallTypeId,
@@ -170,7 +167,7 @@ export const pointRelevanceModelTreeAndLocation = ({
   ModelTreeOrLocationIdList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Point/PointRelevanceModelTreeAndLocation',
+    '/api/Point/PointRelevanceModelTreeAndLocation',
     {
       PointIdList,
       ModelTreeOrLocationIdList
@@ -184,7 +181,7 @@ export const pointRelevanceModelTreeAndLocation = ({
 
 // #region 导入设备 start
 export const importModelTree = ({ industry, formData }) => {
-  return fetch.post(BASE_URI + '/api/Point/ImportModelTree', formData, {
+  return fetch.post('/api/Point/ImportModelTree', formData, {
     params: {
       industry
     },
@@ -206,7 +203,7 @@ export const batchUpdatePoint = ({
   StorageSpaceExtendList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Point/batchUpdatePoint',
+    '/api/Point/batchUpdatePoint',
     {
       UpdatePointType,
       PointIdList,
@@ -227,7 +224,7 @@ export const batchUpdatePoint = ({
 
 // #region 获取点位页下拉框数据 start
 export const getPointPageDropdownList = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Point/GetPointPageDropdownList', {
+  return fetch.get('/api/Point/GetPointPageDropdownList', {
     params: {
       projectId
     }
@@ -237,7 +234,7 @@ export const getPointPageDropdownList = ({ projectId }) => {
 
 // #region 根据点位ID获取关联设备与系统 start
 export const getPointModelTreeSysInfo = ({ pointId }) => {
-  return fetch.get(BASE_URI + '/api/Point/GetPointModelTreeSysInfo', {
+  return fetch.get('/api/Point/GetPointModelTreeSysInfo', {
     params: {
       pointId
     }

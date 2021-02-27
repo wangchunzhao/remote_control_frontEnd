@@ -253,11 +253,47 @@ export default {
         })
         .catch(() => {})
     },
-    addByModule(list) {
-      this.updateConfig([...list, ...this.tableData])
+    async addByModule(list) {
+      try {
+        const beforeList = await this.getAllModuleList()
+        this.updateConfig([...list, ...beforeList])
+      } catch (err) {
+        console.error(err)
+        this.$message.error('添加失败')
+      }
     },
-    addByTemplate(list) {
-      this.updateConfig([...list, ...this.tableData])
+    async addByTemplate(list) {
+      try {
+        const beforeList = await this.getAllModuleList()
+        this.updateConfig([...list, ...beforeList])
+      } catch (err) {
+        console.error(err)
+        this.$message.error('添加失败')
+      }
+    },
+    /** 获取所有 ModuleList */
+    getAllModuleList() {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const { data } = await getModbusDeviceModulePage({
+            DeviceId: this.gatewayInfo.id,
+            DeviceModuleName: '',
+            ModuleTypeList: undefined,
+            SortType: undefined,
+            IsAsc: undefined,
+            PageIndex: 1,
+            PageSize: undefined
+          })
+          if (data.Code === 200) {
+            resolve(data.Data.Data)
+          } else {
+            reject(new Error('列表获取失败'))
+          }
+        } catch (err) {
+          console.error(err)
+          reject(err)
+        }
+      })
     },
     updateConfig(list) {
       if (

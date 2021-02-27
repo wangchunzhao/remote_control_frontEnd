@@ -22,7 +22,7 @@ export const showDeviceList = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/ShowDevice_List',
+    '/api/Device/ShowDevice_List',
     {
       DeviceModuleId,
       ConnectStatusList,
@@ -61,7 +61,7 @@ export const getDevicePointPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/GetDevicePointPage',
+    '/api/Device/GetDevicePointPage',
     {
       DeviceId, // integer($int32) 网关id
       isLine, // integer($int32) 是否在线 1在线 0离线
@@ -81,7 +81,7 @@ export const getDevicePointPage = ({
 
 // #region 获取点位的实时数据 start
 export const getPointRealTimeData = ids => {
-  return fetch.post(BASE_URI + '/api/Device/GetPointRealTimeData', ids, {
+  return fetch.post('/api/Device/GetPointRealTimeData', ids, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -94,7 +94,7 @@ export const getWaybillPage = ({
   pageIndex,
   pageSize
 }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetWaybillPage', {
+  return fetch.get('/api/Device/GetWaybillPage', {
     params: {
       companyId,
       waybillNumOrTagId,
@@ -107,7 +107,7 @@ export const getWaybillPage = ({
 
 // #region 运单点位历史数据导出excel start
 export const exportWaybillTag = ({ start, end, pointId, ts }) => {
-  return fetch.get(BASE_URI + '/api/Device/ExportWaybillTag', {
+  return fetch.get('/api/Device/ExportWaybillTag', {
     params: {
       start,
       end,
@@ -120,7 +120,7 @@ export const exportWaybillTag = ({ start, end, pointId, ts }) => {
 
 // #region 查询点位历史数据 start
 export const getHistoryData = ({ start, end, pointIdList, tmes }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetPointData', {
+  return fetch.get('/api/Device/GetPointData', {
     params: {
       start,
       end,
@@ -136,7 +136,7 @@ export const getHistoryData = ({ start, end, pointIdList, tmes }) => {
 
 // #region 获取点位的统计信息、最大值、最小值、平均值 start
 export const getPointStatisticData = ({ start, end, pointIdList }) => {
-  return fetch.get(BASE_URI + '/api/Device/getPointStatisticData', {
+  return fetch.get('/api/Device/getPointStatisticData', {
     params: {
       start,
       end,
@@ -156,7 +156,7 @@ export const batchAddSensorTag = ({
   tagList,
   tagType
 }) => {
-  return fetch.post(BASE_URI + '/api/Device/BatchAddSensorTag', tagList, {
+  return fetch.post('/api/Device/BatchAddSensorTag', tagList, {
     params: {
       projectId,
       CompanyId,
@@ -169,7 +169,7 @@ export const batchAddSensorTag = ({
 
 // #region 设备绑定序列号和点位 start
 export const carModelTreeBindPoint = ({ modelTreeId, sn, carNo }) => {
-  return fetch.get(BASE_URI + '/api/Device/CarModelTreeBindPoint', {
+  return fetch.get('/api/Device/CarModelTreeBindPoint', {
     params: {
       modelTreeId,
       sn,
@@ -181,7 +181,7 @@ export const carModelTreeBindPoint = ({ modelTreeId, sn, carNo }) => {
 
 // #region 设备解绑序列号和点位 start
 export const carModelTreeUnBindPoint = ({ modelTreeId }) => {
-  return fetch.get(BASE_URI + '/api/Device/CarModelTreeUnBindPoint', {
+  return fetch.get('/api/Device/CarModelTreeUnBindPoint', {
     params: {
       modelTreeId
     }
@@ -201,7 +201,7 @@ export const sensorTagList = ({
   IsAsc
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/SensorTagList',
+    '/api/Device/SensorTagList',
     {
       projectId,
       SensorTagType,
@@ -228,7 +228,7 @@ export const updateSensor = ({
   tAlarm
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/UpdateSensor',
+    '/api/Device/UpdateSensor',
     { SensorIdList, cycle, tOffset, hOffset, tAlarm },
     {
       headers: { 'Content-Type': 'application/json' }
@@ -245,7 +245,7 @@ export const getSensorHistList = ({
   ts,
   type
 }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetSensor_HistList', {
+  return fetch.get('/api/Device/GetSensor_HistList', {
     params: {
       sensorId,
       startTime,
@@ -267,7 +267,7 @@ export const getOriginalSensorHistList = ({
   PageIndex
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/GetOriginalSensor_HistList',
+    '/api/Device/GetOriginalSensor_HistList',
     {
       SensorId,
       StartTime,
@@ -294,7 +294,7 @@ export const downOriginalSensorHistList = ({
   Export
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/GetOriginalSensor_HistList',
+    '/api/Device/GetOriginalSensor_HistList',
     {
       SensorId,
       StartTime,
@@ -320,7 +320,7 @@ export const downSensorHistoryData = ({
   ts,
   type
 }) => {
-  return fetch.get(BASE_URI + '/api/Device/DownSensorHistoryData', {
+  return fetch.get('/api/Device/DownSensorHistoryData', {
     params: {
       sensorId,
       startTime,
@@ -336,19 +336,15 @@ export const downSensorHistoryData = ({
 
 // #region 批量删除传感器 start
 export const batchDeleteSensorTag = ({ sensorTagIdList }) => {
-  return fetch.post(
-    BASE_URI + '/api/Device/BatchDeleteSensorTag',
-    sensorTagIdList,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/Device/BatchDeleteSensorTag', sensorTagIdList, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 批量删除传感器 end
 
 // #region 获取未被车辆和运单绑定的标签 start
 export const getCarTagDropdownList = ({ projectId, carId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetCarTagDropdownList', {
+  return fetch.get('/api/Device/GetCarTagDropdownList', {
     params: {
       projectId,
       carId
@@ -359,7 +355,7 @@ export const getCarTagDropdownList = ({ projectId, carId }) => {
 
 // #region 通过设备id获取该设备下绑定的监测点 start
 export const getCarTagListByModelTreeIdSn = ({ modelTreeId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetCarTagListByModelTreeIdSn', {
+  return fetch.get('/api/Device/GetCarTagListByModelTreeIdSn', {
     params: {
       modelTreeId
     }
@@ -369,7 +365,7 @@ export const getCarTagListByModelTreeIdSn = ({ modelTreeId }) => {
 
 // #region 批量添加车辆标签 start
 export const batchAddCarTag = ({ modelTreeId, tagList }) => {
-  return fetch.post(BASE_URI + '/api/Device/BatchAddCarTag', tagList, {
+  return fetch.post('/api/Device/BatchAddCarTag', tagList, {
     params: {
       modelTreeId
     },
@@ -380,7 +376,7 @@ export const batchAddCarTag = ({ modelTreeId, tagList }) => {
 
 // #region 获取车辆序列号绑定的点位信息 start
 export const getCarSnPointInfo = ({ sn, start, end }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetCarSnPointInfo', {
+  return fetch.get('/api/Device/GetCarSnPointInfo', {
     params: {
       sn,
       start,
@@ -392,7 +388,7 @@ export const getCarSnPointInfo = ({ sn, start, end }) => {
 
 // #region 修改网关名称 start
 export const updateDevicesName = ({ deviceName, deviceID }) => {
-  return fetch.post(BASE_URI + '/api/Device/UpdateDevicesName', null, {
+  return fetch.post('/api/Device/UpdateDevicesName', null, {
     params: {
       deviceID,
       deviceName
@@ -404,7 +400,7 @@ export const updateDevicesName = ({ deviceName, deviceID }) => {
 
 // #region 修改网关序列号 start
 export const updateDevicesSN = ({ SN, deviceID }) => {
-  return fetch.get(BASE_URI + '/api/Device/UpdateDevicesSN', {
+  return fetch.get('/api/Device/UpdateDevicesSN', {
     params: {
       SN,
       deviceID
@@ -415,7 +411,7 @@ export const updateDevicesSN = ({ SN, deviceID }) => {
 
 // #region 设备绑定通讯卡 start
 export const deviceBindICCID = ({ ICCID, deviceID }) => {
-  return fetch.get(BASE_URI + '/api/Device/DeviceBindICCID', {
+  return fetch.get('/api/Device/DeviceBindICCID', {
     params: {
       ICCID,
       deviceID
@@ -426,7 +422,7 @@ export const deviceBindICCID = ({ ICCID, deviceID }) => {
 
 // #region 设备解绑通讯卡 start
 export const deviceUnBindICCID = deviceID => {
-  return fetch.get(BASE_URI + '/api/Device/DeviceUnBindICCID', {
+  return fetch.get('/api/Device/DeviceUnBindICCID', {
     params: {
       deviceID
     }
@@ -436,7 +432,7 @@ export const deviceUnBindICCID = deviceID => {
 
 // #region 通过设备id获取通讯卡信息 start
 export const cardUsageInfo = deviceID => {
-  return fetch.get(BASE_URI + '/api/Device/Card_usage_info', {
+  return fetch.get('/api/Device/Card_usage_info', {
     params: {
       deviceID
     }
@@ -450,7 +446,7 @@ export const deviceDeleteMQTT = ({
   deviceUserName,
   deviceUserPwd
 }) => {
-  return fetch.post(BASE_URI + '/api/Device/DeviceDeleteMQTT', null, {
+  return fetch.post('/api/Device/DeviceDeleteMQTT', null, {
     params: {
       deviceNo,
       deviceUserName,
@@ -463,7 +459,7 @@ export const deviceDeleteMQTT = ({
 
 // #region mqtt网关点位列表 start
 export const getMQTTInfo = deviceNo => {
-  return fetch.get(BASE_URI + '/api/Device/GetDeviceMQTT', {
+  return fetch.get('/api/Device/GetDeviceMQTT', {
     params: {
       deviceNo
     }
@@ -473,7 +469,7 @@ export const getMQTTInfo = deviceNo => {
 
 // #region mqtt网关点位列表 start
 export const getDeviceMQTTPointPage = ({ deviceID, pageIndex, pageSize }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetDeviceMQTTPointPage', {
+  return fetch.get('/api/Device/GetDeviceMQTTPointPage', {
     params: {
       deviceID,
       pageIndex,
@@ -485,7 +481,7 @@ export const getDeviceMQTTPointPage = ({ deviceID, pageIndex, pageSize }) => {
 
 // #region 修改Modbus网关 start
 export const updateModbusDevice = form => {
-  return fetch.post(BASE_URI + '/api/Device/UpdateModbusDevice', form, {
+  return fetch.post('/api/Device/UpdateModbusDevice', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -493,7 +489,7 @@ export const updateModbusDevice = form => {
 
 // #region 导入传感器 start
 export const importSensorTag = formData => {
-  return fetch.post(BASE_URI + '/api/Device/ImportSensorTag', formData, {
+  return fetch.post('/api/Device/ImportSensorTag', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
@@ -501,7 +497,7 @@ export const importSensorTag = formData => {
 
 // #region 获取项目下的车辆 start
 export const getProjectForCarList = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetProjectForCarList', {
+  return fetch.get('/api/Device/GetProjectForCarList', {
     params: {
       projectId
     }
@@ -511,7 +507,7 @@ export const getProjectForCarList = ({ projectId }) => {
 
 // #region 通过项目id获取传感器和记录仪列表 start
 export const getTerminalDropdow = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetTerminalDropdow', {
+  return fetch.get('/api/Device/GetTerminalDropdow', {
     params: {
       projectId
     }
@@ -521,7 +517,7 @@ export const getTerminalDropdow = ({ projectId }) => {
 
 // #region 获取运单管理详情 start
 export const getWaybillManagement = ({ waybillManagementId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetWaybillManagement', {
+  return fetch.get('/api/Device/GetWaybillManagement', {
     params: {
       waybillManagementId
     }
@@ -531,7 +527,7 @@ export const getWaybillManagement = ({ waybillManagementId }) => {
 
 // #region web运单绑定标签 start
 export const waybillBindTagsV2Web = form => {
-  return fetch.post(BASE_URI + '/api/Device/WaybillBindTagsV2Web', form, {
+  return fetch.post('/api/Device/WaybillBindTagsV2Web', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -549,7 +545,7 @@ export const getWaybillPageV2 = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/GetWaybillPageV2',
+    '/api/Device/GetWaybillPageV2',
     {
       ProjectId,
       WaybillNumber,
@@ -570,7 +566,7 @@ export const getWaybillPageV2 = ({
 // #region 运单解绑V2 start
 export const waybillUnbindTagsWebV2 = ({ WaybillNumber, ProjectId }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/WaybillUnbindTagsWebV2',
+    '/api/Device/WaybillUnbindTagsWebV2',
     {
       WaybillNumber,
       ProjectId
@@ -584,7 +580,7 @@ export const waybillUnbindTagsWebV2 = ({ WaybillNumber, ProjectId }) => {
 
 // #region 获取温度范围 Web start
 export const getTempRangeWeb = ({ projectId, companyId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetTempRangeWeb', {
+  return fetch.get('/api/Device/GetTempRangeWeb', {
     params: {
       projectId,
       companyId
@@ -595,7 +591,7 @@ export const getTempRangeWeb = ({ projectId, companyId }) => {
 
 // #region 批量导入运单 需上传运单导入模板 start
 export const batchImportWaybill = formData => {
-  return fetch.post(BASE_URI + '/api/Device/BatchImportWaybill', formData, {
+  return fetch.post('/api/Device/BatchImportWaybill', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
@@ -603,7 +599,7 @@ export const batchImportWaybill = formData => {
 
 // #region 通过车辆id获取车辆点位信息 start
 export const getCarPointInfo = ({ carId, start, end }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetCarPointInfo', {
+  return fetch.get('/api/Device/GetCarPointInfo', {
     params: {
       carId,
       start,
@@ -615,7 +611,7 @@ export const getCarPointInfo = ({ carId, start, end }) => {
 
 // #region 通过位置树id获取图片url start
 export const getLocationTreeImgById = ({ locationTreeId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetLocationTreeImgById', {
+  return fetch.get('/api/Device/GetLocationTreeImgById', {
     params: {
       locationTreeId
     }
@@ -625,7 +621,7 @@ export const getLocationTreeImgById = ({ locationTreeId }) => {
 
 // #region 配置点位类型（0测点级，1设备下的点） start
 export const getPointsByMtid = ({ mtid, type }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetPointByMtid', {
+  return fetch.get('/api/Device/GetPointByMtid', {
     params: {
       mtid,
       type
@@ -636,7 +632,7 @@ export const getPointsByMtid = ({ mtid, type }) => {
 
 // #region 网关切换项目 start
 export const updateProjectDevices = ({ deviceID, projectId }) => {
-  return fetch.get(BASE_URI + '/api/Device/UpdateProjectDevices', {
+  return fetch.get('/api/Device/UpdateProjectDevices', {
     params: {
       deviceID,
       projectId
@@ -647,7 +643,7 @@ export const updateProjectDevices = ({ deviceID, projectId }) => {
 
 // #region 获取不同的模板 start
 export const getTempByType = ({ inp }) => {
-  return fetch.get(BASE_URI + '/api/Device/getTempByType', {
+  return fetch.get('/api/Device/getTempByType', {
     params: {
       inp
     }
@@ -666,7 +662,7 @@ export const addTemplate = ({
   FLAG
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/addTemplate',
+    '/api/Device/addTemplate',
     {
       id,
       name,
@@ -685,13 +681,13 @@ export const addTemplate = ({
 
 // #region 根据用户获取相关的自定义模板 start
 export const getTempByUid = () => {
-  return fetch.get(BASE_URI + '/api/Device/getTempByUid')
+  return fetch.get('/api/Device/getTempByUid')
 }
 // #endregion 根据用户获取相关的自定义模板 end
 
 // #region 根据模板id获取用户信息 start
 export const getUserInfo = ({ tid }) => {
-  return fetch.get(BASE_URI + '/api/Device/getUserInfo', {
+  return fetch.get('/api/Device/getUserInfo', {
     params: {
       tid
     }
@@ -701,7 +697,7 @@ export const getUserInfo = ({ tid }) => {
 
 // #region 删除模板 start
 export const deleteTemplate = ({ tid }) => {
-  return fetch.get(BASE_URI + '/api/Device/deleteTemplate', {
+  return fetch.get('/api/Device/deleteTemplate', {
     params: {
       tid
     }
@@ -711,7 +707,7 @@ export const deleteTemplate = ({ tid }) => {
 
 // #region 根据模板id获取模板内容 start
 export const getTempById = ({ tids }) => {
-  return fetch.get(BASE_URI + '/api/Device/getTempById', {
+  return fetch.get('/api/Device/getTempById', {
     params: {
       tids
     }
@@ -721,7 +717,7 @@ export const getTempById = ({ tids }) => {
 
 // #region 分享模板 start
 export const regionUser = ({ uids, tid }) => {
-  return fetch.get(BASE_URI + '/api/Device/regionUser', {
+  return fetch.get('/api/Device/regionUser', {
     params: {
       uids,
       tid
@@ -732,7 +728,7 @@ export const regionUser = ({ uids, tid }) => {
 
 // #region 删除分享模板成员 start
 export const deleteUser = ({ uids, tid }) => {
-  return fetch.get(BASE_URI + '/api/Device/deleteUser', {
+  return fetch.get('/api/Device/deleteUser', {
     params: {
       uids,
       tid
@@ -752,7 +748,7 @@ export const updateTemplate = ({
   FLAG
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/updateTemplate',
+    '/api/Device/updateTemplate',
     {
       id,
       name,
@@ -780,7 +776,7 @@ export const deviceAddMQTT = ({
   CompanyId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/DeviceAddMQTT',
+    '/api/Device/DeviceAddMQTT',
     {
       deviceName,
       deviceNo,
@@ -799,7 +795,7 @@ export const deviceAddMQTT = ({
 
 // #region 验证设备 start
 export const verifyDevice = ({ deviceNo, deviceUserName, deviceUserPwd }) => {
-  return fetch.get(BASE_URI + '/api/Device/VerifyDevice', {
+  return fetch.get('/api/Device/VerifyDevice', {
     params: {
       deviceNo,
       deviceUserName,
@@ -811,7 +807,7 @@ export const verifyDevice = ({ deviceNo, deviceUserName, deviceUserPwd }) => {
 
 // #region 历史数据导出xlsx start
 export const downHistoryData = ({ start, end, pointIdList, tmes }) => {
-  return fetch.get(BASE_URI + '/api/Device/DownHistoryData', {
+  return fetch.get('/api/Device/DownHistoryData', {
     params: {
       start,
       end,
@@ -828,7 +824,7 @@ export const downHistoryData = ({ start, end, pointIdList, tmes }) => {
 // #region 添加设备传感器 start
 export const addDevices = ({ data }) => {
   return fetch.post(
-    BASE_URI + `/api/Device/addDevicesNew`,
+    `/api/Device/addDevicesNew`,
     {
       data
     },
@@ -841,7 +837,7 @@ export const addDevices = ({ data }) => {
 
 // #region 新增tcp网关 start
 export const addDevicePoint = form => {
-  return fetch.post(BASE_URI + '/api/Device/AddDevicePoint', form, {
+  return fetch.post('/api/Device/AddDevicePoint', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -849,7 +845,7 @@ export const addDevicePoint = form => {
 
 // #region 删除tcp网关 start
 export const devDeleteTCP = id => {
-  return fetch.get(BASE_URI + '/api/Device/devDeleteTCP', {
+  return fetch.get('/api/Device/devDeleteTCP', {
     params: {
       id
     }
@@ -859,7 +855,7 @@ export const devDeleteTCP = id => {
 
 // #region 查询tcp网关配置 start
 export const getTCPConfig = deviceID => {
-  return fetch.get(BASE_URI + '/api/Device/GetDevice_TCPConfig', {
+  return fetch.get('/api/Device/GetDevice_TCPConfig', {
     params: {
       deviceID
     }
@@ -869,7 +865,7 @@ export const getTCPConfig = deviceID => {
 
 // #region 删除传感器 start
 export const delSensor = ({ SensorId }) => {
-  return fetch.get(BASE_URI + '/api/Device/delSensorNEW', {
+  return fetch.get('/api/Device/delSensorNEW', {
     params: {
       SensorId
     },
@@ -882,7 +878,7 @@ export const delSensor = ({ SensorId }) => {
 
 // #region 根据网关id得到全部信息 start
 export const getDeviceConfig = ({ deviceID }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetDevice_Config', {
+  return fetch.get('/api/Device/GetDevice_Config', {
     params: {
       deviceID
     }
@@ -892,7 +888,7 @@ export const getDeviceConfig = ({ deviceID }) => {
 
 // #region 传感器写入数据 start
 export const writeGateway = ({ pointID, writeData }) => {
-  return fetch.get(BASE_URI + '/api/Device/ControlDown', {
+  return fetch.get('/api/Device/ControlDown', {
     params: {
       pointID,
       writeData
@@ -903,7 +899,7 @@ export const writeGateway = ({ pointID, writeData }) => {
 
 // #region 删除设备 start
 export const delDevices = ({ DeviceId }) => {
-  return fetch.get(BASE_URI + '/api/Device/delDevicesNew', {
+  return fetch.get('/api/Device/delDevicesNew', {
     params: {
       DeviceId
     }
@@ -913,7 +909,7 @@ export const delDevices = ({ DeviceId }) => {
 
 // #region 查询网关序列号是否已经存在 start
 export const ckDeviceNo = ({ deviceno }) => {
-  return fetch.get(BASE_URI + '/api/Device/CkDeviceNo', {
+  return fetch.get('/api/Device/CkDeviceNo', {
     params: {
       deviceno
     }
@@ -923,7 +919,7 @@ export const ckDeviceNo = ({ deviceno }) => {
 
 // #region 获取可配置用户 start
 export const getUserbyPro = ({ tid, inp }) => {
-  return fetch.get(BASE_URI + '/api/Device/getUserbyPro', {
+  return fetch.get('/api/Device/getUserbyPro', {
     params: {
       tid,
       inp
@@ -934,7 +930,7 @@ export const getUserbyPro = ({ tid, inp }) => {
 
 // #region 添加modbus网关最新版 start
 export const updateDevices = (form, SensorId) => {
-  return fetch.post(BASE_URI + '/api/Device/updateDevicesNEW', form, {
+  return fetch.post('/api/Device/updateDevicesNEW', form, {
     headers: { 'Content-Type': 'application/json' },
     params: {
       SensorId
@@ -959,33 +955,29 @@ export const downHistoryDataToExcelOrPdf = ({
   zipFileList,
   responseType
 }) => {
-  return fetch.post(
-    BASE_URI + '/api/Device/DownHistoryDataToExcelOrPdf',
-    zipFileList,
-    {
-      params: {
-        start,
-        end,
-        pointIdList,
-        tmes,
-        fileType,
-        isZip,
-        isAlarmLacy,
-        isMerge
-      },
-      responseType,
-      headers: { 'Content-Type': 'application/json' },
-      paramsSerializer: function(params) {
-        return qs.stringify(params, { indices: false })
-      }
+  return fetch.post('/api/Device/DownHistoryDataToExcelOrPdf', zipFileList, {
+    params: {
+      start,
+      end,
+      pointIdList,
+      tmes,
+      fileType,
+      isZip,
+      isAlarmLacy,
+      isMerge
+    },
+    responseType,
+    headers: { 'Content-Type': 'application/json' },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
-  )
+  })
 }
 // #endregion 历史数据导出xlsx end
 
 // #region 获取主控配置信息 start
 export const getMasterControl = ({ proId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetMasterControl', {
+  return fetch.get('/api/Device/GetMasterControl', {
     params: {
       proId
     }
@@ -995,7 +987,7 @@ export const getMasterControl = ({ proId }) => {
 
 // #region 获取配置信息（返回点位对应网关配置信息） start
 export const getDeviceInfo = ({ deviceId }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetDeviceInfo', {
+  return fetch.get('/api/Device/GetDeviceInfo', {
     params: {
       deviceId
     }
@@ -1005,7 +997,7 @@ export const getDeviceInfo = ({ deviceId }) => {
 
 // #region 获取网关信息 start
 export const getPointConfig = ({ pointID }) => {
-  return fetch.get(BASE_URI + '/api/Device/GetPointConfig', {
+  return fetch.get('/api/Device/GetPointConfig', {
     params: {
       pointID
     }
@@ -1030,7 +1022,7 @@ export const addDevicesNewModbus = ({
   DeviceTypeE
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/addDevicesNewModbus',
+    '/api/Device/addDevicesNewModbus',
     {
       DeviceModuleAndAddressList,
       deviceId,
@@ -1066,7 +1058,7 @@ export const updateDevicesNEWModbus = ({
   deviceName
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/updateDevicesNEWModbus',
+    '/api/Device/updateDevicesNEWModbus',
     {
       DeviceModuleAndAddressList,
       DeletePointIdList,
@@ -1086,7 +1078,7 @@ export const updateDevicesNEWModbus = ({
 
 // #region 获取网关序列号规则 start
 export const getDeviceNumRule = ({ deviceTypeList }) => {
-  return fetch.post(BASE_URI + '/api/Device/GetDeviceNumRule', deviceTypeList, {
+  return fetch.post('/api/Device/GetDeviceNumRule', deviceTypeList, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -1103,7 +1095,7 @@ export const getModbusDeviceModulePage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/GetModbusDeviceModulePage',
+    '/api/Device/GetModbusDeviceModulePage',
     {
       DeviceId,
       DeviceModuleName,
@@ -1127,7 +1119,7 @@ export const getDeviceTotal = ({
   ProjectIdList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Device/GetDeviceTotal',
+    '/api/Device/GetDeviceTotal',
     {
       CompanyId,
       IsQueryCreator,
@@ -1142,7 +1134,7 @@ export const getDeviceTotal = ({
 
 // #region 获取设备基础信息 start
 export const getModelTreeBaseInfo = data => {
-  return fetch.get(BASE_URI + '/api/ModelTree/GetModelTreeBaseInfo', {
+  return fetch.get('/api/ModelTree/GetModelTreeBaseInfo', {
     params: data
   })
 }
@@ -1150,18 +1142,15 @@ export const getModelTreeBaseInfo = data => {
 
 // #region 获取设备静态属性 start
 export const getModelTreeStaticProperty = data => {
-  return fetch.get(
-    BASE_URI + '/api/ModelTreeStaticProperty/GetModelTreeStaticProperty',
-    {
-      params: data
-    }
-  )
+  return fetch.get('/api/ModelTreeStaticProperty/GetModelTreeStaticProperty', {
+    params: data
+  })
 }
 // #endregion 获取设备静态属性 end
 
 // #region 添加或更新设备 start
 export const addOrUpdateModelTree = data => {
-  return fetch.post(BASE_URI + '/api/ModelTree/AddOrUpdateModelTree', data, {
+  return fetch.post('/api/ModelTree/AddOrUpdateModelTree', data, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -1169,7 +1158,7 @@ export const addOrUpdateModelTree = data => {
 
 // #region 刷新网关设备 start
 export const refreshDeviceModelTree = ({ deviceId, projectId }) => {
-  return fetch.get(BASE_URI + '/api/Device/RefreshDeviceModelTree', {
+  return fetch.get('/api/Device/RefreshDeviceModelTree', {
     params: {
       deviceId,
       projectId
@@ -1181,7 +1170,7 @@ export const refreshDeviceModelTree = ({ deviceId, projectId }) => {
 
 // #region 网关切换企业 start
 export const updateCompanyDevice = ({ deviceId, companyId }) => {
-  return fetch.get(BASE_URI + '/api/Device/UpdateCompanyDevice', {
+  return fetch.get('/api/Device/UpdateCompanyDevice', {
     params: {
       deviceId,
       companyId

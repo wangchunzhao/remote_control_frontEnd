@@ -1,8 +1,9 @@
 <template>
   <el-dialog
-    width="800px"
+    width="550px"
     title="统计指标"
     class="site-config-dialog"
+    append-to-body
     :visible.sync="dialogVisible"
     @close="handleClose"
   >
@@ -24,8 +25,7 @@
     </div>
     <div class="config-box">
       <img
-        src="
-https://cdn.sinocold.net/images/%E7%BB%9F%E8%AE%A1%E6%8C%87%E6%A0%87icon.svg"
+        src="https://cdn.sinocold.net/images/%E7%BB%9F%E8%AE%A1%E6%8C%87%E6%A0%87icon.svg"
         alt=""
       />
       <div class="config-box-right">
@@ -41,17 +41,32 @@ https://cdn.sinocold.net/images/%E7%BB%9F%E8%AE%A1%E6%8C%87%E6%A0%87icon.svg"
     </div>
     <div class="config-box">
       <img
-        src="
-https://cdn.sinocold.net/images/%E7%BB%9F%E8%AE%A1%E6%8C%87%E6%A0%87icon.svg"
+        src="https://cdn.sinocold.net/images/%E7%BB%9F%E8%AE%A1%E6%8C%87%E6%A0%87icon.svg"
         alt=""
       />
       <div class="config-box-right">
         <div style="color: #595959;font-size: 20px;">
-          保养统计
+          设备运行
         </div>
         <el-switch
-          @change="val => handleSwitchChange(val, 'showMaintenance')"
-          v-model="showMaintenance"
+          @change="val => handleSwitchChange(val, 'showDevice')"
+          v-model="showDevice"
+        >
+        </el-switch>
+      </div>
+    </div>
+    <div class="config-box">
+      <img
+        src="https://cdn.sinocold.net/images/%E7%BB%9F%E8%AE%A1%E6%8C%87%E6%A0%87icon.svg"
+        alt=""
+      />
+      <div class="config-box-right">
+        <div style="color: #595959;font-size: 20px;">
+          能耗统计
+        </div>
+        <el-switch
+          @change="val => handleSwitchChange(val, 'showEnergy')"
+          v-model="showEnergy"
         >
         </el-switch>
       </div>
@@ -66,8 +81,9 @@ export default {
     return {
       dialogVisible: false,
       showAlarm: true,
-      showMaintenance: true,
-      showRepair: true
+      showRepair: true,
+      showDevice: true,
+      showEnergy: true
     }
   },
   computed: {
@@ -81,7 +97,8 @@ export default {
       if (payload) {
         this.showAlarm = payload.showAlarm
         this.showRepair = payload.showRepair
-        this.showMaintenance = payload.showMaintenance
+        this.showDevice = payload.showDevice
+        this.showEnergy = payload.showEnergy
       }
     },
     handleClose() {
@@ -95,7 +112,8 @@ export default {
       const typeMap = {
         showAlarm: 0,
         showRepair: 1,
-        showMaintenance: 2
+        showDevice: 3,
+        showEnergy: 4
       }
       setCompanyTotal({
         CompanyId: this.companyId,
@@ -116,9 +134,10 @@ export default {
     padding: 10px;
     padding-bottom: 30px;
     display: flex;
+    flex-wrap: wrap;
   }
   .config-box {
-    flex: 1;
+    flex: 0 0 220px;
     display: flex;
     margin: 10px;
     border: 1px solid rgba(0, 0, 0, 0.15);

@@ -34,7 +34,6 @@
               :class="item.Asterisk ? 'start-icon-active' : 'start-icon'"
             ></c-svg>
             <EllipsisTooltip class="project-name" :content="item.ProjectName" />
-            <!-- <span class="project-name">{{ item.ProjectName }}</span> -->
             <span v-if="item.AlarmNum > 0" class="alarm-num">{{
               item.AlarmNum
             }}</span>
@@ -54,55 +53,73 @@
         ></c-svg>
         <div>暂无星标项目</div>
       </div>
-      <div class="title" style="margin-top: 20px;">
+      <div class="title" style="margin-top: 20px;margin-bottom: 10px">
         所有项目
-        <el-dropdown style="float: right;" @command="filterBySubarea">
+        <el-dropdown
+          style="float: right;margin-right: 5px;"
+          trigger="click"
+          @command="changeGroupType"
+        >
           <el-button type="text" style="padding: 0;font-weight: normal;">
-            {{
-              subareaOptions.length
-                ? subareaOptions.find(item => item.Id === subareaId).Name
-                : ''
-            }}
+            {{ groupTypes.find(v => v.value === projectGroupBy).label }}
             <i class="el-icon-arrow-down"></i
           ></el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
-              :command="item.Id"
-              v-for="item in subareaOptions"
-              :key="item.Id"
-              >{{ item.Name }}</el-dropdown-item
+              v-for="item in groupTypes"
+              :command="item.value"
+              :key="item.value"
+              >{{ item.label }}</el-dropdown-item
             >
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-      <div v-if="projectList" class="all-project-list">
-        <div
-          v-for="item in projectList"
-          :key="item.ProjectId"
-          class="project-box"
-          @click="() => handleClickProject(item)"
+      <div v-if="projectGroup" class="all-project-list">
+        <el-collapse
+          :value="
+            filterText && projectGroup
+              ? projectGroup.map(v => v.groupTitle)
+              : []
+          "
         >
-          <div class="project-box-main">
-            <c-svg
-              name="star-fill"
-              @click.native.stop="() => handleStart(item)"
-              :class="item.Asterisk ? 'start-icon-active' : 'start-icon'"
-            ></c-svg>
-            <EllipsisTooltip class="project-name" :content="item.ProjectName" />
-            <!-- <span :title="item.ProjectName" class="project-name">{{
-              item.ProjectName
-            }}</span> -->
-            <span v-if="item.AlarmNum > 0" class="alarm-num">{{
-              item.AlarmNum
-            }}</span>
-            <c-svg
-              class="position-icon"
-              @click.native.stop="() => handleClick(item)"
-              name="coordinates_fill"
-            ></c-svg>
-          </div>
-          <CProgress :data="handleProgressData(item)" />
-        </div>
+          <el-collapse-item
+            v-for="(group, index) in projectGroup"
+            :key="group.groupTitle + index"
+            :name="group.groupTitle"
+          >
+            <template slot="title">
+              {{ group.groupTitle }}
+              ({{ group.list.length }})
+            </template>
+            <div
+              v-for="item in group.list"
+              :key="item.ProjectId"
+              class="project-box"
+              @click="() => handleClickProject(item)"
+            >
+              <div class="project-box-main">
+                <c-svg
+                  name="star-fill"
+                  @click.native.stop="() => handleStart(item)"
+                  :class="item.Asterisk ? 'start-icon-active' : 'start-icon'"
+                ></c-svg>
+                <EllipsisTooltip
+                  class="project-name"
+                  :content="item.ProjectName"
+                />
+                <span v-if="item.AlarmNum > 0" class="alarm-num">{{
+                  item.AlarmNum
+                }}</span>
+                <c-svg
+                  class="position-icon"
+                  @click.native.stop="() => handleClick(item)"
+                  name="coordinates_fill"
+                ></c-svg>
+              </div>
+              <CProgress :data="handleProgressData(item)" />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </div>
       <div
         v-if="checkPermission([6]) || isEmptyAccount"
@@ -117,148 +134,6 @@
     <div class="indicator" @click="() => (visible = !visible)">
       <c-svg :name="visible ? 'doubleleft' : 'doubleright'" />
     </div>
-    <div class="data-panel-wrap" :style="{ left: sidebarWidth + 25 + 'px' }">
-      <div v-if="showAlarm" class="alarm-panel">
-        <div class="alarm-panel-header panel-header">
-          报警统计
-          <span
-            class="link-btn"
-            v-permission="[116]"
-            @click="() => $router.push({ name: 'alarmManageWithAllProject' })"
-          >
-            查看全部
-            <i class="el-icon-arrow-right"></i>
-          </span>
-        </div>
-        <div class="panel-body">
-          <div>
-            <div class="label">
-              今日新增
-            </div>
-            <div class="value">
-              {{
-                alarmNums.AlarmNum !== undefined
-                  ? alarmNums.AlarmNum.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              本月报警
-            </div>
-            <div class="value">
-              {{
-                alarmNums.MonthAlarmNum !== undefined
-                  ? alarmNums.MonthAlarmNum.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              上月报警
-            </div>
-            <div class="value">
-              {{
-                alarmNums.LastMonthAlarmNum !== undefined
-                  ? alarmNums.LastMonthAlarmNum.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="showRepair" class="repair-panel">
-        <div class="panel-header">
-          维修统计
-          <!-- <span class="link-btn">
-            查看全部
-            <i class="el-icon-arrow-right"></i>
-          </span> -->
-        </div>
-        <div class="panel-body">
-          <div>
-            <div class="label">
-              待接单
-            </div>
-            <div class="value">
-              {{
-                repairNums.WaitOrderTotal !== undefined
-                  ? repairNums.WaitOrderTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              待签到
-            </div>
-            <div class="value">
-              {{
-                repairNums.WaitSignTotal !== undefined
-                  ? repairNums.WaitSignTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              维修中
-            </div>
-            <div class="value">
-              {{
-                repairNums.RepairingTotal !== undefined
-                  ? repairNums.RepairingTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-          <div>
-            <div class="label">
-              待验收
-            </div>
-            <div class="value">
-              {{
-                repairNums.WaitAcceptanceTotal !== undefined
-                  ? repairNums.WaitAcceptanceTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="showMaintenance" class="maintenance-panel">
-        <div class="alarm-panel-header panel-header">
-          保养统计
-          <!-- <span class="link-btn">
-            查看全部
-            <i class="el-icon-arrow-right"></i>
-          </span> -->
-        </div>
-        <div class="panel-body">
-          <div>
-            <div class="label">
-              本月保养任务
-            </div>
-            <div class="value">
-              {{
-                maintenanceNums.NoMaintenanceTotal !== undefined
-                  ? maintenanceNums.NoMaintenanceTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-              /
-              {{
-                maintenanceNums.MaintenanceTotal !== undefined
-                  ? maintenanceNums.MaintenanceTotal.toLocaleString('en-US')
-                  : '-'
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <el-dialog
       title="添加项目"
       width="580px"
@@ -289,26 +164,17 @@
 <script>
 import { getUserProjectAlarm, getUserSubareaList } from '@/api/subarea'
 import { addProjectAsterisk, deleteProjectAsterisk } from '@/api/project'
-import { getAlarmOverNum } from '@/api/alarmActive'
 import { mapGetters } from 'vuex'
-import {
-  getMaintenanceOverview,
-  getRepairOverview
-} from '@/api/maintenanceStatistical'
 import CProgress from './CProgress'
 import { getPathById } from '@/utils/index'
 import ProjectEditForm from '@/components/ProjectEditForm'
 import { checkPermission } from '@/utils/permissions'
-import Driver from 'driver.js' // import driver.js
+import Driver from 'driver.js'
 import EllipsisTooltip from '@/components/EllipsisTooltip'
-import 'driver.js/dist/driver.min.css' // import driver.js css
+import 'driver.js/dist/driver.min.css'
 
-import dayjs from 'dayjs'
 export default {
   props: {
-    showAlarm: Boolean,
-    showRepair: Boolean,
-    showMaintenance: Boolean,
     handleClick: Function,
     userGatewayList: {
       type: Array,
@@ -329,14 +195,25 @@ export default {
       loading: false,
       projectDialogVisible: false,
       filterText: '',
-      subareaOptions: [],
-      subareaId: 0,
       projectListSource: [],
       projectStartList: [],
-
-      alarmNums: {},
-      maintenanceNums: {},
-      repairNums: {},
+      subareaIdNameMap: {},
+      groupTypes: [
+        {
+          label: '按分区分组',
+          value: 'subarea'
+        },
+        {
+          label: '按标签分组',
+          value: 'tag'
+        },
+        {
+          label: '按地区分组',
+          value: 'city'
+        }
+      ],
+      // 默认按分区分组
+      projectGroupBy: 'subarea',
       checkPermission
     }
   },
@@ -344,41 +221,49 @@ export default {
     subarea() {
       return this.$store.state.app.subarea
     },
-    companyId() {
-      return this.$store.state.app.company.id
-    },
-    projectList() {
-      return this.projectListSource.filter(
+    projectGroup() {
+      const projectList = this.projectListSource.filter(
         item =>
           item.ProjectName.toLowerCase().indexOf(
             this.filterText.toLowerCase()
           ) > -1
       )
+      if (this.projectGroupBy === 'subarea') {
+        return this.orderProjectBySubarea(projectList)
+      } else if (this.projectGroupBy === 'city') {
+        return this.orderProjectByCity(projectList)
+      } else if (this.projectGroupBy === 'tag') {
+        return this.orderProjectByTag(projectList)
+      }
+      return []
     },
-    isEmptyAccount() {
-      return this.$store.state.app.isEmptyAccount
-    },
-    proList() {
-      return this.$store.state.app.proList
-    },
-    ...mapGetters(['preference'])
+    ...mapGetters([
+      'preference',
+      'proList',
+      'companyId',
+      'isEmptyAccount',
+      'mapOverviewHeaderVisible'
+    ])
   },
   watch: {
     proList: {
-      handler: function(list) {
+      handler: async function(list) {
+        await this.fetchSubareaOptions()
         this.projectListSource = JSON.parse(JSON.stringify(list))
         this.projectListSource.forEach(item => {
-          item.adresss = item.adresss.split(';')[1] + item.adresss.split(';')[2]
+          try {
+            const addressItems = item.adresss.split(';')
+            item.adresss = `${addressItems[1]};${addressItems[2]}`
+            item.city = addressItems[1].split('/')[1]
+          } catch (err) {
+            console.error(err)
+          }
         })
         this.projectStartList = this.projectListSource.filter(
           item => item.Asterisk
         )
       },
       immediate: true
-    },
-    companyId() {
-      this.fetchOverviewData()
-      this.fetchSubareaOptions()
     },
     userGatewayList(val) {
       // 如果是空白账号，且账号下有网关，提示添加项目
@@ -409,11 +294,10 @@ export default {
     }
   },
   mounted() {
-    this.fetchSubareaOptions()
-    this.fetchOverviewData()
-    this.fetchProjectList()
-
+    this.$store.dispatch('fetchProject')
     this.handleResize()
+
+    // 用户自定义了侧边栏的宽度
     if (this.preference.previewSidebarWidth) {
       this.sidebarWidth = this.preference.previewSidebarWidth
     }
@@ -458,15 +342,13 @@ export default {
       }
       this.$set(item, 'Asterisk', !item.Asterisk)
     },
-    filterBySubarea(id) {
-      this.subareaId = id
-      this.fetchProjectList()
+    changeGroupType(type) {
+      this.projectGroupBy = type
     },
     fetchProjectList() {
       this.loading = true
       getUserProjectAlarm({
         companyId: this.companyId,
-        SubareaId: this.subareaId,
         IsShow: true
       })
         .then(res => {
@@ -488,46 +370,118 @@ export default {
           this.loading = false
         })
     },
-    fetchSubareaOptions() {
-      getUserSubareaList({
-        companyId: this.companyId
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.subareaOptions = res.data.Data
-          this.subareaId = this.subareaOptions[0].Id
-        }
-      })
-    },
-    fetchOverviewData() {
-      getAlarmOverNum({
-        companyId: this.companyId
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.alarmNums = res.data.Data
+    /** 项目按分区分组 */
+    orderProjectBySubarea(list) {
+      const unGroupItem = {
+        groupTitle: '未分组',
+        list: []
+      }
+      const group = {}
+      list.forEach(v => {
+        if (group[v.ParentSubareaId]) {
+          group[v.ParentSubareaId].push(v)
+        } else {
+          group[v.ParentSubareaId] = [v]
         }
       })
 
-      getMaintenanceOverview({
-        // 这里的传参没错，233
-        projectId: this.companyId,
-        startDate: dayjs()
-          .startOf('month')
-          .format('YYYY-MM-DD HH:mm'),
-        endDate: this._dateFormat(new Date(), 'YYYY-MM-DD HH:mm'),
-        idType: 1
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.maintenanceNums = res.data.Data
+      const groupList = []
+      Object.keys(group).forEach(key => {
+        if (this.subareaIdNameMap[key]) {
+          groupList.push({
+            groupTitle: this.subareaIdNameMap[key],
+            list: group[key]
+          })
+        } else {
+          unGroupItem.list.push(...group[key])
         }
       })
-      getRepairOverview({
-        projectId: this.companyId,
-        idType: 1
-      }).then(res => {
-        if (res.data.Code === 200) {
-          this.repairNums = res.data.Data
+      if (unGroupItem.list.length) {
+        groupList.push(unGroupItem)
+      }
+      return groupList
+    },
+    /** 项目按市区分组 */
+    orderProjectByCity(list) {
+      const unGroupItem = {
+        groupTitle: '未分组',
+        list: []
+      }
+      const group = {
+        无市区: []
+      }
+      list.forEach(v => {
+        if (!v.city) {
+          // 存在项目没有地址的情况
+          group['无市区'].push(v)
+          return
+        }
+        if (group[v.city]) {
+          group[v.city].push(v)
+        } else {
+          group[v.city] = [v]
         }
       })
+      const groupList = []
+      Object.keys(group).forEach(key => {
+        if (key !== '无市区') {
+          groupList.push({
+            groupTitle: key,
+            list: group[key]
+          })
+        } else {
+          unGroupItem.list.push(...group[key])
+        }
+      })
+      if (unGroupItem.list.length) {
+        groupList.push(unGroupItem)
+      }
+      return groupList
+    },
+    /** 项目按 tag 分组 */
+    orderProjectByTag(list) {
+      const unGroupItem = {
+        groupTitle: '未分组',
+        list: []
+      }
+
+      // 二维数组扁平化之后去重
+      const allTag = [
+        ...new Set(
+          list.map(v => v.TagList).reduce((acc, cur) => [...acc, ...cur], [])
+        )
+      ]
+      const group = {
+        无标签: []
+      }
+      allTag.forEach(tag => {
+        group[tag] = []
+      })
+      list.forEach(v => {
+        if (!v.TagList.length) {
+          // 项目没有 tag 的情况
+          group['无标签'].push(v)
+          return
+        }
+        v.TagList.forEach(tag => {
+          group[tag].push(v)
+        })
+      })
+      const groupList = []
+      Object.keys(group).forEach(key => {
+        if (key !== '无标签') {
+          groupList.push({
+            groupTitle: key,
+            list: group[key]
+          })
+        } else {
+          unGroupItem.list.push(...group[key])
+        }
+      })
+      if (unGroupItem.list.length) {
+        groupList.push(unGroupItem)
+      }
+      return groupList
     },
     // 组合progress组件需要的数据
     handleProgressData(item) {
@@ -562,11 +516,30 @@ export default {
           this.$store.dispatch('fetchUserOwnSubareaTree')
         })
       } else {
-        this.fetchProjectList()
         this.$store.dispatch('fetchCompanyStruct')
         this.$store.dispatch('fetchProject')
         this.$store.dispatch('fetchUserOwnSubareaTree')
       }
+    },
+    fetchSubareaOptions() {
+      return new Promise(resolve => {
+        getUserSubareaList({
+          companyId: this.companyId
+        })
+          .then(res => {
+            if (res.data.Code === 200) {
+              const list = res.data.Data
+              const map = {}
+              list.forEach(v => {
+                map[v.Id] = v.Name
+              })
+              this.subareaIdNameMap = map
+            }
+          })
+          .finally(() => {
+            resolve()
+          })
+      })
     },
     handleResize() {
       const sidebar = document.querySelector('.map-sidebar')
@@ -577,7 +550,6 @@ export default {
       let startX, startWidth
       function initDrag(e) {
         startX = e.clientX
-        console.log(e.clientX)
         startWidth = parseInt(
           document.defaultView.getComputedStyle(sidebar).width,
           10
@@ -586,11 +558,8 @@ export default {
         document.documentElement.addEventListener('mouseup', stopDrag, false)
       }
       function doDrag(e) {
-        // sidebar.style.width = startWidth + e.clientX - startX + 'px'
-
         const width = startWidth + e.clientX - startX
         if (width < 400 && width > 240) {
-          // sidebar.style.width = width + 'px'
           that.sidebarWidth = width
         }
       }
@@ -613,10 +582,9 @@ export default {
 
 <style lang="scss" scoped>
 .map-sidebar {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
-  margin-top: 50px;
   transition: transform 210ms;
   background-color: #f0f2f5;
   .main-wrap {
@@ -686,9 +654,6 @@ export default {
       flex: 1;
       font-weight: 500;
       font-size: 14px;
-      // overflow: hidden;
-      // white-space: nowrap;
-      // text-overflow: ellipsis;
       margin: 0 5px;
       color: rgba(0, 0, 0, 0.8);
     }
@@ -749,79 +714,6 @@ export default {
     color: rgba(0, 0, 0, 0.45);
     font-size: 14px;
   }
-  .data-panel-wrap {
-    position: absolute;
-    top: 10px;
-    display: flex;
-  }
-  .alarm-panel {
-    width: 270px;
-    .panel-header {
-      background: linear-gradient(
-        90deg,
-        rgba(207, 19, 34, 1) 0%,
-        rgba(207, 19, 34, 0.65) 100%
-      );
-    }
-  }
-  .repair-panel {
-    width: 270px;
-    .panel-header {
-      background: linear-gradient(
-        90deg,
-        rgba(250, 140, 22, 1) 0%,
-        rgba(250, 140, 22, 0.65) 100%
-      );
-    }
-  }
-  .maintenance-panel {
-    width: 200px;
-    .panel-header {
-      background: linear-gradient(
-        90deg,
-        rgba(24, 144, 255, 1) 0%,
-        rgba(24, 144, 255, 0.65) 100%
-      );
-    }
-  }
-  .alarm-panel,
-  .repair-panel,
-  .maintenance-panel {
-    box-shadow: 0 0 11px rgba(0, 0, 0, 0.2);
-    margin-right: 25px;
-    border-radius: 4px;
-    overflow: hidden;
-    .panel-header {
-      padding: 10px 12px 10px 16px;
-      color: #fff;
-      font-size: 16px;
-    }
-
-    .link-btn {
-      float: right;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .panel-body {
-      padding: 20px 0 24px 0;
-      display: flex;
-      align-items: center;
-      background-color: #fff;
-      & > div {
-        flex: 1;
-        text-align: center;
-      }
-      .label {
-        margin-bottom: 8px;
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.45);
-      }
-      .value {
-        font-size: 20px;
-        font-weight: 500;
-      }
-    }
-  }
 }
 </style>
 
@@ -829,9 +721,29 @@ export default {
 .map-sidebar {
   .filter-input {
     .el-input__inner {
+      height: 40px;
+      line-height: 40px;
       border: none;
       border-radius: 0;
     }
+  }
+  .el-collapse {
+    border: none;
+  }
+  .el-collapse-item__content {
+    padding-bottom: 0px;
+  }
+  .el-collapse-item__header {
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    background-color: transparent;
+  }
+  .el-collapse-item__wrap {
+    background-color: transparent;
+  }
+  .el-collapse-item__header {
+    height: 40px;
+    line-height: 40px;
   }
 }
 </style>

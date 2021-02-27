@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取维修详情 start
 export const getQueryRepairAcitve = data => {
-  return fetch.get(BASE_URI + '/api/NewRepairActive/QueryRepairAcitve', {
+  return fetch.get('/api/NewRepairActive/QueryRepairAcitve', {
     params: data
   })
 }
@@ -10,7 +10,7 @@ export const getQueryRepairAcitve = data => {
 
 // #region 获取维修详情 start
 export const getRepairSchedule = data => {
-  return fetch.get(BASE_URI + '/api/NewRepairActive/GetRepairSchedule', {
+  return fetch.get('/api/NewRepairActive/GetRepairSchedule', {
     params: data
   })
 }
@@ -44,7 +44,7 @@ export const getNewRepairActivePage = ({
   pageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/NewRepairActive/GetNewRepairActivePage',
+    '/api/NewRepairActive/GetNewRepairActivePage',
     {
       CompanyId,
       Status,
@@ -86,7 +86,7 @@ export const getNewRepairActivePageQueryParameter = ({
   projectIdList
 }) => {
   return fetch.post(
-    `${BASE_URI}/api/NewRepairActive/GetNewRepairActivePageQueryParameter`,
+    `/api/NewRepairActive/GetNewRepairActivePageQueryParameter`,
     projectIdList,
     {
       params: {
@@ -104,7 +104,7 @@ export const getNewRepairActiveMessagePage = ({
   companyId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/NewRepairActive/GetNewRepairActiveMessagePage',
+    '/api/NewRepairActive/GetNewRepairActiveMessagePage',
     null,
     {
       params: {
@@ -144,7 +144,7 @@ export const exportNewRepairActivePage = ({
 }) => {
   console.log('%c--', 'color:rgb(38, 139, 210)', Status)
   return fetch.post(
-    BASE_URI + '/api/NewRepairActive/ExportNewRepairActivePage',
+    '/api/NewRepairActive/ExportNewRepairActivePage',
     {
       CompanyId,
       Status,

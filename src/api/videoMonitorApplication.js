@@ -13,8 +13,7 @@ export const addOrUpdateVideoMonitorApplication = ({
   VideoMonitorPointList
 }) => {
   return fetch.post(
-    BASE_URI +
-      '/api/VideoMonitorApplication/AddOrUpdateVideoMonitorApplication',
+    '/api/VideoMonitorApplication/AddOrUpdateVideoMonitorApplication',
     {
       VideoMonitorApplicationId,
       CompanyId,
@@ -38,7 +37,7 @@ export const deleteVideoMonitorApplication = ({
   videoMonitorApplicationId
 }) => {
   return fetch.post(
-    BASE_URI + '/api/VideoMonitorApplication/DeleteVideoMonitorApplication',
+    '/api/VideoMonitorApplication/DeleteVideoMonitorApplication',
     null,
     {
       params: {
@@ -52,7 +51,7 @@ export const deleteVideoMonitorApplication = ({
 
 // #region 获取公司的应用 start
 export const getCompanyApplication = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Application/GetCompanyApplication', {
+  return fetch.get('/api/Application/GetCompanyApplication', {
     params: {
       companyId
     }
@@ -63,7 +62,7 @@ export const getCompanyApplication = ({ companyId }) => {
 // #region 获取视频监控应用列表 start
 export const getVideoMonitorApplicationList = ({ companyId }) => {
   return fetch.get(
-    BASE_URI + '/api/VideoMonitorApplication/GetVideoMonitorApplicationList',
+    '/api/VideoMonitorApplication/GetVideoMonitorApplicationList',
     {
       params: {
         companyId
@@ -76,8 +75,7 @@ export const getVideoMonitorApplicationList = ({ companyId }) => {
 // #region 获取视频监控应用下拉框 start
 export const getVideoMonitorApplicationDropdown = ({ companyId }) => {
   return fetch.get(
-    BASE_URI +
-      '/api/VideoMonitorApplication/GetVideoMonitorApplicationDropdown',
+    '/api/VideoMonitorApplication/GetVideoMonitorApplicationDropdown',
     {
       params: {
         companyId
@@ -92,8 +90,7 @@ export const getTokenByVideoMonitorApplicationId = ({
   videoMonitorApplicationId
 }) => {
   return fetch.get(
-    BASE_URI +
-      '/api/VideoMonitorApplication/GetTokenByVideoMonitorApplicationId',
+    '/api/VideoMonitorApplication/GetTokenByVideoMonitorApplicationId',
     {
       params: {
         videoMonitorApplicationId
@@ -108,7 +105,7 @@ export const getDeviceAddress = ({
   videoMonitorApplicationId,
   deviceSerial
 }) => {
-  return fetch.get(BASE_URI + '/api/VideoMonitorApplication/GetDeviceAddress', {
+  return fetch.get('/api/VideoMonitorApplication/GetDeviceAddress', {
     params: {
       videoMonitorApplicationId,
       deviceSerial

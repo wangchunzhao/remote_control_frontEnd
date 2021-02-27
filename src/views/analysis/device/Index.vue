@@ -1,6 +1,10 @@
 <template>
   <div class="device-analysis">
-    <page-header title="设备运行分析">
+    <page-header
+      :title="$route.meta.title"
+      showBack
+      :onClickBack="() => $router.push('/analysis/home')"
+    >
       <template v-slot:right>
         <div style="flex: 1;display: flex;justify-content: flex-end">
           <el-button
@@ -14,7 +18,10 @@
         </div>
       </template>
     </page-header>
-    <div class="pdg" style="padding: 25px;">
+    <div
+      class="device-analysis content-box"
+      style="padding: 0;background-color: transparent"
+    >
       <div style="background-color: #fff;display: flex">
         <div style="flex: 1">
           <el-card shadow="never" style="border-bottom: none">
@@ -221,7 +228,9 @@
                       "
                     >
                       <div>
-                        <div class="option-title">{{ item.ModelTreeName }}</div>
+                        <div class="option-title">
+                          {{ item.ModelTreeName }}
+                        </div>
                         <div class="option-text">
                           {{ item.ProjectName }}
                         </div>
@@ -328,11 +337,11 @@ export default {
 
       filterLoading: false, //筛选区域loading
       filterDeviceList: [], // 筛选后的设备列表
-      deviceList: [],// 设备列表
-      filterPointList: [],// 筛选后的点位列表
-      pointList: [],//点位列表
-      chooseDeviceIdList: [],// 已选择的设备ID列表
-      choosePointIdList: [],// 已选择的点位ID列表
+      deviceList: [], // 设备列表
+      filterPointList: [], // 筛选后的点位列表
+      pointList: [], //点位列表
+      chooseDeviceIdList: [], // 已选择的设备ID列表
+      choosePointIdList: [], // 已选择的点位ID列表
       keyPointList: [], //图列表
       keyPointChartList: [], //图实例列表
 

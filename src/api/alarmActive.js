@@ -1,22 +1,36 @@
 import fetch from '@/utils/service'
+import qs from 'qs'
 
 // #region 获取报警消息页 start
-export const getAlarmMessageByUserId = ({ pageIndex, pageSize, companyId }) => {
-  return fetch.get(BASE_URI + '/api/AlarmActive/GetAlarmMessageByUserId', {
+export const getAlarmMessageByUserId = ({
+  pageIndex,
+  pageSize,
+  companyId,
+  subareaIdList
+}) => {
+  return fetch.get('/api/AlarmActive/GetAlarmMessageByUserId', {
     params: {
       pageIndex,
       pageSize,
-      companyId
+      companyId,
+      subareaIdList
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
   })
 }
 // #endregion 获取报警消息页 end
 
 // #region 获取报警概览信息 start
-export const getAlarmOverNum = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/AlarmActive/GetAlarmOverNum', {
+export const getAlarmOverNum = ({ companyId, subareaIdList = undefined }) => {
+  return fetch.get('/api/AlarmActive/GetAlarmOverNum', {
     params: {
-      companyId
+      companyId,
+      subareaIdList
+    },
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
     }
   })
 }
@@ -49,7 +63,7 @@ export const getAlarmAct = ({
   Mtid
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetAlarmAct',
+    '/api/AlarmActive/GetAlarmAct',
     {
       UID: undefined,
       OrderByField,
@@ -107,7 +121,7 @@ export const getAlarmActScreen = ({
   MtName
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetAlarmActScreen',
+    '/api/AlarmActive/GetAlarmActScreen',
     {
       UID: undefined,
       Cstime: cstime,
@@ -164,7 +178,7 @@ export const getAlarmClear = ({
   IsDesc
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetAlarmClear',
+    '/api/AlarmActive/GetAlarmClear',
     {
       PageIndex: page,
       PageSize: num,
@@ -221,7 +235,7 @@ export const getAlarmClearScreen = ({
   ResponseTimeEndTime
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetAlarmClearScreen',
+    '/api/AlarmActive/GetAlarmClearScreen',
     {
       UID: undefined,
       PageIndex: undefined,
@@ -257,7 +271,7 @@ export const getAlarmClearScreen = ({
 // #region 根据id获取详细信息 start
 export const queryDetail = id => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/queryDetail',
+    '/api/AlarmActive/queryDetail',
     { id },
     {
       headers: { 'Content-Type': 'application/json' }
@@ -269,7 +283,7 @@ export const queryDetail = id => {
 // #region 修改报警处理信息 start
 export const upDetail = ({ AlarmIdList, COMMENT }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/upDetail',
+    '/api/AlarmActive/upDetail',
     { AlarmIdList, COMMENT },
     {
       headers: { 'Content-Type': 'application/json' }
@@ -280,7 +294,7 @@ export const upDetail = ({ AlarmIdList, COMMENT }) => {
 
 // #region 获取报警进度 start
 export const getAlarmSchedule = data => {
-  return fetch.post(`${BASE_URI}/api/AlarmActive/GetAlarmSchedule`, data, {
+  return fetch.post(`/api/AlarmActive/GetAlarmSchedule`, data, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -288,7 +302,7 @@ export const getAlarmSchedule = data => {
 
 // #region 确认报警 start
 export const updateStatus = ({ id }) => {
-  return fetch.post(`${BASE_URI}/api/AlarmActive/updateStatus`, null, {
+  return fetch.post(`/api/AlarmActive/updateStatus`, null, {
     params: {
       id
     }
@@ -298,7 +312,7 @@ export const updateStatus = ({ id }) => {
 
 // #region 通过报警id获取报警信息 start
 export const getAlarmDetail = ({ alarmId }) => {
-  return fetch.get(`${BASE_URI}/api/AlarmActive/GetAlarmDetail`, {
+  return fetch.get(`/api/AlarmActive/GetAlarmDetail`, {
     params: {
       alarmId
     }
@@ -318,7 +332,7 @@ export const getSmsPushLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetSmsPushLogPage',
+    '/api/AlarmActive/GetSmsPushLogPage',
     {
       PointId,
       AlarmEpoch,
@@ -348,7 +362,7 @@ export const getSmsPushLogUserDropdownList = ({
   PageSize = undefined
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetSmsPushLogUserDropdownList',
+    '/api/AlarmActive/GetSmsPushLogUserDropdownList',
     {
       PointId,
       AlarmEpoch,
@@ -378,7 +392,7 @@ export const getCallPushLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetCallPushLogPage',
+    '/api/AlarmActive/GetCallPushLogPage',
     {
       PointId,
       AlarmEpoch,
@@ -408,7 +422,7 @@ export const getCallPushLogUserDropdownList = ({
   PageSize = undefined
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetCallPushLogUserDropdownList',
+    '/api/AlarmActive/GetCallPushLogUserDropdownList',
     {
       PointId,
       AlarmEpoch,
@@ -451,7 +465,7 @@ export const exportAlarm = ({
   MtName
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/ExportAlarm',
+    '/api/AlarmActive/ExportAlarm',
     {
       CompanyId,
       Cstime,
@@ -499,7 +513,7 @@ export const getAppPushLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/getAppPushLogPage',
+    '/api/AlarmActive/getAppPushLogPage',
     {
       PointId,
       AlarmEpoch,
@@ -529,7 +543,7 @@ export const getAppPushLogUserDropdownList = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/AlarmActive/GetAppPushLogUserDropdownList',
+    '/api/AlarmActive/GetAppPushLogUserDropdownList',
     {
       PointId,
       AlarmEpoch,
@@ -549,7 +563,7 @@ export const getAppPushLogUserDropdownList = ({
 
 // #region 报警app推送数量统计 start
 export const getAlarmAppPushNum = ({ projectId, startTime, endTime }) => {
-  return fetch.get(`${BASE_URI}/api/AlarmActive/GetAlarmAppPushNum`, {
+  return fetch.get(`/api/AlarmActive/GetAlarmAppPushNum`, {
     params: {
       projectId,
       startTime,
@@ -561,7 +575,7 @@ export const getAlarmAppPushNum = ({ projectId, startTime, endTime }) => {
 
 // #region 报警推送状态统计 start
 export const getAlarmPushStatus = ({ projectId, startTime, endTime }) => {
-  return fetch.get(`${BASE_URI}/api/AlarmActive/GetAlarmPushStatus`, {
+  return fetch.get(`/api/AlarmActive/GetAlarmPushStatus`, {
     params: {
       projectId,
       startTime,
@@ -577,7 +591,7 @@ export const exportAlarmPushStatistical = ({
   startTime,
   endTime
 }) => {
-  return fetch.get(`${BASE_URI}/api/AlarmActive/ExportAlarmPushStatistical`, {
+  return fetch.get(`/api/AlarmActive/ExportAlarmPushStatistical`, {
     params: {
       projectId,
       startTime,

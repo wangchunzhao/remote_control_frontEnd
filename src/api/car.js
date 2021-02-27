@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取车辆列表 start
 export const getCarList = form => {
-  return fetch.post(BASE_URI + `/api/car/getCarList`, form, {
+  return fetch.post(`/api/car/getCarList`, form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -10,7 +10,7 @@ export const getCarList = form => {
 
 // #region 获取车辆信息 start
 export const getCarInfo = ({ carId }) => {
-  return fetch.get(BASE_URI + '/api/Car/GetCarInfo', {
+  return fetch.get('/api/Car/GetCarInfo', {
     params: {
       carId
     }
@@ -20,7 +20,7 @@ export const getCarInfo = ({ carId }) => {
 
 // #region 冷藏车的数据信息 start
 export const carDataInfo = ({ carId }) => {
-  return fetch.get(BASE_URI + '/api/Car/CarDataInfo', {
+  return fetch.get('/api/Car/CarDataInfo', {
     params: {
       carId
     }
@@ -40,7 +40,7 @@ export const updateCarInfo = ({
   AType
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Car/UpdateCarInfo',
+    '/api/Car/UpdateCarInfo',
     {
       CarId,
       Company,

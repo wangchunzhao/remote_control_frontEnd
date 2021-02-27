@@ -7,7 +7,7 @@ import qs from 'qs'
  *
  */
 export const getModelList = ({ Industry }) => {
-  return fetch.get(BASE_URI + '/api/Maintenance_Unit/GetModel_List', {
+  return fetch.get('/api/Maintenance_Unit/GetModel_List', {
     params: {
       Industry
     }
@@ -26,7 +26,7 @@ export const addMaintenanceUnit = ({
   Nickname
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Maintenance_Unit/AddMaintenance_Unit',
+    '/api/Maintenance_Unit/AddMaintenance_Unit',
     {
       CompanyId,
       CompanyName,
@@ -50,7 +50,7 @@ export const updateMaintenanceUnit = ({
   Maintenance_UnitId
 }) => {
   return fetch.put(
-    BASE_URI + '/api/Maintenance_Unit/UpdateMaintenance_Unit',
+    '/api/Maintenance_Unit/UpdateMaintenance_Unit',
     {
       Maintenance_UnitId,
       SubareaIdList,
@@ -65,33 +65,27 @@ export const updateMaintenanceUnit = ({
 
 // #region 根据公司ID与维保商ID 移除公司维保商 start
 export const deleteMaintenanceUnit = ({ Maintenance_UnitId }) => {
-  return fetch.delete(
-    BASE_URI + '/api/Maintenance_Unit/DeleteMaintenance_Unit',
-    {
-      params: {
-        Maintenance_UnitId
-      }
+  return fetch.delete('/api/Maintenance_Unit/DeleteMaintenance_Unit', {
+    params: {
+      Maintenance_UnitId
     }
-  )
+  })
 }
 // #endregion 根据公司ID与维保商ID 移除公司维保商 end
 
 // #region 维保商启用与停止 start
 export const startStopMaintenanceUnit = ({ Maintenance_UnitId }) => {
-  return fetch.get(
-    BASE_URI + '/api/Maintenance_Unit/StartStopMaintenance_Unit',
-    {
-      params: {
-        Maintenance_UnitId
-      }
+  return fetch.get('/api/Maintenance_Unit/StartStopMaintenance_Unit', {
+    params: {
+      Maintenance_UnitId
     }
-  )
+  })
 }
 // #endregion 维保商启用与停止 end
 
 // #region 查询维保商详情 start
 export const getMaintenanceUnit = ({ Maintenance_UnitId }) => {
-  return fetch.get(BASE_URI + '/api/Maintenance_Unit/GetMaintenance_Unit', {
+  return fetch.get('/api/Maintenance_Unit/GetMaintenance_Unit', {
     params: {
       Maintenance_UnitId
     }
@@ -109,7 +103,7 @@ export const getMaintenanceUnitList = ({
   orderby,
   subareas
 }) => {
-  return fetch.get(BASE_URI + '/api/Maintenance_Unit/GetMaintenance_UnitList', {
+  return fetch.get('/api/Maintenance_Unit/GetMaintenance_UnitList', {
     params: {
       companyId,
       typeId,

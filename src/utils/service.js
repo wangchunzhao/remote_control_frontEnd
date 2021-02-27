@@ -3,12 +3,11 @@ import qs from 'qs'
 import router from '@/router'
 // import store from '@/store'
 import { getToken, getRefreshToken } from '@/utils/auth'
-// import { _host } from '../config'
 import store from '@/store/index'
 
 // 创建一个axios实例
 const service = axios.create({
-  baseURL: _host
+  baseURL: BASE_URI
   // timeout: 25000   // 删除请求超时功能，因为后台配置有的接口响应时间比较长
 })
 

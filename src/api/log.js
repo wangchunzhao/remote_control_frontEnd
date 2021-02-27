@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取日志模块以及模块下的操作列表 start
 export const getLogModelAndActionList = () => {
-  return fetch.get(BASE_URI + '/api/Log/GetLogModelAndActionList')
+  return fetch.get('/api/Log/GetLogModelAndActionList')
 }
 // #endregion 获取日志模块以及模块下的操作列表 end
 
@@ -19,7 +19,7 @@ export const getLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Log/GetLogPage',
+    '/api/Log/GetLogPage',
     {
       CompanyId,
       StartTime,
@@ -50,7 +50,7 @@ export const exportLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Log/ExportLogPage',
+    '/api/Log/ExportLogPage',
     {
       CompanyId,
       StartTime,
@@ -83,7 +83,7 @@ export const addLog = ({
   Url = undefined
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Log/AddLog',
+    '/api/Log/AddLog',
     {
       CompanyId,
       ProjectId,

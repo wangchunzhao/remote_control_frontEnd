@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 通过企业id获取分区树 start
 export const getSubareaTree = ({ companyId, isGetProject = true }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetSubareaTree', {
+  return fetch.get('/api/Subarea/GetSubareaTree', {
     params: {
       isGetProject,
       companyId
@@ -13,7 +13,7 @@ export const getSubareaTree = ({ companyId, isGetProject = true }) => {
 
 // #region 判断企业下项目是否未配置其他成员(第一次配置加载企业成员) start
 export const getCompanyProjectUserConfig = ({ projectId, CompanyId }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetCompanyProjectUserConfig', {
+  return fetch.get('/api/Subarea/GetCompanyProjectUserConfig', {
     params: {
       projectId,
       CompanyId
@@ -24,7 +24,7 @@ export const getCompanyProjectUserConfig = ({ projectId, CompanyId }) => {
 
 // #region 添加分区 start
 export const addSubarea = ({ parentId, subareaName }) => {
-  return fetch.post(BASE_URI + '/api/Subarea/AddSubarea', null, {
+  return fetch.post('/api/Subarea/AddSubarea', null, {
     params: {
       parentId,
       subareaName
@@ -35,7 +35,7 @@ export const addSubarea = ({ parentId, subareaName }) => {
 
 // #region 编辑分区 start
 export const editSubarea = ({ subareaId, subareaName }) => {
-  return fetch.put(BASE_URI + '/api/Subarea/EditSubarea', null, {
+  return fetch.put('/api/Subarea/EditSubarea', null, {
     params: {
       subareaId,
       subareaName
@@ -46,7 +46,7 @@ export const editSubarea = ({ subareaId, subareaName }) => {
 
 // #region 删除分区 start
 export const deleteSubarea = ({ subareaId }) => {
-  return fetch.delete(BASE_URI + '/api/Subarea/DeleteSubarea', {
+  return fetch.delete('/api/Subarea/DeleteSubarea', {
     params: {
       subareaId
     }
@@ -56,7 +56,7 @@ export const deleteSubarea = ({ subareaId }) => {
 
 // #region 添加项目 start
 export const addProject = (form, parentId) => {
-  return fetch.post(BASE_URI + '/api/Subarea/AddProject', form, {
+  return fetch.post('/api/Subarea/AddProject', form, {
     params: {
       parentId
     },
@@ -76,7 +76,7 @@ export const getProjectList = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Subarea/GetProjectPage',
+    '/api/Subarea/GetProjectPage',
     {
       SubareaId,
       ProjectName,
@@ -96,7 +96,7 @@ export const getProjectList = ({
 // #region 导出项目列表 start
 export const exportProjectPage = ({ SubareaId, ProjectName, Industry }) => {
   return fetch.post(
-    BASE_URI + '/api/Subarea/ExportProjectPage',
+    '/api/Subarea/ExportProjectPage',
     {
       SubareaId,
       ProjectName,
@@ -112,7 +112,7 @@ export const exportProjectPage = ({ SubareaId, ProjectName, Industry }) => {
 
 // #region 获取单个项目 start
 export const getProject = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetProject', {
+  return fetch.get('/api/Subarea/GetProject', {
     params: {
       projectId
     }
@@ -122,7 +122,7 @@ export const getProject = ({ projectId }) => {
 
 // #region 编辑项目 start
 export const editProject = (form, parentId) => {
-  return fetch.put(BASE_URI + '/api/Subarea/EditProject', form, {
+  return fetch.put('/api/Subarea/EditProject', form, {
     params: {
       parentId
     },
@@ -133,7 +133,7 @@ export const editProject = (form, parentId) => {
 
 // #region 获取分区列表 start
 export const getSubareaList = ({ subareaId, pageIndex, pageSize }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetSubareaPage', {
+  return fetch.get('/api/Subarea/GetSubareaPage', {
     params: {
       subareaId,
       pageIndex,
@@ -145,7 +145,7 @@ export const getSubareaList = ({ subareaId, pageIndex, pageSize }) => {
 
 // #region 该企业下分区或项目名称是否存在 start
 export const isNameExist = ({ companyId, subareaName }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/IsSubareaExist', {
+  return fetch.get('/api/Subarea/IsSubareaExist', {
     params: {
       companyId,
       subareaName
@@ -156,7 +156,7 @@ export const isNameExist = ({ companyId, subareaName }) => {
 
 // #region 删除项目 start
 export const deleteProject = ({ pwd, projectId }) => {
-  return fetch.delete(BASE_URI + '/api/Subarea/DeleteProject', {
+  return fetch.delete('/api/Subarea/DeleteProject', {
     params: {
       pwd,
       projectId
@@ -167,7 +167,7 @@ export const deleteProject = ({ pwd, projectId }) => {
 
 // #region 获取分区options start
 export const getSubareaOptions = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetAllSubarea', {
+  return fetch.get('/api/Subarea/GetAllSubarea', {
     params: {
       companyId
     }
@@ -177,7 +177,7 @@ export const getSubareaOptions = ({ companyId }) => {
 
 // #region 当前用户拥有的分区树 start
 export const getUserOwnSubareaTree = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetUserOwnSubareaTree', {
+  return fetch.get('/api/Subarea/GetUserOwnSubareaTree', {
     params: {
       companyId
     }
@@ -187,7 +187,7 @@ export const getUserOwnSubareaTree = ({ companyId }) => {
 
 // #region 获取用户拥有的项目 start
 export const getUserOwnProject = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetUserOwnProject', {
+  return fetch.get('/api/Subarea/GetUserOwnProject', {
     params: {
       companyId
     }
@@ -197,7 +197,7 @@ export const getUserOwnProject = ({ companyId }) => {
 
 // #region 项目列表 start
 export const getUserProjectAlarm = ({ companyId, SubareaId, IsShow }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetUserProjectAlarm', {
+  return fetch.get('/api/Subarea/GetUserProjectAlarm', {
     params: {
       companyId,
       SubareaId,
@@ -209,7 +209,7 @@ export const getUserProjectAlarm = ({ companyId, SubareaId, IsShow }) => {
 
 // #region 分区列表 start
 export const getUserSubareaList = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetUserSubareaList', {
+  return fetch.get('/api/Subarea/GetUserSubareaList', {
     params: {
       companyId
     }
@@ -219,7 +219,7 @@ export const getUserSubareaList = ({ companyId }) => {
 
 // #region 获取行业下改项目子系统信息 start
 export const getProjectModelList = ({ projectId, Industry }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetProject_ModelList', {
+  return fetch.get('/api/Subarea/GetProject_ModelList', {
     params: {
       projectId,
       Industry
@@ -230,7 +230,7 @@ export const getProjectModelList = ({ projectId, Industry }) => {
 
 // #region 子系统配置 start
 export const updateProjectModel = ({ modelList }) => {
-  return fetch.post(BASE_URI + '/api/Subarea/UpdateProjectModel', modelList, {
+  return fetch.post('/api/Subarea/UpdateProjectModel', modelList, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -245,7 +245,7 @@ export const updateProjectCompany = ({
   Access
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Subarea/UpdateProjectCompany',
+    '/api/Subarea/UpdateProjectCompany',
     {
       OldCompanyId,
       CompanyId,
@@ -262,7 +262,7 @@ export const updateProjectCompany = ({
 
 // #region 获取迁入迁出企业权限 start
 export const getAccessCompany = ({ Access }) => {
-  return fetch.post(BASE_URI + '/api/Subarea/GetAccessCompany', null, {
+  return fetch.post('/api/Subarea/GetAccessCompany', null, {
     params: {
       Access
     },
@@ -273,7 +273,7 @@ export const getAccessCompany = ({ Access }) => {
 
 // #region 获取所有分区树 start
 export const getAllSubareaTree = ({ isGetProject, isPermission }) => {
-  return fetch.get(BASE_URI + '/api/Subarea/GetAllSubareaTree', {
+  return fetch.get('/api/Subarea/GetAllSubareaTree', {
     params: {
       isGetProject,
       isPermission
@@ -281,3 +281,15 @@ export const getAllSubareaTree = ({ isGetProject, isPermission }) => {
   })
 }
 // #endregion 获取所有分区树 end
+
+// #region 获取分区标签 start
+export const getSubareaTagPage = ({ CompanyId, PageIndex, PageSize }) => {
+  return fetch.post('/api/Subarea/GetSubareaTagPage', {
+    params: {
+      CompanyId,
+      PageIndex,
+      PageSize
+    }
+  })
+}
+// #endregion 获取分区标签 end

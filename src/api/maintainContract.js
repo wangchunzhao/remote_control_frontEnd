@@ -13,7 +13,7 @@ export const addMaintainContract = ({
   projectList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintainContract/AddMaintainContract',
+    '/api/MaintainContract/AddMaintainContract',
     {
       contractNumber,
       contractName,
@@ -35,7 +35,7 @@ export const addMaintainContract = ({
 // #region 删除维保合同 start
 export const deleteMaintainContract = ({ contractIDList }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintainContract/DeleteMaintainContract',
+    '/api/MaintainContract/DeleteMaintainContract',
     contractIDList,
     {
       headers: { 'Content-Type': 'application/json' }
@@ -58,7 +58,7 @@ export const maintainContractList = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintainContract/MaintainContractList',
+    '/api/MaintainContract/MaintainContractList',
     {
       QueryType,
       PartyA,
@@ -80,20 +80,17 @@ export const maintainContractList = ({
 
 // #region 获取合同最后一个编号 start
 export const getContractNumber = () => {
-  return fetch.get(BASE_URI + '/api/MaintainContract/GetContractNumber')
+  return fetch.get('/api/MaintainContract/GetContractNumber')
 }
 // #endregion 获取合同最后一个编号 end
 
 // #region 获取维保合同详情 start
 export const getMaintainContractQuery = ({ contractID }) => {
-  return fetch.get(
-    BASE_URI + '/api/MaintainContract/GetMaintainContractQuery',
-    {
-      params: {
-        contractID
-      }
+  return fetch.get('/api/MaintainContract/GetMaintainContractQuery', {
+    params: {
+      contractID
     }
-  )
+  })
 }
 // #endregion 获取维保合同详情 end
 
@@ -111,7 +108,7 @@ export const updateMaintainContract = ({
   projectList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintainContract/UpdateMaintainContract',
+    '/api/MaintainContract/UpdateMaintainContract',
     {
       contractID,
       contractNumber,
@@ -139,7 +136,7 @@ export const signingMaintainContract = ({
   MaintenanceTemplate
 }) => {
   return fetch.post(
-    BASE_URI + '/api/MaintainContract/SigningMaintainContract',
+    '/api/MaintainContract/SigningMaintainContract',
     {
       contractID,
       partyA,
@@ -155,19 +152,15 @@ export const signingMaintainContract = ({
 
 // #region 修改保养时间 start
 export const updateMaintainTime = form => {
-  return fetch.post(
-    BASE_URI + '/api/MaintainContract/UpdateMaintainTime',
-    form,
-    {
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/MaintainContract/UpdateMaintainTime', form, {
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 修改保养时间 end
 
 // #region 获取甲方企业 start
 export const getPartyACompany = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/MaintainContract/GetPartyACompany', {
+  return fetch.get('/api/MaintainContract/GetPartyACompany', {
     params: {
       companyId
     }
@@ -177,7 +170,7 @@ export const getPartyACompany = ({ companyId }) => {
 
 // #region 获取甲方维保单位 start
 export const getPartyBCompany = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/MaintainContract/GetPartyBCompany', {
+  return fetch.get('/api/MaintainContract/GetPartyBCompany', {
     params: {
       companyId
     }

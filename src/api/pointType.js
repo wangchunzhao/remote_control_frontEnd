@@ -3,7 +3,7 @@ import qs from 'qs'
 
 // #region 新增点位类型 start
 export const addPointType = form => {
-  return fetch.post(BASE_URI + '/api/PointTypeLabel/PointTypeInsert', form, {
+  return fetch.post('/api/PointTypeLabel/PointTypeInsert', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -11,7 +11,7 @@ export const addPointType = form => {
 
 // #region 点位类型列表 start
 export const fetchPointTypeList = (projectId, TypeName = '') => {
-  return fetch.get(BASE_URI + '/api/PointTypeLabel/PointTypeList', {
+  return fetch.get('/api/PointTypeLabel/PointTypeList', {
     params: {
       projectId,
       TypeName
@@ -22,7 +22,7 @@ export const fetchPointTypeList = (projectId, TypeName = '') => {
 
 // #region 删除点位类型 start
 export const delPointType = ({ projectId, ID }) => {
-  return fetch.get(BASE_URI + '/api/PointTypeLabel/PointTypeDelete', {
+  return fetch.get('/api/PointTypeLabel/PointTypeDelete', {
     params: {
       projectId,
       ID
@@ -36,7 +36,7 @@ export const delPointType = ({ projectId, ID }) => {
 
 // #region 查询点位类型详情 start
 export const queryPointType = (ID, projectId) => {
-  return fetch.get(BASE_URI + '/api/PointTypeLabel/PointTypeQuery', {
+  return fetch.get('/api/PointTypeLabel/PointTypeQuery', {
     params: {
       ID,
       projectId
@@ -47,7 +47,7 @@ export const queryPointType = (ID, projectId) => {
 
 // #region 修改点位类型 start
 export const updatePointType = form => {
-  return fetch.post(BASE_URI + '/api/PointTypeLabel/PointTypeUpdate', form, {
+  return fetch.post('/api/PointTypeLabel/PointTypeUpdate', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }

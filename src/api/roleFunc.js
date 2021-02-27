@@ -4,7 +4,7 @@ import fetch from '@/utils/service'
 // 1：企业权限 2：项目权限
 // 行业id 1：冷链 2：商超
 export const getRuleTree = ({ roleId, PlatformType, industry, companyId }) => {
-  return fetch.get(BASE_URI + '/api/Role_Func/GetCompany_RoleList', {
+  return fetch.get('/api/Role_Func/GetCompany_RoleList', {
     params: {
       roleId,
       PlatformType,
@@ -23,7 +23,7 @@ export const editRoleRule = ({
   StorageSpaceExtendList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Role_Func/UpdateRole_Func',
+    '/api/Role_Func/UpdateRole_Func',
     {
       FuncIdS,
       HalfSelection,
@@ -40,7 +40,7 @@ export const editRoleRule = ({
 // #region 获取用户功能权限 start
 // 1企业权限 2业务权限
 export const getUserFuncNewList = ({ userId, projectId, companyId, type }) => {
-  return fetch.get(BASE_URI + '/api/Role_Func/GetUser_FuncNewList', {
+  return fetch.get('/api/Role_Func/GetUser_FuncNewList', {
     params: {
       userId,
       projectId,

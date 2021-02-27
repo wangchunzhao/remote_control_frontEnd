@@ -3,7 +3,7 @@ import fetch from '@/utils/service'
 // #region 批量设备绑定摄像头 start
 export const batchModelTreeBindVideoMonitorPoint = ({ modelTreeId, form }) => {
   return fetch.post(
-    BASE_URI + '/api/VideoMonitorPoint/BatchModelTreeBindVideoMonitorPoint',
+    '/api/VideoMonitorPoint/BatchModelTreeBindVideoMonitorPoint',
     form,
     {
       params: {
@@ -17,17 +17,13 @@ export const batchModelTreeBindVideoMonitorPoint = ({ modelTreeId, form }) => {
 
 // #region 批量添加视频监控点 start
 export const batchAddVideoMonitorPoint = ({ bigTypeId, form, industry }) => {
-  return fetch.post(
-    BASE_URI + '/api/VideoMonitorPoint/BatchAddVideoMonitorPoint',
-    form,
-    {
-      params: {
-        bigTypeId,
-        industry
-      },
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
+  return fetch.post('/api/VideoMonitorPoint/BatchAddVideoMonitorPoint', form, {
+    params: {
+      bigTypeId,
+      industry
+    },
+    headers: { 'Content-Type': 'application/json' }
+  })
 }
 // #endregion 批量添加视频监控点 end
 
@@ -37,16 +33,13 @@ export const getVideoMonitorPointDropdownList = ({
   modelTreeId,
   industry
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/VideoMonitorPoint/GetVideoMonitorPointDropdownList',
-    {
-      params: {
-        projectId,
-        modelTreeId,
-        industry
-      }
+  return fetch.get('/api/VideoMonitorPoint/GetVideoMonitorPointDropdownList', {
+    params: {
+      projectId,
+      modelTreeId,
+      industry
     }
-  )
+  })
 }
 // #endregion 获取项目下的摄像头点位下拉框 end
 
@@ -55,15 +48,12 @@ export const getModelTreeVideoMonitorPointList = ({
   modelTreeId,
   industry
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/VideoMonitorPoint/GetModelTreeVideoMonitorPointList',
-    {
-      params: {
-        modelTreeId,
-        industry
-      }
+  return fetch.get('/api/VideoMonitorPoint/GetModelTreeVideoMonitorPointList', {
+    params: {
+      modelTreeId,
+      industry
     }
-  )
+  })
 }
 // #endregion 获取设备下摄像头列表 end
 
@@ -81,7 +71,7 @@ export const getVideoMonitorPointPage = ({
   VideoMonitorApplicationIdList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/VideoMonitorPoint/GetVideoMonitorPointPage',
+    '/api/VideoMonitorPoint/GetVideoMonitorPointPage',
     {
       CompanyId,
       ProjectId,
@@ -104,7 +94,7 @@ export const getVideoMonitorPointPage = ({
 // #region 批量设备绑定摄像头 start
 export const batchDeleteVideoMonitorPoint = ({ pointIdList }) => {
   return fetch.post(
-    BASE_URI + '/api/VideoMonitorPoint/BatchDeleteVideoMonitorPoint',
+    '/api/VideoMonitorPoint/BatchDeleteVideoMonitorPoint',
     pointIdList,
     {
       headers: { 'Content-Type': 'application/json' }

@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 登录 start
 export const login = ({ account, pwd }) => {
-  return fetch.get(BASE_URI + '/api/User/login', {
+  return fetch.get('/api/User/login', {
     params: {
       account,
       pwd
@@ -20,7 +20,7 @@ export const addCompanyApply = ({
   mobile
 }) => {
   return fetch.post(
-    BASE_URI + '/api/User/AddCompany_Apply',
+    '/api/User/AddCompany_Apply',
     {
       Code,
       companyName,
@@ -37,7 +37,7 @@ export const addCompanyApply = ({
 
 // #region 根据用户公司获大屏信息 start
 export const getUserBigScreen = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/User/GetUserBigScreen', {
+  return fetch.get('/api/User/GetUserBigScreen', {
     params: {
       companyId
     }
@@ -47,13 +47,13 @@ export const getUserBigScreen = ({ companyId }) => {
 
 // #region 根据用户id得到用户信息 start
 export const getUserInfo = () => {
-  return fetch.get(BASE_URI + '/api/User/GetUserInfo')
+  return fetch.get('/api/User/GetUserInfo')
 }
 // #endregion 根据用户id得到用户信息 end
 
 // #region 手机接收验证码【修改】 start
 export const mobileCodeUP = ({ mobile, region, title }) => {
-  return fetch.get(BASE_URI + '/api/User/MobileCodeUP', {
+  return fetch.get('/api/User/MobileCodeUP', {
     params: {
       mobile,
       title,
@@ -65,7 +65,7 @@ export const mobileCodeUP = ({ mobile, region, title }) => {
 
 // #region 手机接收验证码注册】 start
 export const mobileCode = ({ mobile, region, title }) => {
-  return fetch.get(BASE_URI + '/api/User/MobileCode', {
+  return fetch.get('/api/User/MobileCode', {
     params: {
       mobile,
       title,
@@ -78,7 +78,7 @@ export const mobileCode = ({ mobile, region, title }) => {
 // #region 忘记密码验证手机号码后修改密码 start
 export const changePwd = ({ Mobile, Code, Pwd }) => {
   return fetch.post(
-    BASE_URI + '/api/User/ForgetPwd',
+    '/api/User/ForgetPwd',
     {
       Mobile,
       Code,
@@ -94,7 +94,7 @@ export const changePwd = ({ Mobile, Code, Pwd }) => {
 // #region 更新用户信息 start
 export const updateUserInfo = ({ Nickname, CompanyName, Depart }) => {
   return fetch.post(
-    BASE_URI + '/api/User/UpdateUserInfo',
+    '/api/User/UpdateUserInfo',
     {
       Nickname,
       CompanyName,
@@ -109,7 +109,7 @@ export const updateUserInfo = ({ Nickname, CompanyName, Depart }) => {
 
 // #region 判断是否重复 start
 export const exists = form => {
-  return fetch.post(BASE_URI + '/api/User/Exists', form, {
+  return fetch.post('/api/User/Exists', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }
@@ -117,7 +117,7 @@ export const exists = form => {
 
 // #region 修改用户头像 start
 export const updateAvatar = url => {
-  return fetch.post(BASE_URI + '/api/User/UpdateAvatar', null, {
+  return fetch.post('/api/User/UpdateAvatar', null, {
     params: {
       url
     },
@@ -128,7 +128,7 @@ export const updateAvatar = url => {
 
 // #region 修改密码 start
 export const updatePwd = ({ pwd, newPwd }) => {
-  return fetch.post(BASE_URI + '/api/User/UpdatePwd', null, {
+  return fetch.post('/api/User/UpdatePwd', null, {
     params: {
       pwd,
       newPwd
@@ -140,7 +140,7 @@ export const updatePwd = ({ pwd, newPwd }) => {
 
 // #region 解除微信绑定 start
 export const updateWChart = ({ pwd }) => {
-  return fetch.post(BASE_URI + '/api/User/UpdateWChart', null, {
+  return fetch.post('/api/User/UpdateWChart', null, {
     params: {
       pwd
     },
@@ -151,7 +151,7 @@ export const updateWChart = ({ pwd }) => {
 
 // #region 解除微信绑定 starts
 export const updateEmail = ({ pwd, email }) => {
-  return fetch.post(BASE_URI + '/api/User/UpdateEmail', null, {
+  return fetch.post('/api/User/UpdateEmail', null, {
     params: {
       pwd,
       email
@@ -163,7 +163,7 @@ export const updateEmail = ({ pwd, email }) => {
 
 // #region 解除微信绑定 starts
 export const updateMobile = ({ pwd, mobile, code }) => {
-  return fetch.post(BASE_URI + '/api/User/UpdateMobile', null, {
+  return fetch.post('/api/User/UpdateMobile', null, {
     params: {
       pwd,
       mobile,
@@ -176,7 +176,7 @@ export const updateMobile = ({ pwd, mobile, code }) => {
 
 // #region 通过手机号或用户名称获取用户下拉框带头像 start
 export const getUserDropdownByMobileOrName = ({ mobileOrName }) => {
-  return fetch.get(BASE_URI + '/api/User/GetUserDropdownByMobileOrName', {
+  return fetch.get('/api/User/GetUserDropdownByMobileOrName', {
     params: {
       mobileOrName
     },
@@ -187,7 +187,7 @@ export const getUserDropdownByMobileOrName = ({ mobileOrName }) => {
 
 // #region 查询可添加的联系人 start
 export const queryContact = mobileOrName => {
-  return fetch.get(BASE_URI + '/api/User/QueryUser', {
+  return fetch.get('/api/User/QueryUser', {
     params: {
       mobileOrName
     }
@@ -197,7 +197,7 @@ export const queryContact = mobileOrName => {
 
 // #region 查询可添加的联系人 start
 export const refreshToken = ({ refreshToken }) => {
-  return fetch.get(BASE_URI + '/api/User/RefreshToken', {
+  return fetch.get('/api/User/RefreshToken', {
     params: {
       refreshToken
     }
@@ -207,7 +207,7 @@ export const refreshToken = ({ refreshToken }) => {
 
 // #region 获取登录或者注册验证码 start
 export const loginOrRegisterSMSCode = ({ mobile, region }) => {
-  return fetch.get(BASE_URI + '/api/User/LoginOrRegisterSMSCode', {
+  return fetch.get('/api/User/LoginOrRegisterSMSCode', {
     params: {
       mobile,
       region
@@ -219,7 +219,7 @@ export const loginOrRegisterSMSCode = ({ mobile, region }) => {
 // #region 登录或者注册 starts
 export const loginOrRegister = ({ Mobile, Avatar, SMSCode }) => {
   return fetch.post(
-    BASE_URI + '/api/User/LoginOrRegister',
+    '/api/User/LoginOrRegister',
     {
       Mobile,
       Avatar,
@@ -236,7 +236,7 @@ export const loginOrRegister = ({ Mobile, Avatar, SMSCode }) => {
 // #region 更新用户偏好设置 starts
 export const UpdateUserPreferences = ({ Preferences }) => {
   return fetch.post(
-    BASE_URI + '/api/User/UpdateUserPreferences',
+    '/api/User/UpdateUserPreferences',
     {
       Preferences
     },
@@ -249,6 +249,6 @@ export const UpdateUserPreferences = ({ Preferences }) => {
 
 // #region 获取用户偏好设置 starts
 export const getUserPreferences = () => {
-  return fetch.get(BASE_URI + '/api/User/GetUserPreferences')
+  return fetch.get('/api/User/GetUserPreferences')
 }
 // #endregion 获取用户偏好设置 end

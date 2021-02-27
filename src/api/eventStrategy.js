@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取事件类型列表 start
 export const getEventTypeList = ({ parentId, projectId, isupdate }) => {
-  return fetch.get(BASE_URI + '/api/EventStrategy/GetEvent_typeList', {
+  return fetch.get('/api/EventStrategy/GetEvent_typeList', {
     params: {
       parentId,
       projectId,
@@ -28,7 +28,7 @@ export const addEventStrategy = ({
   StorageSpaceExtendList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/AddEvent_strategy',
+    '/api/EventStrategy/AddEvent_strategy',
     {
       name,
       project,
@@ -68,7 +68,7 @@ export const updateEventStrategy = ({
   StorageSpaceExtendList
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/UpdateEvent_strategy',
+    '/api/EventStrategy/UpdateEvent_strategy',
     {
       ID,
       name,
@@ -94,7 +94,7 @@ export const updateEventStrategy = ({
 
 // #region 获取当前项目下面的所有成员 start
 export const queryProjectConcats = ({ project, strategyID }) => {
-  return fetch.get(BASE_URI + '/api/EventStrategy/Query_Project_concats', {
+  return fetch.get('/api/EventStrategy/Query_Project_concats', {
     params: {
       project,
       strategyID
@@ -105,7 +105,7 @@ export const queryProjectConcats = ({ project, strategyID }) => {
 
 // #region 删除事件策略 start
 export const deleteEventStrategy = ({ strategyId }) => {
-  return fetch.get(BASE_URI + '/api/EventStrategy/DeleteEvent_strategy', {
+  return fetch.get('/api/EventStrategy/DeleteEvent_strategy', {
     params: {
       strategyId
     }
@@ -115,7 +115,7 @@ export const deleteEventStrategy = ({ strategyId }) => {
 
 // #region 开启关闭事件策略 start
 export const eventStrategyRun = ({ ID }) => {
-  return fetch.get(BASE_URI + '/api/EventStrategy/Event_strategyRun', {
+  return fetch.get('/api/EventStrategy/Event_strategyRun', {
     params: {
       ID
     }
@@ -125,7 +125,7 @@ export const eventStrategyRun = ({ ID }) => {
 
 // #region 根据策略ID获取详情 start
 export const queryEventStrategy = ({ ID }) => {
-  return fetch.get(BASE_URI + '/api/EventStrategy/QueryEvent_strategy', {
+  return fetch.get('/api/EventStrategy/QueryEvent_strategy', {
     params: {
       ID
     }
@@ -146,7 +146,7 @@ export const getEventStrategyList = ({
   IsDesc
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetEvent_strategyList',
+    '/api/EventStrategy/GetEvent_strategyList',
     {
       companyId,
       projectId,
@@ -178,7 +178,7 @@ export const getEventStrategyScreen = ({
   IsDesc
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetEvent_strategyScreen',
+    '/api/EventStrategy/GetEvent_strategyScreen',
     {
       companyId,
       projectId,
@@ -199,7 +199,7 @@ export const getEventStrategyScreen = ({
 
 // #region 获取事件类型列表 start
 export const getEventTypeAll = () => {
-  return fetch.get(BASE_URI + '/api/EventStrategy/GetEvent_typeAll')
+  return fetch.get('/api/EventStrategy/GetEvent_typeAll')
 }
 // #endregion 获取事件类型列表 end
 
@@ -220,7 +220,7 @@ export const getEventList = ({
   IsDesc
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetEventList',
+    '/api/EventStrategy/GetEventList',
     {
       companyId,
       projectId,
@@ -259,7 +259,7 @@ export const getEventListScreen = ({
   IsDesc
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetEventListScreen',
+    '/api/EventStrategy/GetEventListScreen',
     {
       companyId,
       projectId,
@@ -293,7 +293,7 @@ export const exportEvent = ({
   sourceName
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/ExportEvent',
+    '/api/EventStrategy/ExportEvent',
     {
       companyId,
       projectId,
@@ -314,7 +314,7 @@ export const exportEvent = ({
 
 // #region 获取项目离线间隔 start
 export const getProjectoffLineInterval = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/EventStrategy/GetProjectoffLineInterval', {
+  return fetch.get('/api/EventStrategy/GetProjectoffLineInterval', {
     params: {
       projectId
     }
@@ -324,7 +324,7 @@ export const getProjectoffLineInterval = ({ projectId }) => {
 
 // #region 更新项目离线间隔 start
 export const updateoffLineInterval = ({ projectId, offLineInterval }) => {
-  return fetch.get(BASE_URI + '/api/EventStrategy/UpdateoffLineInterval', {
+  return fetch.get('/api/EventStrategy/UpdateoffLineInterval', {
     params: {
       projectId,
       offLineInterval
@@ -344,7 +344,7 @@ export const getSmsPushLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetSmsPushLogPage',
+    '/api/EventStrategy/GetSmsPushLogPage',
     {
       EventId,
       UserIdList,
@@ -372,7 +372,7 @@ export const getSmsPushLogUserDropdownList = ({
   PageSize = undefined
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetSmsPushLogUserDropdownList',
+    '/api/EventStrategy/GetSmsPushLogUserDropdownList',
     {
       EventId,
       UserIdList,
@@ -400,7 +400,7 @@ export const getCallPushLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetCallPushLogPage',
+    '/api/EventStrategy/GetCallPushLogPage',
     {
       EventId,
       UserIdList,
@@ -428,7 +428,7 @@ export const getCallPushLogUserDropdownList = ({
   PageSize = undefined
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetCallPushLogUserDropdownList',
+    '/api/EventStrategy/GetCallPushLogUserDropdownList',
     {
       EventId,
       UserIdList,
@@ -456,7 +456,7 @@ export const getAppPushLogPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/getAppPushLogPage',
+    '/api/EventStrategy/getAppPushLogPage',
     {
       EventId,
       UserIdList,
@@ -484,7 +484,7 @@ export const getAppPushLogUserDropdownList = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/EventStrategy/GetAppPushLogUserDropdownList',
+    '/api/EventStrategy/GetAppPushLogUserDropdownList',
     {
       EventId,
       UserIdList,

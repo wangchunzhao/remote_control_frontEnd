@@ -13,7 +13,7 @@ export const addSchedule = ({
   Files
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Schedule/AddSchedule',
+    '/api/Schedule/AddSchedule',
     {
       ProjectId,
       Type,
@@ -45,7 +45,7 @@ export const getScheduleList = ({
   Orderby
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Schedule/GetScheduleList',
+    '/api/Schedule/GetScheduleList',
     {
       ProjectId,
       Type,
@@ -77,7 +77,7 @@ export const updateSchedule = ({
   Files
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Schedule/UpdateSchedule',
+    '/api/Schedule/UpdateSchedule',
     {
       ID,
       ProjectId,
@@ -100,7 +100,7 @@ export const updateSchedule = ({
 
 // #region 获取日程详情 start
 export const getScheduleQuery = ({ ID }) => {
-  return fetch.get(BASE_URI + '/api/Schedule/GetScheduleQuery', {
+  return fetch.get('/api/Schedule/GetScheduleQuery', {
     params: {
       ID
     }
@@ -110,7 +110,7 @@ export const getScheduleQuery = ({ ID }) => {
 
 // #region 根据用户公司 获取日程列表(消息中心) start
 export const getScheduleMsg = ({ companyId }) => {
-  return fetch.get(BASE_URI + '/api/Schedule/GetScheduleMsg', {
+  return fetch.get('/api/Schedule/GetScheduleMsg', {
     params: {
       companyId
     }

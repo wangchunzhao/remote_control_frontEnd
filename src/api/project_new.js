@@ -1,7 +1,7 @@
 import fetch from '@/utils/service'
 // #region 获取项目资源 start
 export const getProjectResources = ({ projectId, type }) => {
-  return fetch.get(BASE_URI + '/api/Project/GetProjectResources', {
+  return fetch.get('/api/Project/GetProjectResources', {
     params: {
       projectId,
       type
@@ -12,7 +12,7 @@ export const getProjectResources = ({ projectId, type }) => {
 
 // #region 获取设备树 start
 export const getDeviceTree = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Project/GetDeviceTree', {
+  return fetch.get('/api/Project/GetDeviceTree', {
     params: {
       projectId
     }
@@ -22,7 +22,7 @@ export const getDeviceTree = ({ projectId }) => {
 
 // #region 获取用户项目拥有的设备id或者项目下的所有设备id start
 export const getDevice = ({ projectId, userId }) => {
-  return fetch.get(BASE_URI + '/api/Project/GetDevice', {
+  return fetch.get('/api/Project/GetDevice', {
     params: {
       projectId,
       userId
@@ -34,7 +34,7 @@ export const getDevice = ({ projectId, userId }) => {
 // #region 更新用户在项目下的设备 start
 export const updateDeviceOrPoint = ({ ProjectId, MtidList, userId }) => {
   return fetch.post(
-    BASE_URI + '/api/Project/UpdateDeviceOrPoint',
+    '/api/Project/UpdateDeviceOrPoint',
     {
       ProjectId,
       MtidList
@@ -51,7 +51,7 @@ export const updateDeviceOrPoint = ({ ProjectId, MtidList, userId }) => {
 
 // #region 查询项目信息 start
 export const queryProjectInfo = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Project/QueryProject', {
+  return fetch.get('/api/Project/QueryProject', {
     params: {
       projectId
     }
@@ -61,7 +61,7 @@ export const queryProjectInfo = ({ projectId }) => {
 
 // #region 更新项目 start
 export const updateProject = form => {
-  return fetch.post(BASE_URI + '/api/Project/UpdateProject', form, {
+  return fetch.post('/api/Project/UpdateProject', form, {
     headers: { 'Content-Type': 'application/json' }
   })
 }

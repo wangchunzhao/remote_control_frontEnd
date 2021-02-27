@@ -47,7 +47,6 @@ export const PROJECT_NAME = 'CoolCare-PC'
 //     : `http://dev.sinocold.com:30392` // 测试环境
 global.DATAV_PROJECT_URL = `http://yun.sinocold.net/DataVDev`
 
-global._host = _host
 global.BASE_URI = BASE_URI
 global.HC_BASE_URI = HC_BASE_URI
 global.PROJECT_URLPROD = baseUriProd

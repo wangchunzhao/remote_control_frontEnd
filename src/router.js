@@ -274,12 +274,6 @@ const energyManage = {
         companyIds: [2],
         projectPermissionId: [153, 155]
       }
-    },
-    {
-      path: 'dataEnter',
-      component: _import('energyManage/dataEnter/Index'),
-      name: 'energyManage_DataEnter',
-      meta: { title: '数据录入', projectPermissionId: [122] }
     }
   ]
 }
@@ -1253,6 +1247,12 @@ const analysis = {
       component: _import('analysis/alarm/Index'),
       name: 'analysisAlarm',
       meta: { showBackButton: true, title: '报警数量统计报告' }
+    },
+    {
+      path: 'energyConsumption',
+      component: _import('analysis/energyConsumption/index'),
+      name: 'energyConsumption',
+      meta: { showBackButton: true, title: '能耗分析' }
     },
     {
       path: 'repair',

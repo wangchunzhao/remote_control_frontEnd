@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取邀请信息 start
 export const getInvitationInfo = ({ invitationId }) => {
-  return fetch.get(BASE_URI + '/api/Invitation/GetInvitationInfo', {
+  return fetch.get('/api/Invitation/GetInvitationInfo', {
     params: {
       invitationId
     }
@@ -12,7 +12,7 @@ export const getInvitationInfo = ({ invitationId }) => {
 
 // #region 添加邀请信息 start
 export const addInvitation = ({ subareaId }) => {
-  return fetch.get(BASE_URI + '/api/Invitation/AddInvitation', {
+  return fetch.get('/api/Invitation/AddInvitation', {
     params: {
       subareaId
     }
@@ -22,7 +22,7 @@ export const addInvitation = ({ subareaId }) => {
 
 // #region 登录并邀请 start
 export const loginAndInvitation = ({ account, pwd, invitationId }) => {
-  return fetch.post(BASE_URI + '/api/Invitation/LoginAndInvitation', null, {
+  return fetch.post('/api/Invitation/LoginAndInvitation', null, {
     params: {
       account,
       pwd,
@@ -43,7 +43,7 @@ export const registerAndInvitation = ({
   SmsCode
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Invitation/RegisterAndInvitation',
+    '/api/Invitation/RegisterAndInvitation',
     { Mobile, Pwd, Nickname, Avatar, SmsCode },
     {
       params: {

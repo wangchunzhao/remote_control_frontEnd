@@ -3,7 +3,7 @@ import fetch from '@/utils/service'
 // #region 更新表格字段 start
 export const updatePreferences = ({ ForeignId, TableType, Field }) => {
   return fetch.post(
-    BASE_URI + '/api/TableField/UpdateTableField',
+    '/api/TableField/UpdateTableField',
     {
       ForeignId,
       TableType,
@@ -18,7 +18,7 @@ export const updatePreferences = ({ ForeignId, TableType, Field }) => {
 
 // #region 更新表格字段 start
 export const getPreferences = ({ type, foreignId }) => {
-  return fetch.get(BASE_URI + '/api/TableField/GetTableField', {
+  return fetch.get('/api/TableField/GetTableField', {
     params: {
       foreignId,
       type

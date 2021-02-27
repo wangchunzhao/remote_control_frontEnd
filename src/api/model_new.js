@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取模型全部信息 start
 export const modelTrees = ({ projectId, isGetModelTree = true }) => {
-  return fetch.get(BASE_URI + '/api/Model/Model_trees', {
+  return fetch.get('/api/Model/Model_trees', {
     params: {
       projectId,
       isGetModelTree
@@ -13,7 +13,7 @@ export const modelTrees = ({ projectId, isGetModelTree = true }) => {
 
 // #region 得到子系统仪表盘信息 start
 export const getChildPlan = ({ project }) => {
-  return fetch.get(BASE_URI + '/api/Model/getchildPlan', {
+  return fetch.get('/api/Model/getchildPlan', {
     params: {
       project
     }
@@ -23,7 +23,7 @@ export const getChildPlan = ({ project }) => {
 
 // #region 根据项目得到子系统 start
 export const getChild = ({ projectId }) => {
-  return fetch.get(BASE_URI + '/api/Model/GetChild', {
+  return fetch.get('/api/Model/GetChild', {
     params: {
       projectId
     }
@@ -42,7 +42,7 @@ export const getVideoMonitorPage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Model/GetVideoMonitorPage',
+    '/api/Model/GetVideoMonitorPage',
     {
       BigTypeId,
       ProjectId,
@@ -79,7 +79,7 @@ export const getModelTreePage = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Model/GetModelTreePage',
+    '/api/Model/GetModelTreePage',
     {
       ProjectId,
       SubareaIdList,
@@ -107,7 +107,7 @@ export const getModelTreePage = ({
 
 // #region 获取设备下显示的点位 start
 export const getModelTreeShowPoint = data => {
-  return fetch.get(BASE_URI + '/api/ModelTree/GetModelTreeShowPoint', {
+  return fetch.get('/api/ModelTree/GetModelTreeShowPoint', {
     params: data
   })
 }
@@ -115,7 +115,7 @@ export const getModelTreeShowPoint = data => {
 
 // #region 获取小类动态属性 start
 export const getModelPropertyList = data => {
-  return fetch.get(BASE_URI + '/api/Model/GetModelPropertyList', {
+  return fetch.get('/api/Model/GetModelPropertyList', {
     params: data
   })
 }
@@ -157,7 +157,7 @@ export const queryPointRead = ({
   PageSize
 }) => {
   return fetch.post(
-    BASE_URI + '/api/Model/QueryPointRead',
+    '/api/Model/QueryPointRead',
     {
       mtid,
       mtidList,

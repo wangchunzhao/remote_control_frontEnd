@@ -23,3 +23,18 @@ export const cancelModelTreeAsterisk = data => {
   )
 }
 // #endregion 取消星标设备 end
+
+// #region 获取设备运行状态 start
+export const getModelTreeRun = ({ CompanyId, SubareaIdList }) => {
+  return fetch.post(
+    global.HC_BASE_URI + '/api/ModelTree/GetModelTreeRun',
+    {
+      CompanyId,
+      SubareaIdList
+    },
+    {
+      headers: { 'Content-Type': 'application/json' }
+    }
+  )
+}
+// #endregion 获取设备运行状态 end

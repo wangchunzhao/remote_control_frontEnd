@@ -55,26 +55,9 @@ router.beforeEach((to, from, next) => {
           resetRouter()
           await routerFactory(store.state.permissions.platform)
           if (to.name === 'triggerRouterGuard') {
-            if (from.name === 'mapIndex') {
-              // 从地图总览页面点击项目会触发这个
-              let firstPath = ''
-              store.state.permissions.routerMap.some(router => {
-                try {
-                  firstPath = getFirstRouterPath(router)
-                  if (firstPath) {
-                    return true
-                  }
-                } catch (err) {
-                  console.error(err)
-                }
-              })
-              next({
-                path: firstPath,
-                replace: true
-              })
-            } else if (to.query.behavior === 'switchToBusiness') {
-              // 切换平台后触发这里
-              next({ name: 'mapIndex', replace: true })
+            if (to.query.goPage) {
+              // 切换平台后后需要跳转页面触发这里
+              next({ path: to.query.goPage, replace: true })
             } else {
               let firstPath = ''
               store.state.permissions.routerMap.some(router => {

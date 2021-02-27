@@ -2,7 +2,7 @@ import fetch from '@/utils/service'
 
 // #region 获取昨日统计总览 start
 export const getYesterDayOverview = ({ industry, companyId }) => {
-  return fetch.get(BASE_URI + '/api/OverviewStatistical/GetYesterDayOverview', {
+  return fetch.get('/api/OverviewStatistical/GetYesterDayOverview', {
     params: {
       industry,
       companyId
@@ -18,31 +18,25 @@ export const getPassengerBrokenLine = ({
   dateType,
   companyId
 }) => {
-  return fetch.get(
-    BASE_URI + '/api/OverviewStatistical/GetPassengerBrokenLine',
-    {
-      params: {
-        startTime,
-        endTime,
-        dateType,
-        companyId
-      }
+  return fetch.get('/api/OverviewStatistical/GetPassengerBrokenLine', {
+    params: {
+      startTime,
+      endTime,
+      dateType,
+      companyId
     }
-  )
+  })
 }
 // #endregion 客流趋势折线图 end
 
 // #region 报修故障原因前10 start
 export const getFaultDescribeRanking = ({ startTime, endTime, companyId }) => {
-  return fetch.get(
-    BASE_URI + '/api/OverviewStatistical/GetFaultDescribeRanking',
-    {
-      params: {
-        startTime,
-        endTime,
-        companyId
-      }
+  return fetch.get('/api/OverviewStatistical/GetFaultDescribeRanking', {
+    params: {
+      startTime,
+      endTime,
+      companyId
     }
-  )
+  })
 }
 // #endregion 报修故障原因前10 end
