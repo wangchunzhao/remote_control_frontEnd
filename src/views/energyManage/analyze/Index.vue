@@ -17,7 +17,7 @@
               </CustomEnegyBranchPicker>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="9">
             <el-form-item
               label="日期范围:"
               style="display: flex;align-items: center;margin-left: 15px"
@@ -31,7 +31,7 @@
               ></CustomDatePicker>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="9">
             <el-form-item
               label="时段:"
               style="display: flex;align-items: center;margin-left: 15px"

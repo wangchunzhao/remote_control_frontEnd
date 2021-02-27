@@ -246,7 +246,10 @@
         </div>
       </div>
     </div>
-    <TimeIntervalSetDialog ref="timeIntervalSetDialog"></TimeIntervalSetDialog>
+    <TimeIntervalSetDialog
+      :companyId="companyId"
+      ref="timeIntervalSetDialog"
+    ></TimeIntervalSetDialog>
   </div>
 </template>
 
