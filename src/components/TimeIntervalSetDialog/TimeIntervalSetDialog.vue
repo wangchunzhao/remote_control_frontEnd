@@ -108,6 +108,7 @@
       :appendToBody="true"
       :options="typeOptions"
       @changeType="changeTimeInterval"
+      @changeModel="changeModel"
       ref="changeTimeIntervalDialog"
     ></ChangeTimeIntervalDialog>
   </el-dialog>
@@ -197,6 +198,7 @@ export default {
       form: undefined, //获取到的
       bgColor,
 
+      changeBoxShowStatus: false, // 批量框选显示状态
       keyDown: false, // 当前模式 false:单选 true:批量框选
       canvas: null, // canvas实例
       startX: 0,
@@ -208,6 +210,18 @@ export default {
     }
   },
   methods: {
+    //更换时段设置模式
+    changeModel() {
+      this.resetChooseItem()
+      this.changeBoxShowStatus = false
+      this.keyDown = false
+      this.canvas = null
+      this.startX = 0
+      this.startY = 0
+      this.endX = 0
+      this.endY = 0
+      this.isDown = false //是否在框选区域按下鼠标
+    },
     // 鼠标移动
     mouseMove(e) {
       if (this.isDown) {
@@ -266,12 +280,12 @@ export default {
       }
       if (chooseList.length) {
         this.chooseList = chooseList
+        this.changeBoxShowStatus = true
         this.$refs.changeTimeIntervalDialog.openDialog(chooseList)
       } else {
         this.chooseList = []
         this.$message.error('请至少选中一个单元格')
       }
-      this.resetChooseItem()
     },
     // 重置框选数据
     resetChooseItem() {
@@ -319,14 +333,19 @@ export default {
       this.dialogVisible = true
       this.typeOptions = []
       document.onkeydown = e => {
-        this.resetChooseItem()
-        if (e.keyCode && e.keyCode === 16 && this.dialogVisible) {
+        if (
+          e.keyCode &&
+          e.keyCode === 16 &&
+          this.dialogVisible &&
+          !this.changeBoxShowStatus
+        ) {
+          this.resetChooseItem()
           this.keyDown = true
           this.$message('您已进入框选模式')
         }
       }
       document.onkeyup = e => {
-        if (this.keyDown && this.dialogVisible) {
+        if (this.keyDown && this.dialogVisible && !this.changeBoxShowStatus) {
           this.resetChooseItem()
           this.keyDown = false
           this.canvas = null
@@ -472,6 +491,7 @@ export default {
     border-radius: 4px;
   }
   .choose-item {
+    user-select: none;
     border-radius: 4px;
     width: 85px;
     height: 28px;

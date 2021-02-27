@@ -260,6 +260,12 @@ const energyManage = {
       }
     },
     {
+      path: 'electricityLoad',
+      component: _import('energyManage/electricityLoad/Index'),
+      name: 'energyManage_ElectricityLoad',
+      meta: { title: '用电负荷', projectPermissionId: [120] }
+    },
+    {
       path: 'dataConfig',
       component: _import('energyManage/dataConfig/Index'),
       name: 'dataConfig',

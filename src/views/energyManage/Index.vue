@@ -11,7 +11,11 @@
             <c-svg name="time-circle" style="font-size: 13px;"></c-svg>
             时段设置
           </el-button>
-          <el-button style="margin-left: 15px;" size="mini">
+          <el-button
+            @click.native="$refs.groupBranchSetDialog.openDialog()"
+            style="margin-left: 15px;"
+            size="mini"
+          >
             <c-svg name="time-circle" style="font-size: 13px;"></c-svg>
             分组设置
           </el-button>
@@ -30,17 +34,20 @@
       ref="timeIntervalSetDialog"
       :projectId="projectId"
     ></TimeIntervalSetDialog>
+    <GroupBranchSetDialog ref="groupBranchSetDialog"> </GroupBranchSetDialog>
   </div>
 </template>
 
 <script>
 import TimeIntervalSetDialog from '@components/TimeIntervalSetDialog/TimeIntervalSetDialog'
+import GroupBranchSetDialog from '@components/GroupBranchSetDialog'
 import Tab1 from './preview/Index'
 import Tab2 from './analyze/Index'
 export default {
   name: 'Index',
   components: {
     TimeIntervalSetDialog,
+    GroupBranchSetDialog,
     Tab1,
     Tab2
   },

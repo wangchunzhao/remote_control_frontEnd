@@ -1,22 +1,18 @@
 <template>
   <el-dialog
-    width="360px"
+    width="300px"
     title="批量时段设置"
     :visible.sync="dialogVisible"
     :append-to-body="appendToBody"
     :close-on-click-modal="false"
     @close="handleClose"
   >
+    <div style="margin-bottom: 10px">已选中：{{ list.length }}</div>
     <div>
-      <el-form ref="form" label-width="85px" size="small">
-        <el-form-item label="已选中:">
-          {{ list.length }}
-        </el-form-item>
-      </el-form>
       <el-select
         v-model="type"
         placeholder="请选择"
-        size="mini"
+        size="small"
         style="width: 100%"
       >
         <el-option
@@ -65,6 +61,7 @@ export default {
       this.list = list
     },
     handleClose() {
+      this.$emit('changeModel')
       this.dialogVisible = false
       this.list = []
     },
