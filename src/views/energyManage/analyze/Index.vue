@@ -131,12 +131,12 @@ export default {
     },
     // 更换时段类型
     timeIntervalTypeChange(val) {
-      // console.log(val, '时段类型变化')
+      console.log(val, '时段类型变化')
       this.timeIntervalType = val
     },
     // 更换时段
     timeIntervalChange(val) {
-      // console.log(val, '时段值变化')
+      console.log(val, '时段值变化')
       this.timeIntervalType = val.type
     }
   }

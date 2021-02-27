@@ -222,7 +222,7 @@ export default {
       if (this.type === 'custom') {
         this.$emit('chooseChange', {
           type: this.type,
-          timeInterval: '',
+          timeInterval: undefined,
           timeIntervalId: undefined,
           timeIntervalList: [],
           dateRange: []
@@ -239,7 +239,7 @@ export default {
       } else {
         this.$emit('chooseChange', {
           type: this.type,
-          timeInterval: '',
+          timeInterval: undefined,
           timeIntervalId: undefined,
           timeIntervalList: [],
           dateRange: []
