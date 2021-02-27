@@ -25,16 +25,16 @@
       </div>
       <!--      表哥区-->
       <div class="table-box">
-        <div
-          class="canvas-box"
-          id="timeIntervalSetDialogCanvasBox"
-          v-show="keyDown"
-          @mousemove.self="mouseMove"
-          @mousedown="mouseDown"
-          @mouseup="mouseUp"
-        >
-          <div class="choose-area-box"></div>
-        </div>
+        <!--        <div-->
+        <!--          class="canvas-box"-->
+        <!--          id="timeIntervalSetDialogCanvasBox"-->
+        <!--          v-show="keyDown"-->
+        <!--          @mousemove.self="mouseMove"-->
+        <!--          @mousedown="mouseDown"-->
+        <!--          @mouseup="mouseUp"-->
+        <!--        >-->
+        <!--          <div class="choose-area-box"></div>-->
+        <!--        </div>-->
 
         <el-table :data="timeIntervalList" stripe fit height="888px">
           <el-table-column
@@ -57,7 +57,7 @@
             :key="item + index"
           >
             <template slot-scope="{ row }">
-              <div v-if="item === 'Title'">
+              <div v-if="item === 'Title'" class="choose-item-row-title">
                 {{ row.Title }}
               </div>
               <div v-else>
@@ -85,7 +85,7 @@
                     </el-option>
                   </el-select>
                 </div>
-                <div v-else class="choose-item">
+                <div v-else class="choose-item-select">
                   {{ row[item] }}
                 </div>
               </div>
@@ -203,7 +203,9 @@ export default {
       endX: 0,
       endY: 0,
       isDown: false, //是否在框选区域按下鼠标
-      chooseBoxDom: null
+      chooseBoxDom: null,
+      tableWidth: 95, // 框选表格单元宽度
+      tableHeight: 35 // 框选表格单元高度
     }
   },
   methods: {
@@ -261,10 +263,10 @@ export default {
       let startY = isNomal ? this.startY : this.endY
       let endX = isNomal ? this.endX : this.startX
       let endY = isNomal ? this.endY : this.startY
-      let startRowNum = Math.ceil(startY / 35)
-      let startColumnNum = Math.ceil(startX / 95)
-      let endRowNum = Math.ceil(endY / 35)
-      let endColumnNum = Math.ceil(endX / 95)
+      let startRowNum = Math.ceil(startY / this.tableHeight)
+      let startColumnNum = Math.ceil(startX / this.tableWidth)
+      let endRowNum = Math.ceil(endY / this.tableHeight)
+      let endColumnNum = Math.ceil(endX / this.tableWidth)
       let startRow = startRowNum < endRowNum ? startRowNum : endRowNum
       let startColumn =
         startColumnNum < endColumnNum ? startColumnNum : endColumnNum
@@ -493,7 +495,18 @@ export default {
   .table-select-item {
     border-radius: 4px;
   }
+  .choose-item-row-title {
+    user-select: none;
+  }
   .choose-item {
+    user-select: none;
+    border-radius: 4px;
+    width: 85px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+  }
+  .choose-item-select {
     user-select: none;
     border-radius: 4px;
     width: 85px;
@@ -513,6 +526,7 @@ export default {
       padding: 0 5px;
     }
     .el-input__inner {
+      user-select: none;
       border: none;
       color: #000;
     }
@@ -531,8 +545,8 @@ export default {
     position: absolute;
     left: 95px;
     top: 48px;
-    background: blue;
-    opacity: 0.2;
+    //background: blue;
+    //opacity: 0.2;
     width: 665px;
     height: 840px;
   }
