@@ -6,7 +6,7 @@
     <el-radio-group
       v-model="type"
       @change="typeChange"
-      size="mini"
+      :size="size"
       border
       :class="direction === 'row' ? 'radio-group-box' : ''"
     >
@@ -20,8 +20,8 @@
     <el-select
       v-show="type === 'default'"
       v-model="timeInterval"
-      placeholder=""
-      size="mini"
+      placeholder="请选择"
+      :size="size"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -49,7 +49,7 @@
           step: '01:00',
           end: '23:00'
         }"
-        size="mini"
+        :size="size"
         :style="{
           width: pickerWidth ? pickerWidth + 'px' : '100%'
         }"
@@ -64,7 +64,7 @@
           step: '01:00',
           end: '23:00'
         }"
-        size="mini"
+        :size="size"
         :style="{
           width: pickerWidth ? pickerWidth + 'px' : '100%'
         }"
@@ -102,6 +102,12 @@ export default {
       type: Number,
       default: function() {
         return -1
+      }
+    },
+    size: {
+      type: String,
+      default: function() {
+        return 'mini'
       }
     }
   },

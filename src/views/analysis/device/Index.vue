@@ -127,64 +127,18 @@
                   :typeArr="['day', 'month', 'year', 'custom']"
                   @timeChange="timeChange"
                   @typeChange="timeTypeChange"
+                  size="small"
                   ref="customDatePicker"
                 ></CustomDatePicker>
               </el-form-item>
               <el-form-item label="时段">
-                <el-radio-group
-                  v-model="filterForm.timeIntervalType"
-                  @change="scopeChange"
+                <CustomTimeIntervalPicker
+                  :projectId="projectId"
+                  @typeChange="timeIntervalTypeChange"
+                  @chooseChange="timeIntervalChange"
                   size="small"
-                  border
-                >
-                  <el-radio-button label="default">
-                    已设置时段
-                  </el-radio-button>
-                  <el-radio-button label="custom">
-                    自定义时段
-                  </el-radio-button>
-                </el-radio-group>
-                <el-select
-                  v-show="filterForm.timeIntervalType === 'default'"
-                  v-model="filterForm.timeInterval"
-                  placeholder=""
-                  style="width:100%;margin-top: 5px"
-                  clearable
-                  @change="typeChanage"
-                >
-                  <el-option
-                    v-for="item in typeOptions"
-                    :key="item.Id"
-                    :label="item.Name"
-                    :value="item.Id"
-                  />
-                </el-select>
-                <div
-                  v-show="filterForm.timeIntervalType === 'custom'"
-                  style="display: flex;align-items: center;margin-top: 5px"
-                >
-                  <el-time-select
-                    placeholder="起始时间"
-                    v-model="filterForm.startTimeInterval"
-                    :picker-options="{
-                      start: '00:00',
-                      step: '0:30',
-                      end: '23:30'
-                    }"
-                  >
-                  </el-time-select>
-                  <div style="margin: 0 10px">-</div>
-                  <el-time-select
-                    placeholder="结束时间"
-                    v-model="filterForm.endTimeInterval"
-                    :picker-options="{
-                      start: '00:00',
-                      step: '0:30',
-                      end: '23:30'
-                    }"
-                  >
-                  </el-time-select>
-                </div>
+                  ref="customTimeIntervalPicker"
+                ></CustomTimeIntervalPicker>
               </el-form-item>
               <el-form-item label="选择项目范围">
                 <treeselect
@@ -314,6 +268,7 @@ import {
   getModelTreeShowPoint
 } from '@/api/model_new'
 import CustomDatePicker from '@/components/CustomDatePicker'
+import CustomTimeIntervalPicker from '@/components/CustomTimeIntervalPicker'
 import TimeIntervalSetDialog from '@components/TimeIntervalSetDialog/TimeIntervalSetDialog'
 
 export default {
@@ -321,6 +276,7 @@ export default {
     LineChart,
     Treeselect,
     CustomDatePicker,
+    CustomTimeIntervalPicker,
     TimeIntervalSetDialog
   },
   data() {
@@ -388,6 +344,9 @@ export default {
   computed: {
     companyId() {
       return this.$store.state.app.company.id
+    },
+    projectId() {
+      return this.$store.state.app.project.id
     }
   },
   watch: {
@@ -604,6 +563,16 @@ export default {
       this.filterForm.end = val.dateRange.length > 1 ? val.dateRange[1] : ''
       console.log('时间更新')
       this.renderChart()
+    },
+    // 更换时段类型
+    timeIntervalTypeChange(val) {
+      // console.log(val, '时段类型变化')
+      // this.timeIntervalType = val
+    },
+    // 更换时段
+    timeIntervalChange(val) {
+      // console.log(val, '时段值变化')
+      // this.timeIntervalType = val.type
     },
     // 更换时段类型
     scopeChange(val) {

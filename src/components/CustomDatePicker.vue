@@ -6,7 +6,7 @@
     <el-radio-group
       v-model="type"
       @change="scopeChange"
-      size="mini"
+      :size="size"
       border
       :class="direction === 'row' ? 'radio-group-box' : ''"
     >
@@ -37,7 +37,7 @@
           return val.getTime() > Date.now() - 3600000 * 24
         }
       }"
-      size="mini"
+      :size="size"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -56,7 +56,7 @@
           return val.getTime() > Date.now() - 3600 * 1000 * 24 * 7
         }
       }"
-      size="mini"
+      :size="size"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -79,7 +79,7 @@
           )
         }
       }"
-      size="mini"
+      :size="size"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -97,7 +97,7 @@
           return val > dayjs().startOf('year')
         }
       }"
-      size="mini"
+      :size="size"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -115,7 +115,7 @@
           return val.getTime() > Date.now() - 3600000 * 24
         }
       }"
-      size="mini"
+      :size="size"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth * 1.6 + 'px' : '100%'
@@ -147,6 +147,12 @@ export default {
       type: Number,
       default: function() {
         return null
+      }
+    },
+    size: {
+      type: String,
+      default: function() {
+        return 'mini'
       }
     }
   },
