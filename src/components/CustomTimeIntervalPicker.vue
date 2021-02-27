@@ -114,6 +114,7 @@ export default {
   data() {
     return {
       type: 'default',
+      timeIntervalId: '', //时段id
       timeInterval: '', //已设置时段值
       startTime: '',
       endTime: '',
@@ -148,6 +149,7 @@ export default {
         .then(res => {
           if (res.data.Code === 200) {
             if (res.data.Data) {
+              this.timeIntervalId = res.data.Data.TimeIntervalId
               let typeOptions = []
               if (res.data.Data.Classify) {
                 for (let i = 0; i < res.data.Data.Classify; i++) {
@@ -194,13 +196,15 @@ export default {
         this.$emit('chooseChange', {
           type: this.type,
           timeInterval: val,
+          timeIntervalId: this.timeIntervalId,
           timeIntervalList: timeIntervalList,
           dateRange: []
         })
       } else {
         this.$emit('chooseChange', {
           type: this.type,
-          timeInterval: '',
+          timeInterval: undefined,
+          timeIntervalId: undefined,
           timeIntervalList: [],
           dateRange: val
         })
@@ -219,6 +223,7 @@ export default {
         this.$emit('chooseChange', {
           type: this.type,
           timeInterval: '',
+          timeIntervalId: undefined,
           timeIntervalList: [],
           dateRange: []
         })
@@ -227,6 +232,7 @@ export default {
         this.$emit('chooseChange', {
           type: this.type,
           timeInterval: this.timeInterval,
+          timeIntervalId: this.timeIntervalId,
           timeIntervalList: typeOptions.map(item => item.value),
           dateRange: []
         })
@@ -234,6 +240,7 @@ export default {
         this.$emit('chooseChange', {
           type: this.type,
           timeInterval: '',
+          timeIntervalId: undefined,
           timeIntervalList: [],
           dateRange: []
         })
