@@ -228,10 +228,10 @@ export default {
         this.endX = e.offsetX
         this.endY = e.offsetY
         if (this.endX < this.startX) {
-          this.chooseBoxDom.style.left = this.endX
+          this.chooseBoxDom.style.left = this.endX + 'px'
         }
         if (this.endY < this.startY) {
-          this.chooseBoxDom.style.top = this.endY
+          this.chooseBoxDom.style.top = this.endY + 'px'
         }
         let width = this.endX - this.startX
         let height = this.endY - this.startY
@@ -244,8 +244,7 @@ export default {
     //松开鼠标
     mouseUp(e) {
       this.isDown = false
-      this.endX = e.offsetX
-      this.endY = e.offsetY
+      console.log('松开鼠标');
       this.filterTimeInterval()
     },
     // 按下鼠标
@@ -261,10 +260,20 @@ export default {
     },
     // 筛选框选的单元
     filterTimeInterval() {
-      let startRow = Math.ceil(this.startY / 35)
-      let startColumn = Math.ceil(this.startX / 95)
-      let endRow = Math.ceil(this.endY / 35)
-      let endColumn = Math.ceil(this.endX / 95)
+      console.log(111);
+      let isNomal = this.startX < this.endX
+      let startX = isNomal ? this.startX : this.endX
+      let startY = isNomal ? this.startY : this.endY
+      let endX = isNomal ? this.endX : this.startX
+      let endY = isNomal ? this.endY : this.startY
+      let startRow = Math.ceil(startY / 35)
+      let startColumn = Math.ceil(startX / 95)
+      let endRow = Math.ceil(endY / 35)
+      let endColumn = Math.ceil(endX / 95)
+      console.log(startRow, 'startRow')
+      console.log(startColumn, 'startRow')
+      console.log(endRow, 'startRow')
+      console.log(endColumn, 'startRow')
       let chooseList = []
       for (let i = 1; i <= 24; i++) {
         if (i >= startRow && i <= endRow) {
@@ -278,6 +287,7 @@ export default {
           }
         }
       }
+      console.log(chooseList, 'chooseList')
       if (chooseList.length) {
         this.chooseList = chooseList
         this.changeBoxShowStatus = true
@@ -528,8 +538,8 @@ export default {
     position: absolute;
     left: 95px;
     top: 48px;
-    //background: blue;
-    //opacity: 0.2;
+    background: blue;
+    opacity: 0.2;
     width: 665px;
     height: 840px;
   }
