@@ -6,7 +6,7 @@
     <el-radio-group
       v-model="type"
       @change="scopeChange"
-      size="small"
+      size="mini"
       border
       :class="direction === 'row' ? 'radio-group-box' : ''"
     >
@@ -37,7 +37,7 @@
           return val.getTime() > Date.now() - 3600000 * 24
         }
       }"
-      size="small"
+      size="mini"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -56,7 +56,7 @@
           return val.getTime() > Date.now() - 3600 * 1000 * 24 * 7
         }
       }"
-      size="small"
+      size="mini"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -79,7 +79,7 @@
           )
         }
       }"
-      size="small"
+      size="mini"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -97,7 +97,7 @@
           return val > dayjs().startOf('year')
         }
       }"
-      size="small"
+      size="mini"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth + 'px' : '100%'
@@ -115,7 +115,7 @@
           return val.getTime() > Date.now() - 3600000 * 24
         }
       }"
-      size="small"
+      size="mini"
       :style="{
         'margin-top': direction === 'column' ? '5px' : '0',
         width: pickerWidth ? pickerWidth * 1.6 + 'px' : '100%'
@@ -162,19 +162,19 @@ export default {
   watch: {
     //日、周、
     time(val) {
-      this.timeOutPut(val)
+      this.valueOutPut(val)
     },
     dateRange(val) {
       if (val.length > 1) {
-        this.timeOutPut(val)
+        this.valueOutPut(val)
       }
     }
   },
   methods: {
     /**
      * 组件初始化、重置
-     * @param type {String} 默认选择时间
-     * @param defaultTime {Boolean} 是否默认选择时间
+     * @param type {String} 默认选择类型
+     * @param defaultTime {Boolean} 是否默认
      * **/
     init(type = 'day', defaultTime = false) {
       let time = ''
@@ -211,7 +211,7 @@ export default {
       this.type = type
       this.dateRange = []
     },
-    timeOutPut(val) {
+    valueOutPut(val) {
       let startTime = ''
       let endTime = ''
       if (val) {
@@ -271,6 +271,7 @@ export default {
         endTime = ''
       }
       this.$emit('timeChange', {
+        type: this.type,
         time:
           Object.prototype.toString.call(val) === '[object Array]'
             ? undefined
@@ -287,11 +288,12 @@ export default {
       this.$emit('typeChange', this.type)
       if (this.type === 'custom') {
         this.$emit('timeChange', {
+          type: this.type,
           time: '',
           dateRange: []
         })
       } else {
-        this.timeOutPut(this.time)
+        this.valueOutPut(this.time)
       }
     }
   }

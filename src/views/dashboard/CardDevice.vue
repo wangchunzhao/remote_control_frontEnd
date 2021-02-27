@@ -162,6 +162,7 @@
                 @click.stop="
                   () => $emit('watchHistory', point.point, item.mtid)
                 "
+                style="cursor: pointer"
               >
                 {{ point.pname }}：{{ point.valuename }}
               </div>
@@ -823,6 +824,7 @@ export default {
     display: flex;
     align-items: center;
     margin-left: 20px;
+    cursor: pointer;
   }
   .item-bottom-item:nth-child(1) {
     margin-left: 0;
