@@ -1,11 +1,14 @@
 <template>
-  <div class="custom-date-pikcer-KJDSHFJ" :class="direction === 'row' ? 'row' : ''">
+  <div
+    class="custom-date-pikcer-KJDSHFJ"
+    :class="direction === 'row' ? 'row' : ''"
+  >
     <el-radio-group
-        v-model="type"
-        @change="scopeChange"
-        size="small"
-        border
-        :class="direction === 'row' ? 'radio-group-box' : ''"
+      v-model="type"
+      @change="scopeChange"
+      size="small"
+      border
+      :class="direction === 'row' ? 'radio-group-box' : ''"
     >
       <el-radio-button label="day" v-if="typeArr.indexOf('day') >= 0">
         日
