@@ -200,13 +200,17 @@ export default {
           timeIntervalList: timeIntervalList,
           dateRange: []
         })
-      } else {
+      } else if (val && val.length > 1) {
+        let dateRange = [
+          val[0].split(':')[0] - 0 + '',
+          val[1].split(':')[0] - 0 + ''
+        ]
         this.$emit('chooseChange', {
           type: this.type,
           timeInterval: undefined,
           timeIntervalId: undefined,
           timeIntervalList: [],
-          dateRange: val
+          dateRange: dateRange
         })
       }
     },
