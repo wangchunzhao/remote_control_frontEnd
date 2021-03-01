@@ -201,6 +201,12 @@ export default {
           dateRange: []
         })
       } else if (val && val.length > 1) {
+        if (
+          new Date('2020-12-12 ' + val[0]) > new Date('2020-12-12 ' + val[1])
+        ) {
+          this.$message('开始时间不能大于结果时间')
+          return
+        }
         let dateRange = [
           val[0].split(':')[0] - 0 + '',
           val[1].split(':')[0] - 0 + ''
@@ -268,6 +274,9 @@ export default {
 </style>
 <style lang="scss">
 .custom-timeInterval-pikcer-KJDSHFJ {
+  .el-radio-group {
+    display: flex;
+  }
   .el-radio-button__orig-radio:checked + .el-radio-button__inner {
     background-color: #fff;
     color: #1890ff;

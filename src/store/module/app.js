@@ -18,8 +18,9 @@ import router, { resetRouter } from '@/router'
 
 const app = {
   state: {
+    // !+ ： + 字符串转数字 ！数字转 boolean
     sidebar: !+sessionStorage.getItem(storageName('sidebarStatus')),
-    mapOverviewHeaderVisible: !+sessionStorage.getItem(
+    mapOverviewHeaderVisible: !!+sessionStorage.getItem(
       storageName('mapOverviewHeaderVisible')
     ), // 地图总览页- header 是否可见
     pid: sessionStorage.getItem(storageName('project'))
@@ -200,10 +201,10 @@ const app = {
         resetRouter()
       }
     },
-    fetchStructTree({ commit, state }, data) {
+    fetchStructTree({ commit, state }, payload) {
       return new Promise((resolve, reject) => {
         modelTrees({
-          projectId: data ? data.pid : state.pid
+          projectId: payload ? payload.pid : state.pid
         })
           .then(({ data }) => {
             if (data.Code === 200) {
@@ -356,7 +357,7 @@ const app = {
             } else {
               structData = []
               console.error(res.data.Message)
-              reject('公司结构树获取失败')
+              reject(new Error('公司结构树获取失败'))
             }
             commit('UPDATE_COMPANY_STRUCT', structData)
             resolve()
@@ -364,7 +365,7 @@ const app = {
           .catch(err => {
             commit('UPDATE_COMPANY_STRUCT', [])
             console.error(err)
-            reject('公司结构树获取失败')
+            reject(new Error('公司结构树获取失败'))
           })
       })
     },

@@ -44,11 +44,15 @@ export default {
         if (!options) {
           throw new Error('echart need options')
         }
-        this.chart.setOption({
-          color: this.defaultColors || defaultColors,
-          ...options
-        })
-      }
+        this.chart.setOption(
+          {
+            color: defaultColors,
+            ...this.options
+          },
+          true
+        )
+      },
+      deep: true
     }
   },
   mounted() {

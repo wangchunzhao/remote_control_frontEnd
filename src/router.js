@@ -1258,7 +1258,7 @@ const analysis = {
       path: 'energyConsumption',
       component: _import('analysis/energyConsumption/index'),
       name: 'energyConsumption',
-      meta: { showBackButton: true, title: '能耗分析' }
+      meta: { showBackButton: true, title: '能耗分析', customHeader: true }
     },
     {
       path: 'repair',

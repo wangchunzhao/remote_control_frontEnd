@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-input size="small" placeholder="搜索项目名称" v-model="filterText">
+    <el-input
+      size="small"
+      clearable
+      placeholder="搜索项目名称"
+      v-model="filterText"
+    >
     </el-input>
     <div
       style="margin-top: 15px;max-height: 400px;overflow: auto"
@@ -12,9 +17,9 @@
         ref="tree"
         @check-change="handleCheckChange"
         node-key="SubareaId"
-        :default-expanded-keys="[
-          companyStruct ? companyStruct[0].SubareaId : undefined
-        ]"
+        :default-expanded-keys="
+          companyStruct.length ? [companyStruct[0].SubareaId] : []
+        "
         :filter-node-method="filterNode"
         :props="{
           children: 'Children',
@@ -27,10 +32,14 @@
 </template>
 
 <script>
+import { getUserOwnSubareaTree } from '@/api/subarea'
+import debounce from 'lodash/debounce'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      filterText: ''
+      filterText: '',
+      companyStruct: []
     }
   },
   watch: {
@@ -39,19 +48,45 @@ export default {
     }
   },
   computed: {
-    companyStruct() {
-      return [this.$store.state.app.companyStruct]
-    }
+    ...mapGetters(['companyId'])
+  },
+  mounted() {
+    // 获取项目树
+    getUserOwnSubareaTree({
+      companyId: this.companyId
+    })
+      .then(res => {
+        if (res.data.Code === 200) {
+          let tree = [res.data.Data]
+          this.walk(tree)
+          console.log('[59]-StructTree.vue', tree)
+          this.companyStruct = tree
+        }
+      })
+      .catch(err => {
+        console.error(err)
+      })
   },
   methods: {
-    handleCheckChange(val, val2, val3) {
+    handleCheckChange: debounce(function() {
       const checkedNodes = this.$refs.tree.getCheckedNodes()
-      console.log('[49]-StructTree.vue', checkedNodes)
       this.$emit('change', checkedNodes)
-    },
+    }, 600),
     filterNode(value, data) {
       if (!value) return true
       return data.SubareaName.toLowerCase().indexOf(value.toLowerCase()) !== -1
+    },
+    // 删除空的Children
+    walk(arr) {
+      arr.forEach(item => {
+        if (item.Children) {
+          if (!item.Children.length) {
+            delete item.Children
+          } else {
+            this.walk(item.Children)
+          }
+        }
+      })
     }
   }
 }

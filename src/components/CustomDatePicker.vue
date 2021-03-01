@@ -213,8 +213,8 @@ export default {
             break
         }
       }
-      this.time = time
       this.type = type
+      this.time = time
       this.dateRange = []
     },
     valueOutPut(val) {
@@ -320,6 +320,9 @@ export default {
 </style>
 <style lang="scss">
 .custom-date-pikcer-KJDSHFJ {
+  .el-radio-group {
+    display: flex;
+  }
   .el-radio-button__orig-radio:checked + .el-radio-button__inner {
     background-color: #fff;
     color: #1890ff;

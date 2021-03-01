@@ -16,7 +16,14 @@
       size="small"
       prefix-icon="el-icon-search"
     ></el-input>
-    <div class="main-wrap thin-scroll">
+    <div
+      class="main-wrap thin-scroll"
+      :style="{
+        height: mapOverviewHeaderVisible
+          ? 'calc(100vh - 90px)'
+          : 'calc(100vh - 40px)'
+      }"
+    >
       <div class="title">
         星标项目
       </div>
@@ -585,12 +592,14 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
+  bottom: 0;
   transition: transform 210ms;
   background-color: #f0f2f5;
   .main-wrap {
+    box-sizing: border-box;
     overflow-y: auto;
     padding: 16px;
-    height: calc(100vh - 82px);
+    height: calc(100vh - 90px);
     box-shadow: 4px 0 11px rgba(0, 0, 0, 0.2);
   }
   .gutter-horizontal {

@@ -1,5 +1,12 @@
 <template>
-  <div id="amap-cointainer" class="mymap" v-loading="loading">
+  <div
+    id="amap-cointainer"
+    :style="{
+      height: mapOverviewHeaderVisible ? 'calc(100vh - 50px)' : '100vh'
+    }"
+    class="mymap"
+    v-loading="loading"
+  >
     <div id="map-container" />
     <Sidebar :handleClick="setCenter" :userGatewayList="userGatewayList" />
     <OverviewPanel />
@@ -45,6 +52,7 @@ import { showDeviceList } from '@/api/device_new'
 import { updatePreferences } from '@/api/preferences'
 import { resetRouter } from '@/router'
 import mapConfigJson from '@/assets/json/custom_map_config.json'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -73,24 +81,16 @@ export default {
     subarea() {
       return this.$store.state.app.subarea
     },
-    userInfo() {
-      return this.$store.state.app.userInfo
-    },
-    companyId() {
-      return this.$store.state.app.company.id
-    },
-    companyList() {
-      return this.$store.state.app.companyList
-    },
-    proList() {
-      return this.$store.state.app.proList
-    },
-    userId() {
-      return this.$store.state.app.userInfo.uid
-    },
     isEmptyAccount() {
       return this.$store.state.app.isEmptyAccount
-    }
+    },
+    ...mapGetters([
+      'proList',
+      'mapOverviewHeaderVisible',
+      'companyId',
+      'userInfo',
+      'companyList'
+    ])
   },
   watch: {
     proList: {
@@ -189,7 +189,9 @@ export default {
                   .addEventListener('click', e => {
                     const id = e.target.getAttribute('data-id')
                     Cookies.set(
-                      storageName(`maintenance-pact-${this.userId}-${id}`),
+                      storageName(
+                        `maintenance-pact-${this.userInfo.uid}-${id}`
+                      ),
                       'hide',
                       {
                         expires: new Date(
@@ -212,7 +214,7 @@ export default {
               if (
                 Cookies.get(
                   storageName(
-                    `maintenance-pact-${this.userId}-${element.contractID}`
+                    `maintenance-pact-${this.userInfo.uid}-${element.contractID}`
                   )
                 ) !== 'hide'
               ) {
@@ -460,7 +462,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 #amap-cointainer {
-  height: 100%;
   position: relative;
   .empty-gateway {
     position: absolute;
