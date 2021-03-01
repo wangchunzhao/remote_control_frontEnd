@@ -399,24 +399,18 @@ export default {
               : timeIntervalList,
           isExport: true
         })
-        if (res.data.Code === 200) {
-          if (
-            res.headers['content-type'] === 'application/json; charset=utf-8'
-          ) {
-            // blob转json
-            var reader = new FileReader()
-            reader.onload = e => {
-              const temp = JSON.parse(e.target.result)
-              this.$message(temp.Message)
-            }
-            reader.readAsText(res.data)
-            return false
+        if (res.headers['content-type'] === 'application/json; charset=utf-8') {
+          // blob转json
+          var reader = new FileReader()
+          reader.onload = e => {
+            const temp = JSON.parse(e.target.result)
+            this.$message(temp.Message)
           }
-          const blob = new Blob([res.data])
-          saveAs(blob, `能耗分析.xls`)
-        } else {
-          this.$message.error('表格导出失败')
+          reader.readAsText(res.data)
+          return false
         }
+        const blob = new Blob([res.data])
+        saveAs(blob, `能耗分析.xls`)
       } catch (error) {
         this.exportLoading = false
         console.error(error)

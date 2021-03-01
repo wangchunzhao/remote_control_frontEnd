@@ -1,4 +1,5 @@
 import fetch from '@/utils/service'
+import qs from 'qs'
 
 // #region 获取模型全部信息 start
 export const modelTrees = ({ projectId, isGetModelTree = true }) => {
@@ -62,6 +63,7 @@ export const getVideoMonitorPage = ({
 // #region 获取设备页 start
 export const getModelTreePage = ({
   ProjectId,
+  ProjectIdList,
   SubareaIdList,
   BigTypeId,
   BigTypeIdList,
@@ -82,6 +84,7 @@ export const getModelTreePage = ({
     '/api/Model/GetModelTreePage',
     {
       ProjectId,
+      ProjectIdList,
       SubareaIdList,
       BigTypeId,
       BigTypeIdList,
@@ -108,7 +111,10 @@ export const getModelTreePage = ({
 // #region 获取设备下显示的点位 start
 export const getModelTreeShowPoint = data => {
   return fetch.get('/api/ModelTree/GetModelTreeShowPoint', {
-    params: data
+    params: data,
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { indices: false })
+    },
   })
 }
 // #endregion 获取设备下显示的点位 end
@@ -138,6 +144,7 @@ export const editModelTreeShowPoint = ({ modelTreeId, pointIdList }) => {
 export const queryPointRead = ({
   mtid,
   mtidList = undefined,
+  ProjectIdList = undefined,
   BigTypeId = undefined,
   ProjectId,
   LevelList = undefined,
@@ -161,6 +168,7 @@ export const queryPointRead = ({
     {
       mtid,
       mtidList,
+      ProjectIdList,
       BigTypeId,
       ProjectId,
       LevelList,

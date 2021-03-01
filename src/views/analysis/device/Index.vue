@@ -34,11 +34,10 @@
               >
                 <LineChart
                   :ref="'keyPointHistoryDialog' + index"
+                  :info="item"
                   @requestReg="KeyPointRequestReg"
                   @requestChart="KeyPointRequestChart"
-                  :keyPointIndex="index"
-                  :point-ids="item.point"
-                  :device-id="item.deviceId"
+                  :Index="index"
                 ></LineChart>
               </div>
             </div>
@@ -48,7 +47,8 @@
                 <el-button
                   icon="el-icon-download"
                   type="primary"
-                  size="small"
+                  size="mini"
+                  :loading="exportLoading"
                   @click.native="downloadExcel"
                 >
                   导出
@@ -117,7 +117,7 @@
             </div>
             <el-form
               ref="filterForm"
-              :model="filterForm"
+              :model="form"
               size="medium"
               label-position="top"
               class="thin-scroll"
@@ -133,7 +133,7 @@
               </el-form-item>
               <el-form-item label="时段">
                 <CustomTimeIntervalPicker
-                  :projectId="projectId"
+                  :company-id="companyId"
                   @typeChange="timeIntervalTypeChange"
                   @chooseChange="timeIntervalChange"
                   size="small"
@@ -141,23 +141,44 @@
                 ></CustomTimeIntervalPicker>
               </el-form-item>
               <el-form-item label="选择项目范围">
-                <treeselect
-                  v-model="filterForm.area"
-                  :default-expand-level="1"
-                  :append-to-body="true"
-                  :multiple="true"
-                  :options="treeOptions"
-                  style="line-height: 20px;"
-                  placeholder=""
-                  :show-count="true"
-                  :normalizer="normalizer"
-                  @close="areaChange"
-                />
+                <el-cascader
+                  :options="companyStruct"
+                  ref="cascader"
+                  collapse-tags
+                  :show-all-levels="false"
+                  clearable
+                  filterable
+                  style="width: 300px;"
+                  :props="cascaderProps"
+                  @change="areaChange"
+                >
+                  <template slot="empty">
+                    暂无数据
+                  </template>
+                  <template slot-scope="{ node, data }">
+                    <c-svg
+                      :name="
+                        data.Remark === '项目'
+                          ? 'location-fill'
+                          : 'folder-open-fill'
+                      "
+                      :style="{
+                        color: data.Remark === '项目' ? '#909399' : '#5AC8FA'
+                      }"
+                    />
+                    <span>&nbsp;{{ data.SubareaName }}</span>
+                    <c-svg
+                      v-if="data.IsSummary"
+                      style="color: #909399; margin-left: 5px"
+                      name="zong"
+                    ></c-svg>
+                  </template>
+                </el-cascader>
               </el-form-item>
               <el-form-item label="选择设备" style="margin-bottom: 18px;">
                 <el-select
                   v-model="chooseDeviceIdList"
-                  :disabled="!filterForm.area.length"
+                  :disabled="!projectIdList.length"
                   placeholder="搜索设备温区/标签/名称"
                   popper-class="device-selector-JSDKF38924"
                   style="width:100%;"
@@ -203,7 +224,7 @@
               </el-form-item>
               <el-form-item label="选择点位" style="margin-bottom: 18px;">
                 <el-select
-                  v-model="choosePointIdList"
+                  v-model="form.PointIdList"
                   :disabled="!chooseDeviceIdList.length"
                   placeholder="搜索点位名称/类型"
                   style="width:100%;"
@@ -212,7 +233,7 @@
                   filterable
                   clearable
                   :filter-method="filterPointListFun"
-                  @visible-change="pointVisibleChange"
+                  @change="pointVisibleChange"
                 >
                   <el-option
                     v-for="item in filterPointList"
@@ -222,16 +243,20 @@
                   >
                     <div
                       class="option-item"
-                      :class="item.choose ? 'choose-option-item' : ''"
+                      :class="
+                        form.PointIdList.includes(item.id)
+                          ? 'choose-option-item'
+                          : ''
+                      "
                     >
                       <div>
-                        <div class="option-title">CLT10.2双面岛柜(无盖）</div>
+                        <div class="option-title">{{ item.name }}</div>
                         <div class="option-text">
-                          QHC-CLT12.1双面岛柜(无盖）P
+                          {{ item.ModelTreeName }}
                         </div>
-                        <div class="option-text">QHC-美团优选郑州仓</div>
+                        <div class="option-text">{{ item.ProjectName }}</div>
                       </div>
-                      <div v-show="item.choose">
+                      <div v-show="form.PointIdList.includes(item.id)">
                         <i
                           class="el-icon-check"
                           style="width: 16px;height: 16px;color: #1890FF"
@@ -260,19 +285,16 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn' // load on demand
 dayjs.locale('zh-cn')
-import { getUserOwnSubareaTree } from '@/api/subarea'
-import {
-  getElectricTypeList,
-  getElectricStatisticalDetailList
-} from '@/api/maintenanceStatistical'
 import {
   getModelTreePage,
   queryPointRead,
   getModelTreeShowPoint
 } from '@/api/model_new'
+import { getMoreProjectPointTable } from '@/api/deviceMonitoryPoint'
 import CustomDatePicker from '@/components/CustomDatePicker'
 import CustomTimeIntervalPicker from '@/components/CustomTimeIntervalPicker'
 import TimeIntervalSetDialog from '@components/TimeIntervalSetDialog/TimeIntervalSetDialog'
+import saveAs from 'file-saver'
 
 export default {
   components: {
@@ -284,52 +306,32 @@ export default {
   },
   data() {
     return {
-      treeOptions: [],
-      typeOptions: [],
-      normalizer(node) {
-        return {
-          id: node.SubareaId,
-          label: node.SubareaName,
-          children: node.Children
-        }
+      cascaderProps: {
+        multiple: true,
+        children: 'Children',
+        label: 'SubareaName',
+        value: 'ProjectId'
       },
 
       filterLoading: false, //筛选区域loading
+      projectIdList: [], //选择的项目ID列表
       filterDeviceList: [], // 筛选后的设备列表
       deviceList: [], // 设备列表
       filterPointList: [], // 筛选后的点位列表
       pointList: [], //点位列表
       chooseDeviceIdList: [], // 已选择的设备ID列表
-      choosePointIdList: [], // 已选择的点位ID列表
       keyPointList: [], //图列表
       keyPointChartList: [], //图实例列表
 
-      filterForm: {
-        scope: 'day', // 日期 默认日
-        time: '', //选中日期
-        start: '',
-        end: '',
-        timeIntervalType: 'default', //时段类型 默认已设置时段
-        timeInterval: '', //已有时段
-        startTimeInterval: '', //开始时段
-        endTimeInterval: '', //结束时段
-        area: [] //项目范围
-      },
-
       form: {
-        interval: 2,
-        startTime: new Date(new Date().getTime() - 24 * 3600 * 1000),
-        endTime: new Date(),
-        pointIds: [],
-        pointIdsByAdd: [], // 用户自己添加的点位
-        dateRange: [
-          new Date(new Date().getTime() - 24 * 3600 * 1000),
-          new Date()
-        ],
-        showRelatePoint: false, // 是否显示关联点位
-        model: 'chart',
-        showStatistical: false, // 显示统计
-        showThreshold: false // 显示阈值
+        PointIdList: [],
+        DateType: undefined,
+        TimeQuantum: {
+          StartDate: undefined,
+          EndDate: undefined
+        },
+        TimeIntervalId: undefined,
+        ClassifyList: []
       },
 
       projectNameFilter: '', // 表格 项目名称筛选值
@@ -340,6 +342,7 @@ export default {
       },
       tableData: [],
       tableLoading: false,
+      exportLoading: false,
 
       dayjs
     }
@@ -350,6 +353,9 @@ export default {
     },
     projectId() {
       return this.$store.state.app.project.id
+    },
+    companyStruct() {
+      return this.$store.state.app.subarea
     }
   },
   watch: {
@@ -359,40 +365,7 @@ export default {
   },
   mounted() {
     this.$refs.customDatePicker.init('day', true)
-    // 获取项目树
-    getUserOwnSubareaTree({
-      companyId: this.companyId
-    })
-      .then(res => {
-        if (res.data.Code === 200) {
-          let tree = [res.data.Data]
-          this.walk(tree)
-          this.treeOptions = tree
-          this.$nextTick(() => {
-            this.filterForm.area = [this.treeOptions[0].SubareaId]
-            this.areaChange()
-          })
-        }
-      })
-      .catch(err => {
-        console.error(err)
-      })
-
-    getElectricTypeList({
-      companyId: this.companyId
-    })
-      .then(res => {
-        if (res.data.Code === 200) {
-          res.data.Data.unshift({
-            Id: '',
-            Name: '全部分类'
-          })
-          this.typeOptions = res.data.Data
-        }
-      })
-      .catch(err => {
-        console.error(err)
-      })
+    this.$refs.customTimeIntervalPicker.init('default', true)
   },
   methods: {
     // 获取图标实例
@@ -405,7 +378,7 @@ export default {
           }
         }
         // 图标联动
-        echarts.connect('keyPoint')
+        echarts.connect('deviceRunningAnalysisCharts')
       }
     },
     KeyPointRequestReg() {},
@@ -435,7 +408,11 @@ export default {
     filterPointListFun(v) {
       if (v) {
         this.filterPointList = this.pointList.filter(
-          item => item.name && item.name.indexOf && item.name.indexOf(v) >= 0
+          item =>
+            (item.ModelTreeName &&
+              item.ModelTreeName.indexOf &&
+              item.ModelTreeName.indexOf(v) >= 0) ||
+            (item.name && item.name.indexOf && item.name.indexOf(v) >= 0)
         )
       } else {
         this.filterPointList = this.pointList
@@ -443,24 +420,129 @@ export default {
     },
     // 清除筛选
     resetForm() {
-      this.filterForm.scope = 'day'
-      this.filterForm.area = [this.treeOptions[0].SubareaId]
-      this.filterForm.timeInterval = ''
-      this.filterForm.time = ''
-      this.filterForm.start = ''
-      this.filterForm.end = ''
+      this.form = {
+        PointIdList: [],
+        DateType: undefined,
+        TimeQuantum: {
+          StartDate: undefined,
+          EndDate: undefined
+        },
+        TimeIntervalId: undefined,
+        ClassifyList: []
+      }
     },
-    // 清楚图表数据
+    // 清除图表数据
     resertReviewList() {
+      this.pagination.currentPage = 1
       this.tableData = []
       this.keyPointList = []
       this.keyPointChartList = []
+      this.form.PointIdList = []
+    },
+    // 更换时间类型
+    timeTypeChange(val) {
+      let DateType = ''
+      switch (val) {
+        case 'day':
+          DateType = 'Day'
+          break
+        case 'week':
+          DateType = 'Week'
+          break
+        case 'month':
+          DateType = 'Month'
+          break
+        case 'year':
+          DateType = 'Year'
+          break
+        case 'custom':
+          DateType = 'Custom'
+          break
+        default:
+          DateType = 'Day'
+          break
+      }
+      this.form.DateType = DateType
+    },
+    // 更换时间
+    timeChange(val) {
+      if (val.type === 'custom' && (!val.dateRange || !val.dateRange.length)) {
+        return
+      }
+      let DateType = ''
+      switch (val.type) {
+        case 'day':
+          DateType = 'Day'
+          break
+        case 'week':
+          DateType = 'Week'
+          break
+        case 'month':
+          DateType = 'Month'
+          break
+        case 'year':
+          DateType = 'Year'
+          break
+        case 'custom':
+          DateType = 'Custom'
+          break
+        default:
+          DateType = 'Day'
+          break
+      }
+      this.form.DateType = DateType
+      this.form.TimeQuantum.StartDate =
+        val.dateRange.length > 1 ? val.dateRange[0] : ''
+      this.form.TimeQuantum.EndDate =
+        val.dateRange.length > 1 ? val.dateRange[1] : ''
+      this.renderChart()
+    },
+    // 更换时段类型
+    timeIntervalTypeChange(val) {
+      if (val !== 'default') {
+        this.form.TimeIntervalId = undefined
+        this.form.ClassifyList = []
+      }
+      // this.timeIntervalType = val
+    },
+    // 更换时段
+    timeIntervalChange(val) {
+      if (val.type === 'custom' && (!val.dateRange || !val.dateRange.length)) {
+        return
+      }
+      let ClassifyList = []
+      if (val.type === 'default') {
+        ClassifyList =
+          val.timeInterval === 'all' ? undefined : [val.timeInterval]
+      } else if (val.dateRange && val.dateRange.length) {
+        ClassifyList = [val.dateRange[0], val.dateRange[1]]
+      } else {
+        ClassifyList = undefined
+      }
+      this.form.TimeIntervalId = val.timeIntervalId
+      this.form.ClassifyList = ClassifyList
+      this.renderChart()
     },
     // 更换项目
-    areaChange() {
-      if (this.filterForm.area.length) {
+    areaChange(val) {
+      if (!val.length) {
+        this.projectIdList = []
+        this.chooseDeviceIdList = []
+        this.form.PointIdList = []
+        this.pointList = []
+        this.filterPointList = []
+        this.resertReviewList()
+        return
+      }
+      let nodeList = this.$refs.cascader.getCheckedNodes()
+      let projectIdList = []
+      projectIdList = nodeList
+        .filter(item => item.data.Remark === '项目')
+        .map(item => item.data.ProjectId)
+      this.projectIdList = projectIdList
+      if (this.projectIdList.length) {
         getModelTreePage({
-          SubareaIdList: this.filterForm.area,
+          ProjectIdList: this.projectIdList,
           IsGetStaticProperty: true,
           PageIndex: 1,
           PageSize: 9999
@@ -482,17 +564,24 @@ export default {
           })
           .finally(() => {
             this.chooseDeviceIdList = []
-            this.choosePointIdList = []
+            this.form.PointIdList = []
             this.pointList = []
             this.filterPointList = []
             this.resertReviewList()
           })
+      } else {
+        this.chooseDeviceIdList = []
+        this.form.PointIdList = []
+        this.pointList = []
+        this.filterPointList = []
+        this.resertReviewList()
       }
     },
     // 更换设备
     deviceChanage() {
       queryPointRead({
         mtidList: this.chooseDeviceIdList,
+        ProjectIdList: this.projectIdList,
         BigTypeId: undefined,
         LevelList: [],
         area: undefined,
@@ -507,7 +596,7 @@ export default {
             this.filterPointList = res.data.Data.Data
           } else {
             this.$message.error('获取点位列表失败')
-            this.choosePointIdList = []
+            this.form.PointIdList = []
             this.pointList = []
             this.filterPointList = []
           }
@@ -515,23 +604,23 @@ export default {
         .catch(err => {
           console.error(err)
           this.$message.error('获取点位列表失败')
-          this.choosePointIdList = []
+          this.form.PointIdList = []
           this.pointList = []
           this.filterPointList = []
         })
         .finally(() => {
           this.resertReviewList()
           getModelTreeShowPoint({
-            mtidList: this.chooseDeviceIdList
+            modelTreeId: this.chooseDeviceIdList
           })
             .then(res => {
               if (res.data.Code === 200) {
                 let data = res.data.Data
-                this.choosePointIdList = data.length
+                this.form.PointIdList = data.length
                   ? data.map(item => item.Key)
                   : []
               } else {
-                this.choosePointIdList = []
+                this.form.PointIdList = []
                 this.$message.error('获取默认选中点位列表失败')
               }
             })
@@ -539,99 +628,108 @@ export default {
               console.error(err)
               this.$message.error('获取默认选中点位列表失败')
             })
-            .finally(err => {
-              this.pointVisibleChange(false)
+            .finally(() => {
+              this.pointVisibleChange()
             })
         })
     },
     // 更换点位
-    pointVisibleChange(v) {
-      if (!v && this.choosePointIdList) {
-        for (let i = 0; i < this.keyPointList.length; i++) {
-          this.$refs[`keyPointHistoryDialog${i}`][0].toggleDialog(this.form)
-        }
+    pointVisibleChange() {
+      if (this.form.PointIdList.length) {
         this.renderChart(true)
       } else {
         this.resertReviewList()
       }
     },
-    // 更换时间类型
-    timeTypeChange(val) {
-      this.scope = val
-    },
-    // 更换时间
-    timeChange(val) {
-      this.filterForm.time = val.time ? val.time : ''
-      this.filterForm.start = val.dateRange.length > 1 ? val.dateRange[0] : ''
-      this.filterForm.end = val.dateRange.length > 1 ? val.dateRange[1] : ''
-      console.log('时间更新')
-      this.renderChart()
-    },
-    // 更换时段类型
-    timeIntervalTypeChange(val) {
-      // console.log(val, '时段类型变化')
-      // this.timeIntervalType = val
-    },
-    // 更换时段
-    timeIntervalChange(val) {
-      // console.log(val, '时段值变化')
-      // this.timeIntervalType = val.type
-    },
-    // 更换时段类型
-    scopeChange(val) {
-      if (val === 'default') {
-      } else if (val === 'custom') {
-      }
-    },
-    // 更换时段
-    typeChanage() {
-      console.log('时段更新')
-      this.renderChart()
-    },
-    // 图标更新验证
+    // 图表更新验证
     renderChart(init = false) {
       if (
-        this.filterForm.start &&
-        this.filterForm.end &&
-        this.filterForm.timeInterval
+        this.form.PointIdList.length &&
+        this.form.DateType &&
+        this.form.TimeQuantum.StartDate &&
+        this.form.TimeQuantum.EndDate &&
+        this.form.TimeQuantum.EndDate &&
+        (this.form.TimeIntervalId || this.form.ClassifyList.length)
       ) {
-        console.log('图表更新')
-      }
-
-      if (this.choosePointIdList.length) {
-        this.handleSizeChange()
-        for (let i = 0; i < this.keyPointList.length; i++) {
-          if (init) {
-            this.$refs[`keyPointHistoryDialog${i}`][0].toggleDialog(this.form)
-          } else {
-            this.$refs[`keyPointHistoryDialog${i}`][0].updateDialog(this.form)
-          }
+        let val = JSON.parse(JSON.stringify(this.form.PointIdList))
+        let keyPointList = []
+        if (val && val.length) {
+          let PointList = this.pointList.filter(
+            item => val.indexOf(item.id) >= 0
+          )
+          PointList.map(item => {
+            let flag = false
+            for (let i = 0; i < keyPointList.length; i++) {
+              if (
+                item.ModelTreeId === keyPointList[i].ModelTreeId &&
+                item.ProjectId === keyPointList[i].ProjectId
+              ) {
+                flag = true
+                keyPointList[i].data.push(item.id)
+                break
+              }
+            }
+            if (!flag) {
+              keyPointList.push({
+                ProjectId: item.ProjectId,
+                ProjectName: item.ProjectName,
+                ModelTreeId: item.ModelTreeId,
+                name: item.name,
+                ModelTreeName: item.ModelTreeName,
+                data: [item.id]
+              })
+            }
+          })
         }
+        this.keyPointList = keyPointList
+        this.handleSizeChange()
+        this.$nextTick(() => {
+          for (let i = 0; i < this.keyPointList.length; i++) {
+            if (init) {
+              this.$refs[`keyPointHistoryDialog${i}`][0].toggleDialog(this.form)
+            } else {
+              this.$refs[`keyPointHistoryDialog${i}`][0].updateDialog(this.form)
+            }
+          }
+        })
+      } else {
+        this.resertReviewList()
       }
     },
-    downloadExcel() {
-      let query = ''
-      this.filterForm.area.forEach(item => {
-        query += `&subareaId=${item}`
-      })
-      window.location = `${BASE_URI}/api/MaintenanceStatistical/ExportElectricStatisticalDetailList?startDate=${this.filterForm.start}&endDate=${this.filterForm.end}&industry=${this.$store.state.app.company.industry}&companyId=${this.companyId}&projectName=${this.projectNameFilter}&userId=${this.$store.state.app.userInfo.uid}&pageIndex=-1${query}`
+    async downloadExcel() {
+      try {
+        this.exportLoading = true
+        const res = await getMoreProjectPointTable({
+          ...this.form,
+          isExport: true
+        })
+
+        if (res.headers['content-type'] === 'application/json; charset=utf-8') {
+          // blob转json
+          var reader = new FileReader()
+          reader.onload = e => {
+            const temp = JSON.parse(e.target.result)
+            this.$message(temp.Message)
+          }
+          reader.readAsText(res.data)
+          return false
+        }
+        const blob = new Blob([res.data])
+        saveAs(blob, `设备运行分析.xls`)
+        this.exportLoading = false
+      } catch (error) {
+        this.exportLoading = false
+        console.error(error)
+        this.$message.error('表格导出失败')
+      }
     },
     fetchTableData() {
       this.tableLoading = true
-      getElectricStatisticalDetailList({
-        startDate: this.filterForm.start,
-        endDate: this.filterForm.end,
-        subareaId: this.filterForm.area,
-        industry: this.$store.state.app.company.industry,
-        pageIndex: this.pagination.currentPage,
-        pageSize: this.pagination.size,
-        projectName: this.projectNameFilter,
-        companyId: this.companyId
-      })
+      getMoreProjectPointTable(this.form)
         .then(res => {
           if (res.data.Code === 200) {
-            this.tableData = res.data.Data.Data
-            this.pagination.total = res.data.Data.TotalCount
+            this.tableData = res.data.Data
+            this.pagination.total = res.data.Data.length
           }
         })
         .catch(err => {

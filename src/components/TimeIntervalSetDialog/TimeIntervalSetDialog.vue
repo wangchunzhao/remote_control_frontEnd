@@ -209,6 +209,19 @@ export default {
     }
   },
   methods: {
+    // 获取随机颜色
+    getRandomColor() {
+      // return (
+      //   '#' +
+      //   (function(color) {
+      //     return (color += '0123456789abcdef'[
+      //       Math.floor(Math.random() * 16)
+      //     ]) && color.length == 6
+      //       ? color
+      //       : arguments.callee(color)
+      //   })('')
+      // )
+    },
     //更换时段设置模式
     changeModel() {
       this.resetChooseItem()
@@ -531,6 +544,7 @@ export default {
       color: #000;
     }
     input {
+      user-select: none;
       background: none;
     }
     .el-select .el-input .el-select__caret {
