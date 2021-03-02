@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import { getUserProjectAlarm, getUserSubareaList } from '@/api/subarea'
+import { getUserSubareaList } from '@/api/subarea'
 import { addProjectAsterisk, deleteProjectAsterisk } from '@/api/project'
 import { mapGetters } from 'vuex'
 import CProgress from './CProgress'
@@ -257,6 +257,9 @@ export default {
       handler: async function(list) {
         await this.fetchSubareaOptions()
         this.projectListSource = JSON.parse(JSON.stringify(list))
+        this.projectListSource = this.projectListSource.sort(
+          (a, b) => b.AlarmNum - a.AlarmNum
+        )
         this.projectListSource.forEach(item => {
           try {
             const addressItems = item.adresss.split(';')
@@ -351,31 +354,6 @@ export default {
     },
     changeGroupType(type) {
       this.projectGroupBy = type
-    },
-    fetchProjectList() {
-      this.loading = true
-      getUserProjectAlarm({
-        companyId: this.companyId,
-        IsShow: true
-      })
-        .then(res => {
-          if (res.data.Code === 200) {
-            const data = res.data.Data
-            data.forEach(item => {
-              item.adresss =
-                item.adresss.split(';')[1] + item.adresss.split(';')[2]
-            })
-            this.projectListSource = data
-          } else {
-            this.$message.error('项目列表获取失败')
-          }
-        })
-        .catch(err => {
-          console.error(err)
-        })
-        .finally(() => {
-          this.loading = false
-        })
     },
     /** 项目按分区分组 */
     orderProjectBySubarea(list) {

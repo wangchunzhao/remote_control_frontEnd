@@ -21,9 +21,11 @@ const app = {
     // !+ ： + 字符串转数字 ！数字转 boolean
     sidebar: !+sessionStorage.getItem(storageName('sidebarStatus')),
     language: getLanguage(),
-    mapOverviewHeaderVisible: !!+sessionStorage.getItem(
+    mapOverviewHeaderVisible: sessionStorage.getItem(
       storageName('mapOverviewHeaderVisible')
-    ), // 地图总览页- header 是否可见
+    )
+      ? !!+sessionStorage.getItem(storageName('mapOverviewHeaderVisible'))
+      : true, // 地图总览页- header 是否可见
     pid: sessionStorage.getItem(storageName('project'))
       ? JSON.parse(sessionStorage.getItem(storageName('project'))).id
       : '', // 当前 项目 id
@@ -84,10 +86,10 @@ const app = {
       state.sidebar = !state.sidebar
     },
     TOGGLE_MAP_OVERVIEW_HEADER_VISIBLE: state => {
-      if (state.sidebar) {
-        sessionStorage.setItem(storageName('mapOverviewHeaderVisible'), 1)
-      } else {
+      if (state.mapOverviewHeaderVisible) {
         sessionStorage.setItem(storageName('mapOverviewHeaderVisible'), 0)
+      } else {
+        sessionStorage.setItem(storageName('mapOverviewHeaderVisible'), 1)
       }
       state.mapOverviewHeaderVisible = !state.mapOverviewHeaderVisible
     },
