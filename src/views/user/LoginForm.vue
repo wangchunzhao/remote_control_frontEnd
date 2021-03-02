@@ -36,6 +36,7 @@
             alt=""
           />
         </div>
+        <LangSelect class="lang-select" />
       </div>
       <el-form
         ref="form"
@@ -114,7 +115,11 @@
             @click="submitForm('form')"
           >
             {{
-              isAccountNormalLogin ? '登 录' : acountExist ? '登 录' : '注 册'
+              isAccountNormalLogin
+                ? $t('login.logIn')
+                : acountExist
+                ? $t('login.logIn')
+                : '注 册'
             }}
           </el-button>
         </div>
@@ -219,8 +224,12 @@
 import { login, loginOrRegister, loginOrRegisterSMSCode } from '@/api/user'
 import '@/utils/browserUpdate.js'
 import { exists } from '@/api/user'
+import LangSelect from '@/components/LangSelect'
 const phoneRule = /^[1]([3-9])[0-9]{9}$/
 export default {
+  components: {
+    LangSelect
+  },
   data() {
     const checkPhone = (rule, value, callback) => {
       if (this.isAccountNormalLogin) {
@@ -316,6 +325,11 @@ export default {
       time: 60,
       canSent: true,
       host: window.location.host
+    }
+  },
+  computed: {
+    language() {
+      return this.$store.getters.language
     }
   },
   methods: {
@@ -468,6 +482,7 @@ export default {
     width: 320px;
   }
   .brand-wrap {
+    position: relative;
     text-align: center;
     padding-bottom: 24px;
   }
@@ -538,5 +553,18 @@ export default {
   text-align: center;
   font-size: 18px;
   color: #fff;
+}
+</style>
+
+<style lang="scss">
+.login-page {
+  .lang-select {
+    position: absolute;
+    right: 0px;
+    top: 15px;
+    .icon {
+      color: #fff;
+    }
+  }
 }
 </style>

@@ -100,7 +100,7 @@
         active-text-color="#fff"
         menu-trigger="click"
       >
-        <el-menu-item v-if="showMapMenu" index="02">
+        <el-menu-item v-if="showMapMenu" index="06">
           <router-link
             to="/map/index"
             class="menu-link"
@@ -109,6 +109,11 @@
             <c-svg name="location" style="width: 16px;height: 16px;" />
             总览
           </router-link>
+        </el-menu-item>
+        <el-menu-item index="07">
+          <LangSelect
+            :iconStyle="{ padding: '0 20px', transform: 'translateY(-2px)' }"
+          />
         </el-menu-item>
         <div v-if="isShowProjectSelect()" class="subarea-cascader-wrap">
           <c-svg name="appstore" style="width: 16px;height: 16px;" />
@@ -202,10 +207,12 @@ import { getUserBigScreen } from '@/api/user'
 import { resetRouter } from '@/router'
 import { updatePreferences } from '@/api/preferences'
 import { PLATFORM } from '@/utils/enum'
+import LangSelect from '@/components/LangSelect'
 
 export default {
   components: {
-    MsgCenter
+    MsgCenter,
+    LangSelect
   },
   data() {
     return {

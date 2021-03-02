@@ -16,6 +16,7 @@ import HistoryDialog from '@/components/HistoryDialog'
 import noData from '@/directive/noData/index.js'
 import Permission from '@/directive/permission/index'
 import PageHeader from '@/components/PageHeader'
+import i18n from './lang' // internationalization
 
 if (!('Promise' in window)) {
   import('promise-polyfill/src/polyfill')
@@ -38,7 +39,9 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 Vue.directive('nodata', noData)
 Vue.directive('permission', Permission)
 Vue.component('c-svg', CSvg)
@@ -258,5 +261,6 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
+  i18n,
   render: h => h(App)
 }).$mount('#app')
