@@ -81,7 +81,7 @@
           <span class="btn-text">添加工单</span>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" v-if="findChildSystem('冷冻冷藏', 'entryCheck')">
         <div class="entry-btn" @click="findChildSystem('冷冻冷藏')">
           <div class="icon-wrap">
             <c-svg name="lengdong1" class="quick-item-icon" />
@@ -89,7 +89,7 @@
           <span class="btn-text">冷冻冷藏</span>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" v-if="findChildSystem('配电质量', 'entryCheck')">
         <div class="entry-btn" @click="findChildSystem('配电质量')">
           <div class="icon-wrap">
             <c-svg name="peidian" class="quick-item-icon" />
@@ -97,7 +97,7 @@
           <span class="btn-text">配电质量</span>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" v-if="findChildSystem('环境监测', 'entryCheck')">
         <div class="entry-btn" @click="findChildSystem('环境监测')">
           <div class="icon-wrap">
             <c-svg name="huanjing" class="quick-item-icon" />
@@ -130,7 +130,7 @@ export default {
   },
   methods: {
     //查找子系统
-    findChildSystem(name) {
+    findChildSystem(name, type = 'routerCheck') {
       let flag = false
       let path = ''
       let sid = ''
@@ -142,13 +142,16 @@ export default {
           break
         }
       }
+      if (type !== 'routerCheck') {
+        return flag
+      }
       if (flag) {
         this.$router.push({
           path: path,
           query: { sid, routeType: 'monitorRoute' }
         })
       } else {
-        this.$message.error('当前项目暂无次系统')
+        this.$message.error('当前项目暂无此系统')
       }
     },
     //校验权限

@@ -55,6 +55,16 @@ export default {
           return false
         }
         this.chart.setOption({
+          color: [
+            '#26A9FF',
+            '#00C74C',
+            '#FECC00',
+            '#242F77',
+            '#8F30E8',
+            '#00C6C3',
+            '#3E29CF',
+            '#FD2E62'
+          ],
           tooltip: {
             trigger: 'item',
             formatter: '{b} : {c} ({d}%)'

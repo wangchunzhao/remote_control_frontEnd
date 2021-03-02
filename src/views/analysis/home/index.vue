@@ -11,8 +11,8 @@
           }}
         </div>
       </div>
-      <el-row type="flex" :gutter="17">
-        <el-col :span="5">
+      <div style="display: flex;align-items: center;margin-bottom: 25px">
+        <div style="flex: 1;margin-right: 10px">
           <el-card shadow="never">
             <div class="part-item">
               <div class="part-top">
@@ -26,8 +26,8 @@
               </div>
             </div>
           </el-card>
-        </el-col>
-        <el-col :span="5">
+        </div>
+        <div style="flex: 1;margin:0 10px">
           <el-card shadow="never">
             <div class="part-item">
               <div class="part-top">
@@ -49,8 +49,8 @@
               </div>
             </div>
           </el-card>
-        </el-col>
-        <el-col :span="4">
+        </div>
+        <div style="flex: 1;margin:0 10px">
           <el-card shadow="never">
             <div class="part-item">
               <div class="part-top">
@@ -136,8 +136,8 @@
               </div>
             </div>
           </el-card>
-        </el-col>
-        <el-col :span="5">
+        </div>
+        <div style="flex: 1;margin:0 10px">
           <el-card shadow="never">
             <div class="part-item">
               <div class="part-top">
@@ -240,8 +240,8 @@
               </div>
             </div>
           </el-card>
-        </el-col>
-        <el-col :span="5">
+        </div>
+        <div style="flex: 1;margin-left:10px">
           <el-card shadow="never">
             <div class="part-item">
               <div class="part-top">
@@ -327,8 +327,8 @@
               </div>
             </div>
           </el-card>
-        </el-col>
-      </el-row>
+        </div>
+      </div>
     </div>
 
     <el-row type="flex" :gutter="25" style="flex-wrap: wrap;">
@@ -677,11 +677,19 @@ export default {
       .then(res => {
         if (res.data.Code === 200) {
           this.overviewData = res.data.Data
-          this.totalNumStoreEchartOptions.series[0].data = [1]
+          this.totalNumStoreEchartOptions.series[0].data = [
+            this.overviewData.OnlineProjectNum
+              ? this.overviewData.OnlineProjectNum
+              : 0
+          ]
           this.totalNumStoreEchartOptions.series[1].data = [
             this.overviewData.ProjectNum ? this.overviewData.ProjectNum : 1
           ]
-          this.totalNumDeviceEchartOptions.series[0].data = [1]
+          this.totalNumDeviceEchartOptions.series[0].data = [
+            this.overviewData.OnlineDeviceNum
+              ? this.overviewData.OnlineDeviceNum
+              : 0
+          ]
           this.totalNumDeviceEchartOptions.series[1].data = [
             this.overviewData.DeviceNum ? this.overviewData.DeviceNum : 1
           ]

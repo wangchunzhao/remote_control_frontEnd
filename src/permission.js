@@ -213,7 +213,7 @@ function hasPermission(permissions, route, platform) {
         res = permissions.some(item => {
           return route.meta.projectPermissionId.includes(item)
         })
-      } else {
+      } else if (Array.isArray(route.meta.companyPermissionId)) {
         res = permissions.some(item => {
           return route.meta.companyPermissionId.includes(item)
         })

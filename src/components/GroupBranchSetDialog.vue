@@ -17,7 +17,11 @@
               size="small"
               style="width:200px;margin-right: 10px"
             ></el-input>
-            <el-link :underline="false" @click="deleteItem(index)">
+            <el-link
+              :underline="false"
+              @click="deleteItem(index)"
+              v-show="List.length > 1"
+            >
               <c-svg
                 name="delete"
                 style="color: #F56C6C;font-size: 16px"
@@ -66,15 +70,23 @@
       </el-button>
     </el-form>
     <span slot="footer">
-      <el-button size="medium" type="primary" @click.native="submit"
-        >确 定</el-button
-      >
+      <el-button size="medium" type="primary" @click.native="submit">
+        确 定
+      </el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
 import { getSubentryTree } from '@/api/subentry'
+
+function walk(arr) {
+  arr.forEach(item => {
+    item.ChildrenList && item.ChildrenList.length
+      ? walk(item.ChildrenList)
+      : delete item.ChildrenList
+  })
+}
 
 export default {
   props: {
@@ -187,7 +199,12 @@ export default {
       this.List.splice(index, 1)
     },
     handleClose() {
-      this.List = []
+      this.List = [
+        {
+          name: '',
+          idList: []
+        }
+      ]
       this.dialogVisible = false
     },
     submit() {
