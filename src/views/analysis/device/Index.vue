@@ -23,7 +23,7 @@
       style="padding: 0;background-color: transparent"
     >
       <div style="background-color: #fff;display: flex">
-        <div style="flex: 1">
+        <div style="flex: 1" id="deviceAnalysisContent">
           <el-card shadow="never" style="border-bottom: none">
             <!--图-->
             <div class="line-chart-wrap" v-if="keyPointList.length">
@@ -61,30 +61,40 @@
                 <!--                  style="width: 200px;float: right;"-->
                 <!--                />-->
               </div>
-              <el-table
-                v-loading="tableLoading"
-                :data="tableData"
-                style="width: 100%;margin-top: 20px;"
-              >
-                <el-table-column type="index" label="排名" width="50px" />
-
-                <el-table-column
-                  v-for="item in Object.keys(tableData[0])"
-                  :key="item"
-                  :prop="item"
-                  :label="item"
+              <div style="margin-top: 20px">
+                <el-table
+                  v-loading="tableLoading"
+                  :data="tableData"
+                  ref="table"
+                  fit
+                  :style="{ width: tableWidth + 'px' }"
+                >
+                  <el-table-column
+                    label="项目名称"
+                    fixed="left"
+                    prop="项目名称"
+                    width="120"
+                  />
+                  <el-table-column
+                    v-for="item in Object.keys(tableData[0])"
+                    v-if="item !== '项目名称'"
+                    min-width="80"
+                    :key="item"
+                    :prop="item"
+                    :label="item"
+                  />
+                </el-table>
+                <el-pagination
+                  background
+                  :current-page.sync="pagination.currentPage"
+                  :page-size.sync="pagination.size"
+                  :page-sizes="[10, 20, 50, 100]"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="pagination.total"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
                 />
-              </el-table>
-              <el-pagination
-                background
-                :current-page.sync="pagination.currentPage"
-                :page-size.sync="pagination.size"
-                :page-sizes="[10, 20, 50, 100]"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="pagination.total"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-              />
+              </div>
             </div>
             <!--缺省页-->
             <div
@@ -343,7 +353,7 @@ export default {
       tableData: [],
       tableLoading: false,
       exportLoading: false,
-
+      tableWidth: 0,
       dayjs
     }
   },
@@ -366,6 +376,8 @@ export default {
   mounted() {
     this.$refs.customDatePicker.init('day', true)
     this.$refs.customTimeIntervalPicker.init('default', true)
+    this.tableWidth =
+      document.getElementById('deviceAnalysisContent').scrollWidth - 50
   },
   methods: {
     // 获取图标实例
@@ -736,6 +748,7 @@ export default {
           console.error(err)
         })
         .finally(() => {
+          this.$refs.table.doLayout()
           this.tableLoading = false
         })
     },
