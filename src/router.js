@@ -1234,7 +1234,7 @@ const analysis = {
   name: 'analysisDashboard',
   redirect: '/analysis/home',
   singleMenu: true,
-  meta: { title: '统计分析', icon: 'count', companyPermissionId: [3] },
+  meta: { title: '统计分析', icon: 'power', companyPermissionId: [3] },
   children: [
     {
       path: 'home',
@@ -1282,6 +1282,36 @@ const analysis = {
 }
 // #endregion 统计分析 end
 
+// #region 项目配置 start
+const report = {
+  path: '/reportManage',
+  component: layout,
+  name: 'reportManage',
+  redirect: '/reportManage/list',
+  meta: { title: '报告管理', icon: 'report', projectPermissionId: [48] },
+  children: [
+    {
+      path: 'list',
+      component: _import('reportManage/reportList/Index'),
+      name: 'reportList',
+      meta: { title: '报告列表', projectPermissionId: [49] }
+    },
+    {
+      path: 'strategy',
+      component: _import('reportManage/reportStrategy/Index'),
+      name: 'reportStrategy',
+      meta: { title: '报告策略', projectPermissionId: [49], customHeader: true }
+    },
+    {
+      path: 'releaseList',
+      component: _import('reportManage/releaseList/Index'),
+      name: 'releaseList',
+      meta: { title: '诊断发布', projectPermissionId: [49] }
+    },
+  ]
+}
+// #endregion 项目配置 end
+
 export const constRouter = [
   login,
   invite,
@@ -1318,6 +1348,7 @@ export const businessRouter = [
 // 数据分析平台的路由
 export const dataAnalysisRouter = [
   analysis,
+  report,
   dataDownload,
   { path: '*', redirect: '/403/index', hidden: true }
 ]
