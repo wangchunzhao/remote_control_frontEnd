@@ -134,10 +134,10 @@ export default {
       height: 100%;
     }
     .sidebar-container {
-      overflow: auto;
+      // overflow: auto;
       transition: width 0.28s ease-out;
       width: 160px;
-      height: 100%;
+      // height: 100%;
       position: fixed;
       top: 50px;
       bottom: 0;

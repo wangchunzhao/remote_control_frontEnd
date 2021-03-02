@@ -1,32 +1,17 @@
 <template>
   <div class="header">
     <div class="logo">
-      <div class="hamburger-container" @click="toggleSideBar">
+      <img src="https://cdn.sinocold.net/images/haier_logo.png" alt="" />
+
+      <!-- <div class="hamburger-container" @click="toggleSideBar">
         <c-svg
           name="liebiao"
           class="wscn-icon hamburger"
           :class="{ 'is-active': !sidebar }"
         />
-      </div>
-      <div class="Platform">
-        <span
-          v-if="
-            host === 'yun.ikold.com.cn' ||
-              host === 'ikold.com.cn' ||
-              host === 'cloud.ikold.com.cn'
-          "
-        >
-          CRYOTEK
-        </span>
-        <c-svg
-          v-else-if="host === 'service.haiercarrier.com'"
-          style="width: 110px;"
-          name="HaierCarrier-white-logo"
-        />
-        <span v-else>
-          CoolCare
-        </span>
-      </div>
+      </div> -->
+      <!-- <div class="Platform">
+      </div> -->
     </div>
     <el-menu
       class="horizontal-menu thin-scroll"
@@ -116,7 +101,7 @@
           />
         </el-menu-item>
         <div v-if="isShowProjectSelect()" class="subarea-cascader-wrap">
-          <c-svg name="appstore" style="width: 16px;height: 16px;" />
+          <c-svg name="appstore" style="width: 18px;height: 18px;" />
           <div class="subarea-cascader-search" @click="cascaderSearchFun">
             <i
               class="el-icon-search"
@@ -222,7 +207,6 @@ export default {
       path: this.$store.state.app.projectPath,
       prePath: '',
       avatar: '',
-      host: window.location.host,
       PLATFORM
     }
   },
@@ -476,15 +460,6 @@ export default {
         }
       }
     },
-    // 折叠侧边栏
-    toggleSideBar() {
-      this.$store.dispatch('ToggleSideBar')
-      if (this.sidebar) {
-        this.mapWidth = window.innerWidth - 180
-      } else {
-        this.mapWidth = window.innerWidth - 70
-      }
-    },
     // 退出登录
     logout() {
       this.$confirm('确认退出吗?', '提示', {
@@ -582,35 +557,13 @@ export default {
     flex: 0 0 160px;
     height: 50px;
     display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 22px;
     background: #152c73 !important;
     float: left;
-    .Platform {
-      flex: 1;
-      text-align: center;
-      font-size: 16px;
-      color: rgba(255, 255, 255, 0.85);
-    }
-    .hamburger-container {
-      line-height: 45px;
-      height: 50px;
-      flex: 0 0 40px;
-      box-sizing: border-box;
-      .icon {
-        margin: 0 10px 0 15px;
-      }
-      .hamburger {
-        display: inline-block;
-        cursor: pointer;
-        transform: rotate(0deg);
-        transition: 0.38s;
-        transform-origin: 50% 50%;
-        width: 16px;
-        height: 16px;
-      }
-      .hamburger.is-active {
-        transform: rotate(90deg);
-      }
+    img {
+      width: 80%;
     }
   }
   .horizontal-menu {

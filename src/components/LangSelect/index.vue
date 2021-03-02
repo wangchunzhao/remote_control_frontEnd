@@ -7,7 +7,7 @@
     <div>
       <c-svg
         name="duoyuyan"
-        :style="{ fontSize: '20px', color: '#fff', ...iconStyle }"
+        :style="{ fontSize: '18px', color: '#fff', ...iconStyle }"
       ></c-svg>
     </div>
     <el-dropdown-menu slot="dropdown">

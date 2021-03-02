@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-container thin-scroll">
+  <div class="sidebar-container">
     <el-menu
       mode="vertical"
       :default-active="$route.path"
@@ -8,7 +8,7 @@
       background-color="#fff"
       text-color="rgba(0,0,0,0.65)"
       active-text-color="#1890ff"
-      class="el-menu-vertical-demo"
+      class="thin-scroll"
       unique-opened
       @select="selectMenuItem"
     >
@@ -86,6 +86,9 @@
         </div>
       </template>
     </el-menu>
+    <div class="hamburger-container" @click="toggleSideBar">
+      <c-svg :name="sidebar ? 'outdent' : 'indent'"></c-svg>
+    </div>
   </div>
 </template>
 <script>
@@ -105,6 +108,10 @@ export default {
     ...mapGetters(['sidebar', 'industry', 'platform'])
   },
   methods: {
+    // 折叠侧边栏
+    toggleSideBar() {
+      this.$store.dispatch('ToggleSideBar')
+    },
     selectMenuItem(path, indexPath, item) {
       this.$router.push({ path: path, query: (item.route || {}).query })
     },
@@ -161,5 +168,26 @@ export default {
   height: 16px;
   color: rgba(0, 0, 0, 0.65) !important;
   vertical-align: middle;
+}
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  .hamburger-container {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(0, 0, 0, 0.09);
+    cursor: pointer;
+    .icon {
+      font-size: 18px;
+      padding-right: 18px;
+      color: rgba(0, 0, 0, 0.45);
+    }
+  }
+  .el-menu {
+    flex: 1;
+    overflow: hidden auto;
+  }
 }
 </style>
