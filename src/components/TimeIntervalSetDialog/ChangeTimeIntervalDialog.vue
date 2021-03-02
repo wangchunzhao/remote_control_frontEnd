@@ -7,7 +7,7 @@
     :close-on-click-modal="false"
     @close="handleClose"
   >
-    <div style="margin-bottom: 10px">已选中：{{ list.length }}</div>
+    <div style="margin-bottom: 10px">已选中：{{ list.length }} 个</div>
     <div>
       <el-select
         v-model="type"

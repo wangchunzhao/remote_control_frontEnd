@@ -25,18 +25,24 @@
       </div>
       <!--      表哥区-->
       <div class="table-box">
-        <!--        <div-->
-        <!--          class="canvas-box"-->
-        <!--          id="timeIntervalSetDialogCanvasBox"-->
-        <!--          v-show="keyDown"-->
-        <!--          @mousemove.self="mouseMove"-->
-        <!--          @mousedown="mouseDown"-->
-        <!--          @mouseup="mouseUp"-->
-        <!--        >-->
-        <!--          <div class="choose-area-box"></div>-->
-        <!--        </div>-->
+        <div
+          class="canvas-box"
+          id="timeIntervalSetDialogCanvasBox"
+          v-show="keyDown"
+          @mousemove.self="mouseMove"
+          @mousedown="mouseDown"
+          @mouseup="mouseUp"
+        >
+          <div class="choose-area-box"></div>
+        </div>
 
-        <el-table :data="timeIntervalList" stripe fit height="888px">
+        <el-table
+          v-loading="tableLoading"
+          :data="timeIntervalList"
+          stripe
+          fit
+          height="888px"
+        >
           <el-table-column
             v-for="(item, index) in tableCols"
             :prop="item"
@@ -187,6 +193,7 @@ export default {
     return {
       dialogVisible: false,
       submitLoading: false,
+      tableLoading: false,
       type: '', //时段分类
       typeOptions: [],
       chooseList: [], //框选列表
@@ -352,6 +359,7 @@ export default {
     },
     openDialog() {
       this.dialogVisible = true
+      this.tableLoading = true
       this.typeOptions = []
       document.onkeydown = e => {
         if (
@@ -428,6 +436,9 @@ export default {
         .catch(err => {
           console.error(err)
           this.$message.error('获取时段失败')
+        })
+        .finally(() => {
+          this.tableLoading = false
         })
     },
     handleClose() {
