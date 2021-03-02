@@ -10,7 +10,7 @@
     "elementType": "geometry",
     "stylers": {
         "visibility": "on",
-        "color": "#dee3e5ff"
+        "color": "#dee1e5ff"
     }
 }, {
     "featureType": "building",
@@ -22,7 +22,7 @@
     "featureType": "building",
     "elementType": "geometry.topfill",
     "stylers": {
-        "color": "#d1d7dbff"
+        "color": "#d1d4dbff"
     }
 }, {
     "featureType": "building",
@@ -47,35 +47,35 @@
     "featureType": "education",
     "elementType": "geometry",
     "stylers": {
-        "visibility": "off",
-        "color": "#e1e7e7ff"
+        "visibility": "on",
+        "color": "#e1e4e7ff"
     }
 }, {
     "featureType": "medical",
     "elementType": "geometry",
     "stylers": {
-        "visibility": "off",
-        "color": "#d1dbdbff"
+        "visibility": "on",
+        "color": "#d1d4dbff"
     }
 }, {
     "featureType": "scenicspots",
     "elementType": "geometry",
     "stylers": {
         "visibility": "on",
-        "color": "#d1d7dbff"
+        "color": "#d1d6dbff"
     }
 }, {
     "featureType": "highway",
     "elementType": "geometry",
     "stylers": {
-        "visibility": "off",
+        "visibility": "on",
         "weight": "4"
     }
 }, {
     "featureType": "highway",
     "elementType": "geometry.fill",
     "stylers": {
-        "color": "#fbfdffff"
+        "color": "#ffffffff"
     }
 }, {
     "featureType": "highway",
@@ -87,7 +87,7 @@
     "featureType": "highway",
     "elementType": "labels",
     "stylers": {
-        "visibility": "off"
+        "visibility": "on"
     }
 }, {
     "featureType": "highway",
@@ -111,7 +111,7 @@
     "featureType": "arterial",
     "elementType": "geometry",
     "stylers": {
-        "visibility": "off",
+        "visibility": "on",
         "weight": "2"
     }
 }, {
@@ -130,7 +130,7 @@
     "featureType": "arterial",
     "elementType": "labels",
     "stylers": {
-        "visibility": "off"
+        "visibility": "on"
     }
 }, {
     "featureType": "arterial",
@@ -148,7 +148,7 @@
     "featureType": "local",
     "elementType": "geometry",
     "stylers": {
-        "visibility": "off",
+        "visibility": "on",
         "weight": "1"
     }
 }, {
@@ -253,7 +253,7 @@
     "featureType": "continent",
     "elementType": "labels.text.fill",
     "stylers": {
-        "color": "#5a5c63ff"
+        "color": "#333333ff"
     }
 }, {
     "featureType": "continent",
@@ -277,7 +277,7 @@
     "featureType": "city",
     "elementType": "labels.text.fill",
     "stylers": {
-        "color": "#606772ff"
+        "color": "#454950ff"
     }
 }, {
     "featureType": "city",
@@ -295,13 +295,13 @@
     "featureType": "town",
     "elementType": "labels",
     "stylers": {
-        "visibility": "on"
+        "visibility": "off"
     }
 }, {
     "featureType": "town",
     "elementType": "labels.text.fill",
     "stylers": {
-        "color": "#454950ff"
+        "color": "#454d50ff"
     }
 }, {
     "featureType": "town",
@@ -319,7 +319,7 @@
     "featureType": "road",
     "elementType": "geometry.fill",
     "stylers": {
-        "color": "#fbfdffff"
+        "color": "#fbfffeff"
     }
 }, {
     "featureType": "poilabel",
@@ -343,7 +343,7 @@
     "featureType": "districtlabel",
     "elementType": "labels.text.fill",
     "stylers": {
-        "color": "#abb1c0ff"
+        "color": "#888fa0ff"
     }
 }, {
     "featureType": "transportation",
@@ -391,7 +391,7 @@
     "featureType": "village",
     "elementType": "labels",
     "stylers": {
-        "visibility": "on"
+        "visibility": "off"
     }
 }, {
     "featureType": "district",
@@ -791,7 +791,7 @@
     "featureType": "country",
     "elementType": "labels.text.fill",
     "stylers": {
-        "color": "#5682b3ff"
+        "color": "#8f5a33ff"
     }
 }, {
     "featureType": "country",
@@ -809,7 +809,7 @@
     "featureType": "manmade",
     "elementType": "geometry",
     "stylers": {
-        "color": "#dfe3e7ff"
+        "color": "#dfe2e7ff"
     }
 }, {
     "featureType": "provincialway",
@@ -965,22 +965,19 @@
     "featureType": "entertainment",
     "elementType": "geometry",
     "stylers": {
-        "color": "#d1dbdbff",
-        "visibility": "off"
+        "color": "#d1d6dbff"
     }
 }, {
     "featureType": "estate",
     "elementType": "geometry",
     "stylers": {
-        "color": "#d1dbdbff",
-        "visibility": "off"
+        "color": "#d1d6dbff"
     }
 }, {
     "featureType": "shopping",
     "elementType": "geometry",
     "stylers": {
-        "color": "#d1dbdbff",
-        "visibility": "off"
+        "color": "#d1d7dbff"
     }
 }, {
     "featureType": "education",
@@ -1027,187 +1024,6 @@
 }, {
     "featureType": "country",
     "elementType": "labels",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "road",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "district",
-    "elementType": "labels.text.fill",
-    "stylers": {
-        "color": "#606772ff"
-    }
-}, {
-    "featureType": "village",
-    "elementType": "labels.text.fill",
-    "stylers": {
-        "color": "#61666fff"
-    }
-}, {
-    "featureType": "background",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "on",
-        "color": "#ffffffff"
-    }
-}, {
-    "featureType": "education",
-    "elementType": "labels",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "medical",
-    "elementType": "labels",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "playground",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "parkinglot",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "nationalway",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "nationalway",
-    "elementType": "labels",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "provincialway",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "provincialway",
-    "elementType": "labels",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "cityhighway",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "cityhighway",
-    "elementType": "labels",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "arterial",
-    "elementType": "labels.icon",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "tertiaryway",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "tertiaryway",
-    "elementType": "labels",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "tertiaryway",
-    "elementType": "labels.icon",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "fourlevelway",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "fourlevelway",
-    "elementType": "labels",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "fourlevelway",
-    "elementType": "labels.icon",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "local",
-    "elementType": "labels.icon",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "scenicspotsway",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "universityway",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "vacationway",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "roadarrow",
-    "elementType": "labels.icon",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "footbridge",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "crosswalk",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "parkingspace",
-    "elementType": "geometry",
-    "stylers": {
-        "visibility": "off"
-    }
-}, {
-    "featureType": "laneline",
-    "elementType": "geometry",
     "stylers": {
         "visibility": "off"
     }
