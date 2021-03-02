@@ -1,4 +1,5 @@
 const getters = {
+  language: state => state.app.language,
   sidebar: state => state.app.sidebar,
   mapOverviewHeaderVisible: state => state.app.mapOverviewHeaderVisible,
   proList: state => state.app.proList,

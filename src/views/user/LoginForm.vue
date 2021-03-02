@@ -3,39 +3,11 @@
     <div class="login-content">
       <div class="brand-wrap">
         <img
-          v-if="host === 'kdlhealth.sinocold.net'"
-          style="width: 310px;"
-          src="https://front-end-assets.oss-cn-shanghai.aliyuncs.com/images/KDLlogo.png"
-          alt=""
-        />
-        <img
-          v-else-if="
-            host === 'yun.ikold.com.cn' ||
-              host === 'ikold.com.cn' ||
-              host === 'cloud.ikold.com.cn'
-          "
-          src="https://front-end-assets.oss-cn-shanghai.aliyuncs.com/images/ikold.png"
-          style="width: 160px;"
-          alt=""
-        />
-        <img
-          v-else-if="host === 'service.haiercarrier.com'"
           src="https://cdn.sinocold.net/images/haier_logo.png"
           style="width: 240px;"
           alt=""
         />
-        <div v-else class="sinocold-brand">
-          <img
-            class="sinocold-logo"
-            src="https://front-end-assets.oss-cn-shanghai.aliyuncs.com/images/coolcare_logo.jpg"
-            alt=""
-          />
-          <img
-            class="coolcare-text"
-            src="https://front-end-assets.oss-cn-shanghai.aliyuncs.com/images/coolcare_text.png"
-            alt=""
-          />
-        </div>
+        <LangSelect class="lang-select" />
       </div>
       <el-form
         ref="form"
@@ -46,11 +18,7 @@
         class="login-form"
       >
         <h3 class="platform-name">
-          {{
-            host === 'kdlhealth.sinocold.net'
-              ? '温湿度综合管理平台'
-              : '物联网设备管理云平台'
-          }}
+          物联网设备管理云平台
         </h3>
         <el-form-item
           prop="account"
@@ -114,7 +82,11 @@
             @click="submitForm('form')"
           >
             {{
-              isAccountNormalLogin ? '登 录' : acountExist ? '登 录' : '注 册'
+              isAccountNormalLogin
+                ? $t('login.logIn')
+                : acountExist
+                ? $t('login.logIn')
+                : '注 册'
             }}
           </el-button>
         </div>
@@ -154,42 +126,7 @@
         </div>
       </el-form>
       <div class="ms-helpers">
-        <div
-          v-if="host === 'kdlhealth.sinocold.net'"
-          style="color: #fff;text-align: center;margin-top: 25px;"
-        >
-          Powered by
-          <span style="font-size: 16px;font-weight: bold;">CoolCare</span> v4.1
-          <div
-            style="font-size: 12px;margin-top: 12px; color: rgb(165, 167, 169);"
-          >
-            <el-tooltip
-              class="item"
-              effect="light"
-              content="秦骏设备监控软件 V4.1"
-              placement="bottom"
-            >
-              <span>
-                版权信息
-              </span>
-            </el-tooltip>
-          </div>
-        </div>
-        <div
-          v-else-if="
-            host === 'yun.ikold.com.cn' ||
-              host === 'ikold.com.cn' ||
-              host === 'cloud.ikold.com.cn'
-          "
-          style="color: #fff;text-align: center;margin-top: 25px;"
-        >
-          Powered by
-          <span style="font-size: 16px;font-weight: bold;"
-            >Cryotek Refrigeration</span
-          >
-          v4.3
-        </div>
-        <div class="tool-link" v-else>
+        <div class="tool-link">
           <el-tooltip effect="light" placement="right">
             <div slot="content">
               <img
@@ -219,8 +156,12 @@
 import { login, loginOrRegister, loginOrRegisterSMSCode } from '@/api/user'
 import '@/utils/browserUpdate.js'
 import { exists } from '@/api/user'
+import LangSelect from '@/components/LangSelect'
 const phoneRule = /^[1]([3-9])[0-9]{9}$/
 export default {
+  components: {
+    LangSelect
+  },
   data() {
     const checkPhone = (rule, value, callback) => {
       if (this.isAccountNormalLogin) {
@@ -314,8 +255,12 @@ export default {
         ]
       },
       time: 60,
-      canSent: true,
-      host: window.location.host
+      canSent: true
+    }
+  },
+  computed: {
+    language() {
+      return this.$store.getters.language
     }
   },
   methods: {
@@ -468,6 +413,7 @@ export default {
     width: 320px;
   }
   .brand-wrap {
+    position: relative;
     text-align: center;
     padding-bottom: 24px;
   }
@@ -538,5 +484,18 @@ export default {
   text-align: center;
   font-size: 18px;
   color: #fff;
+}
+</style>
+
+<style lang="scss">
+.login-page {
+  .lang-select {
+    position: absolute;
+    right: 0px;
+    top: 15px;
+    .icon {
+      color: #fff;
+    }
+  }
 }
 </style>

@@ -58,7 +58,7 @@
             <span class="secondary-text">
               {{
                 numberFormat(
-                  energyOverviewData && energyOverviewData.LastMonthEnergy,
+                  energyOverviewData && energyOverviewData.ToDayEnergy,
                   ['度', '万度', '亿度', '万亿度']
                 ).unit
               }}
@@ -208,7 +208,7 @@
               <span class="secondary-text">
                 {{
                   numberFormat(
-                    energyOverviewData && energyOverviewData.LastMonthEnergy,
+                    energyOverviewData && energyOverviewData.ToDayEnergy,
                     ['度', '万度', '亿度', '万亿度']
                   ).unit
                 }}
@@ -231,7 +231,7 @@
               <span class="secondary-text">
                 {{
                   numberFormat(
-                    energyOverviewData && energyOverviewData.LastMonthEnergy,
+                    energyOverviewData && energyOverviewData.MonthEnergy,
                     ['度', '万度', '亿度', '万亿度']
                   ).unit
                 }}
@@ -538,9 +538,12 @@ export default {
       const param = {}
       const k = 10000
       const index = Math.floor(Math.log(value) / Math.log(k))
-      param.value = (value / Math.pow(k, index))
-        .toFixed(1)
-        .toLocaleString('en-US')
+      param.value = value / Math.pow(k, index)
+      if (value > 9999) {
+        param.value = param.value.toFixed(1).toLocaleString('en-US')
+      } else {
+        param.value = param.value.toFixed(0).toLocaleString('en-US')
+      }
       param.unit = units[index]
       return param
     }

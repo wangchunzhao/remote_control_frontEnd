@@ -5,24 +5,27 @@ import {
   removeToken,
   removeRefreshToken
 } from '@/utils/auth.js'
+import Cookies from 'js-cookie'
 import { getCompanysByUser } from '@/api/userSubarea'
-import { getUserOwnSubareaTree } from '@/api/subarea'
-import { getUserProjectAlarm } from '@/api/subarea'
-import { storageName } from '@/utils/index'
+import { getUserOwnSubareaTree, getUserProjectAlarm } from '@/api/subarea'
+import { storageName, getPathById } from '@/utils/index'
 import { modelTrees } from '@/api/model_new'
-import { getPathById } from '@/utils/index'
 import { getSubareaTree } from '@/api/subarea'
 import { getPreferences } from '@/api/preferences'
 import { message, Message } from 'element-ui'
 import router, { resetRouter } from '@/router'
+import { getLanguage } from '@/lang/index'
 
 const app = {
   state: {
     // !+ ： + 字符串转数字 ！数字转 boolean
     sidebar: !+sessionStorage.getItem(storageName('sidebarStatus')),
-    mapOverviewHeaderVisible: !!+sessionStorage.getItem(
+    language: getLanguage(),
+    mapOverviewHeaderVisible: sessionStorage.getItem(
       storageName('mapOverviewHeaderVisible')
-    ), // 地图总览页- header 是否可见
+    )
+      ? !!+sessionStorage.getItem(storageName('mapOverviewHeaderVisible'))
+      : true, // 地图总览页- header 是否可见
     pid: sessionStorage.getItem(storageName('project'))
       ? JSON.parse(sessionStorage.getItem(storageName('project'))).id
       : '', // 当前 项目 id
@@ -69,6 +72,11 @@ const app = {
         JSON.stringify(payload)
       )
     },
+    SET_LANGUAGE: (state, language) => {
+      console.log('[74]-app.js', language)
+      state.language = language
+      Cookies.set('language', language)
+    },
     TOGGLE_SIDEBAR: state => {
       if (state.sidebar) {
         sessionStorage.setItem(storageName('sidebarStatus'), 1)
@@ -78,10 +86,10 @@ const app = {
       state.sidebar = !state.sidebar
     },
     TOGGLE_MAP_OVERVIEW_HEADER_VISIBLE: state => {
-      if (state.sidebar) {
-        sessionStorage.setItem(storageName('mapOverviewHeaderVisible'), 1)
-      } else {
+      if (state.mapOverviewHeaderVisible) {
         sessionStorage.setItem(storageName('mapOverviewHeaderVisible'), 0)
+      } else {
+        sessionStorage.setItem(storageName('mapOverviewHeaderVisible'), 1)
       }
       state.mapOverviewHeaderVisible = !state.mapOverviewHeaderVisible
     },
@@ -158,6 +166,9 @@ const app = {
     }
   },
   actions: {
+    setLanguage({ commit }, language) {
+      commit('SET_LANGUAGE', language)
+    },
     ToggleSideBar: ({ commit }) => {
       commit('TOGGLE_SIDEBAR')
     },
