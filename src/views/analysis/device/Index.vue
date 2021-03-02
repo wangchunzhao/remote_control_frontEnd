@@ -284,6 +284,7 @@
     <TimeIntervalSetDialog
       :companyId="companyId"
       ref="timeIntervalSetDialog"
+      @refresh="initTimeInterval"
     ></TimeIntervalSetDialog>
   </div>
 </template>
@@ -380,6 +381,10 @@ export default {
       document.getElementById('deviceAnalysisContent').scrollWidth - 50
   },
   methods: {
+    // 更新时段设置
+    initTimeInterval() {
+      this.$refs.customTimeIntervalPicker.init('default', true)
+    },
     // 获取图标实例
     KeyPointRequestChart({ chart, index }) {
       this.keyPointChartList[index] = chart
