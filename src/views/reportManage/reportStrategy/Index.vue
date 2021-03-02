@@ -15,12 +15,12 @@
     </page-header>
     <el-tabs class="page-tabs" v-model="activeName">
       <el-tab-pane
-        label="当前报警"
+        label="基础版"
         v-for="(item, index) in tableData"
         :name="item.id"
         :key="index"
       >
-        <strategyPane :info="item"></strategyPane>
+        <strategyPane :info="item" @refresh="fetchTableData"></strategyPane>
       </el-tab-pane>
     </el-tabs>
     <AddStrategyPane

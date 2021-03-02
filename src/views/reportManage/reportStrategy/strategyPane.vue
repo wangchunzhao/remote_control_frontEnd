@@ -10,18 +10,19 @@
       <el-form-item label="策略名称" prop="name">
         <el-input
           v-show="isEdit"
-          :disabled="sumitLoading"
+          :disabled="submitLoading"
           placeholder="请输入"
           v-model="form.name"
           style="width: 500px"
         ></el-input>
         <span v-show="!isEdit">12312312</span>
       </el-form-item>
-      <el-form-item label="适用项目" prop="projectId">
+      <el-form-item label="适用项目" prop="projectIdList">
         <el-select
           v-show="isEdit"
-          v-model="form.projectId"
-          :disabled="sumitLoading"
+          v-model="form.projectIdList"
+          :disabled="submitLoading"
+          multiple
           filterable
           placeholder="请选择"
           style="width: 500px"
@@ -39,42 +40,44 @@
         <el-radio-group
           v-model="form.cycle"
           v-show="isEdit"
-          :disabled="sumitLoading"
+          :disabled="submitLoading"
         >
           <el-radio label="Week">周</el-radio>
           <el-radio label="Month">月</el-radio>
         </el-radio-group>
         <span v-show="!isEdit">12312312</span>
       </el-form-item>
-      <el-form-item label="包含内容" prop="projectId">
+      <el-form-item label="包含内容" prop="contentList">
         <el-select
           v-show="isEdit"
-          v-model="form.projectId"
-          :disabled="sumitLoading"
+          v-model="form.contentList"
+          :disabled="submitLoading"
+          multiple
           filterable
           placeholder="请选择"
           style="width: 500px"
         >
           <el-option
-            v-for="item in projectOptions"
-            :key="item.id"
+            v-for="item in contentOptions"
+            :key="item.value"
             :label="item.label"
-            :value="item.id"
+            :value="item.value"
           ></el-option>
         </el-select>
         <span v-show="!isEdit">12312312</span>
       </el-form-item>
-      <el-form-item label="报警明细" prop="projectId">
+      <el-form-item label="报警明细" prop="levelList">
         <el-select
           v-show="isEdit"
-          v-model="form.projectId"
-          :disabled="sumitLoading"
+          v-model="form.levelList"
+          :disabled="submitLoading"
+          multiple
           filterable
           placeholder="请选择显示范围"
           style="width: 500px"
         >
           <el-option
-            v-for="item in projectOptions"
+            v-for="item in levelOptions"
             :key="item.id"
             :label="item.label"
             :value="item.id"
@@ -98,7 +101,7 @@
             <el-input
               v-show="isEdit"
               v-model="row.Max"
-              :disabled="sumitLoading"
+              :disabled="submitLoading"
               type="number"
               placeholder=""
               style="width: 80px"
@@ -116,7 +119,7 @@
             <el-input
               v-show="isEdit"
               v-model="row.Min"
-              :disabled="sumitLoading"
+              :disabled="submitLoading"
               type="number"
               placeholder=""
               style="width: 80px"
@@ -142,7 +145,7 @@
         @click="deletePane"
         type="danger"
         size="small"
-        :loading="sumitLoading"
+        :loading="submitLoading"
         style="margin: 0 15px"
       >
         删除
@@ -162,7 +165,7 @@
         type="primary"
         style="margin: 0 15px"
         size="small"
-        :loading="sumitLoading"
+        :loading="submitLoading"
       >
         提交
       </el-button>
@@ -187,11 +190,13 @@ export default {
   data() {
     return {
       isEdit: true,
-      sumitLoading: false,
+      submitLoading: false,
       form: {
         name: '',
-        projectId: '',
-        cycle: ''
+        projectIdList: [],
+        cycle: 'Week',
+        contentList: [],
+        levelList: []
       },
       tableData: [
         {
@@ -217,8 +222,9 @@ export default {
       ],
       formRules: {
         name: [{ required: true, message: '请输入', trigger: 'blur' }],
-        projectId: [
+        projectIdList: [
           {
+            type: 'array',
             required: true,
             message: '请选择',
             trigger: 'change'
@@ -230,8 +236,64 @@ export default {
             message: '请选择',
             trigger: 'change'
           }
+        ],
+        contentList: [
+          {
+            type: 'array',
+            required: true,
+            message: '请选择',
+            trigger: 'change'
+          }
+        ],
+        levelList: [
+          {
+            type: 'array',
+            required: true,
+            message: '请选择',
+            trigger: 'change'
+          }
         ]
-      }
+      },
+      contentOptions: [
+        {
+          label: '设备运行',
+          value: '1'
+        },
+        {
+          label: '诊断分析',
+          value: '2'
+        },
+        {
+          label: '报警统计',
+          value: '3'
+        },
+        {
+          label: '用电量统计',
+          value: '4'
+        },
+        {
+          label: '工单统计',
+          value: '5'
+        }
+      ],
+      levelOptions: [
+        {
+          id: 1,
+          label: '紧急'
+        },
+        {
+          id: 2,
+          label: '重要'
+        },
+        {
+          id: 3,
+          label: '一般'
+        },
+        {
+          id: 4,
+          label: '记录'
+        }
+      ]
     }
   },
   methods: {
@@ -243,7 +305,7 @@ export default {
         .catch(() => {})
     },
     submit() {
-      this.sumitLoading = true
+      this.submitLoading = true
     }
   }
 }
