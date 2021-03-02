@@ -81,9 +81,6 @@ export default {
     CustomTimeIntervalPicker
   },
   computed: {
-    energyStruct() {
-      return this.$store.state.energy.energyStruct
-    },
     projectId() {
       return this.$store.state.app.project.id
     }
@@ -93,18 +90,22 @@ export default {
       energyBranchType: 'default', // 用能支路类型
       energyBranchId: '', // 支路分组id
       energyBranchIdList: '', // 自定义列表
-      timeType: 'day', // 时间类型
-      time: '', // 日期
-      dateRange: [], //日期范围
-      timeIntervalType: 'default', // 时段类型
-      timeInterval: '', // 已设置时段值
-      timeIntervalDateRange: [] // 自定义时段值
+
+      form: {
+        DateType: undefined,
+        TimeQuantum: {
+          StartDate: undefined,
+          EndDate: undefined
+        },
+        TimeIntervalId: undefined,
+        ClassifyList: []
+      }
     }
   },
   mounted() {
-    this.$refs.customEnegyBranchPicker.init(this.energyBranchType, true)
-    this.$refs.customDatePicker.init(this.timeType, true)
-    this.$refs.customTimeIntervalPicker.init(this.timeIntervalType, true)
+    this.$refs.customEnegyBranchPicker.init('default', true)
+    this.$refs.customDatePicker.init('day', true)
+    this.$refs.customTimeIntervalPicker.init('default', true)
   },
   methods: {
     // 更换支路类型
@@ -119,25 +120,85 @@ export default {
     },
     // 更换时间类型
     timeTypeChange(val) {
-      // console.log(val, '时间类型变化')
-      this.timeType = val
+      let DateType = ''
+      switch (val) {
+        case 'day':
+          DateType = 'Day'
+          break
+        case 'week':
+          DateType = 'Week'
+          break
+        case 'month':
+          DateType = 'Month'
+          break
+        case 'year':
+          DateType = 'Year'
+          break
+        case 'custom':
+          DateType = 'Custom'
+          break
+        default:
+          DateType = 'Day'
+          break
+      }
+      this.form.DateType = DateType
     },
     // 更换时间
     timeChange(val) {
-      // console.log(val, '时间值变化')
-      this.timeType = val.type
-      this.time = val.time
-      this.dateRange = val.dateRange
+      if (val.type === 'custom' && (!val.dateRange || !val.dateRange.length)) {
+        return
+      }
+      let DateType = ''
+      switch (val.type) {
+        case 'day':
+          DateType = 'Day'
+          break
+        case 'week':
+          DateType = 'Week'
+          break
+        case 'month':
+          DateType = 'Month'
+          break
+        case 'year':
+          DateType = 'Year'
+          break
+        case 'custom':
+          DateType = 'Custom'
+          break
+        default:
+          DateType = 'Day'
+          break
+      }
+      this.form.DateType = DateType
+      this.form.TimeQuantum.StartDate =
+        val.dateRange.length > 1 ? val.dateRange[0] : ''
+      this.form.TimeQuantum.EndDate =
+        val.dateRange.length > 1 ? val.dateRange[1] : ''
     },
     // 更换时段类型
     timeIntervalTypeChange(val) {
-      console.log(val, '时段类型变化')
-      this.timeIntervalType = val
+      if (val !== 'default') {
+        this.form.TimeIntervalId = undefined
+        this.form.ClassifyList = []
+      }
+      // this.timeIntervalType = val
     },
     // 更换时段
     timeIntervalChange(val) {
-      console.log(val, '时段值变化')
-      this.timeIntervalType = val.type
+      if (val.type === 'custom' && (!val.dateRange || !val.dateRange.length)) {
+        return
+      }
+      let ClassifyList = []
+      if (val.type === 'default') {
+        ClassifyList =
+          val.timeInterval === 'all' ? undefined : [val.timeInterval]
+      } else if (val.dateRange && val.dateRange.length) {
+        ClassifyList = [val.dateRange[0], val.dateRange[1]]
+      } else {
+        ClassifyList = undefined
+      }
+      this.form.TimeIntervalId = val.timeIntervalId
+      this.form.ClassifyList = ClassifyList
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="chart-title">{{ info.ModelTreeName }}</div>
+    <div class="chart-title">{{ info.ProjectName / info.ModelTreeName }}</div>
     <div :id="chartWrapId" style="flex: 1;width: 100%;height: 302px" />
   </div>
 </template>

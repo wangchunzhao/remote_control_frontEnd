@@ -12,8 +12,8 @@ const hostDev = 'http://dev.sinocold.com:8092'
 // ===================================================
 
 // 测试端口是8083，release是8081
-const baseUriProd = 'https://yun.sinocold.net:5001'
-// const baseUriProd = 'http://152.136.134.93:9183'
+// const baseUriProd = 'https://yun.sinocold.net:5001'
+const baseUriProd = 'http://152.136.134.93:9183'
 // const baseUriProd = 'http://192.168.6.13:30863'
 // const baseUriProd = 'http://dev.sinocold.com:8083'
 // const baseUriProd = 'http://localhost:9183'
