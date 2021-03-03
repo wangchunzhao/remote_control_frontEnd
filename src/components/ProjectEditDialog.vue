@@ -1,285 +1,217 @@
 <template>
-  <div class="project-form">
-    <el-form
-      ref="form"
-      :rules="formRules"
-      size="small"
-      :model="form"
-      label-width="80px"
-    >
-      <el-form-item v-if="projectId" prop="" label="项目代码">
-        <span style="color: #606266;">{{ form.projectCode }}</span>
-      </el-form-item>
-      <el-form-item prop="pname" label="项目名称">
-        <el-input
-          v-model.trim="form.pname"
-          :disabled="!editPermission"
-          placeholder="项目名称"
-          style="width: 100%;"
-          clearable
-          size="medium"
-        />
-      </el-form-item>
-      <el-form-item prop="" label="项目地址" required style="margin-bottom: 0">
-        <el-col :span="11">
-          <el-form-item prop="region">
-            <el-cascader
-              v-model="form.region"
-              clearable
-              ref="cascaderAddr"
-              filterable
-              :disabled="!editPermission"
-              :options="regionOptions"
-              placeholder="省 / 市 / 区"
-              style="width: 100%;"
-              size="medium"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col class="line" :span="1">&nbsp;</el-col>
-        <el-col :span="12" style="position: relative">
-          <el-form-item prop="stree">
-            <el-input
-              v-model.trim="form.stree"
-              clearable
-              :disabled="!editPermission"
-              placeholder="详细街道地址"
-              style="width: 100%;"
-              size="medium"
-            />
-            <el-link
-              :underline="false"
-              type="primary"
-              size="small"
-              :disabled="!editPermission"
-              @click.native="handleClickMapBtn"
-              style="position: absolute;right: -100px;"
-            >
-              在地图中查找
-            </el-link>
-          </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item
-        label="所属分区"
-        :rules="[
-          {
-            required: true,
-            message: '请选择分区',
-            trigger: 'blur'
-          }
-        ]"
-        prop="subarea"
+  <el-dialog
+    title="编辑项目"
+    width="450px"
+    top="100px"
+    :visible.sync="dialogVisible"
+    :append-to-body="appendToBody"
+    :close-on-click-modal="false"
+    @close="handleClose"
+    class="projectEditDialog"
+  >
+    <div class="project-edit-dialog">
+      <el-form
+        ref="form"
+        :rules="formRules"
+        size="small"
+        :model="form"
+        label-width="80px"
+        style="width: 100%"
       >
-        <el-select
-          v-model="form.subarea"
-          style="width: 100%;"
-          :disabled="!editPermission"
-          placeholder="请选择分区"
-        >
-          <el-option
-            v-for="item in subareaOptions"
-            :key="item.SubareaId"
-            :label="item.SubareaName"
-            :value="item.SubareaId"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item
-        label="关联网关"
-        v-if="gatewayOptions.length"
-        :rules="[
-          {
-            required: true,
-            message: '请选择',
-            trigger: 'blur'
-          }
-        ]"
-        prop="gatewayId"
-      >
-        <el-select
-          v-model="form.gatewayId"
-          style="width: 100%;"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in gatewayOptions"
-            :key="item.id"
-            :label="item.NAME"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="describe" label="项目描述">
-        <el-input
-          v-model="form.describe"
-          :rows="6"
-          :disabled="!editPermission"
-          type="textarea"
-          placeholder=""
-          size="medium"
-        />
-      </el-form-item>
-      <el-form-item prop="industry" label="行业类型">
-        <el-select
-          v-model="form.industry"
-          @change="handleChangeIndustry"
-          placeholder="请选择"
-          :disabled="!editPermission || !!projectId"
-          clearable
-          filterable
-          style="width: 100%;"
-        >
-          <el-option
-            v-for="item in industryOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="level" label="项目等级">
-        <el-select
-          v-model="form.level"
-          placeholder="请选择"
-          :disabled="!editPermission"
-          clearable
-          filterable
-          style="width: 100%;"
-        >
-          <el-option
-            v-for="item in levelOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="tag" label="项目标签">
-        <div
-          style="margin-bottom: 10px"
-          v-if="tagList.length < 5 && editPermission"
-        >
+        <el-form-item prop="pname" label="项目名称">
           <el-input
-            class="input-new-tag"
-            v-if="inputVisible"
-            v-model="inputValue"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="handleTagInputConfirm"
-            @blur="handleTagInputConfirm"
-          >
-          </el-input>
-          <el-button
-            v-else
-            class="button-new-tag"
-            size="small"
-            @click="showTagInput"
-          >
-            + 标签
-          </el-button>
-        </div>
-        <el-tag
-          v-for="(item, index) in tagList"
-          :key="index"
-          :closable="editPermission"
-          effect="plain"
-          :disable-transitions="false"
-          @close="handleDeleteTag(index)"
-          style="margin-right: 5px;margin-bottom: 5px"
+            v-model.trim="form.pname"
+            placeholder="项目名称"
+            style="width: 100%;"
+            clearable
+            size="medium"
+          />
+        </el-form-item>
+        <el-form-item
+          prop=""
+          label="项目地址"
+          required
+          style="margin-bottom: 20px"
         >
-          {{ item }}
-        </el-tag>
-      </el-form-item>
-      <el-form-item v-if="projectId" prop="" label="项目封面">
-        <img class="project-logo" :src="form.imgurl" alt="" />
-        <el-upload
-          accept="image/png,image/jpg,image/jpeg"
-          :http-request="upload"
-          :show-file-list="false"
-          style="display: inline-block;margin-left: 15px;vertical-align: top;"
-          action="#2333"
+          <el-col :span="11" style="position: relative">
+            <el-form-item prop="region">
+              <el-cascader
+                v-model="form.region"
+                clearable
+                ref="cascaderAddr"
+                filterable
+                :options="regionOptions"
+                placeholder="省 / 市 / 区"
+                style="width: 100%;"
+                size="medium"
+              />
+              <el-link
+                :underline="false"
+                type="primary"
+                size="small"
+                @click.native="handleClickMapBtn"
+                style="position: absolute;left:0;bottom: -30px"
+              >
+                在地图中查找
+              </el-link>
+            </el-form-item>
+          </el-col>
+          <el-col class="line" :span="1">&nbsp;</el-col>
+          <el-col :span="12">
+            <el-form-item prop="stree">
+              <el-input
+                v-model.trim="form.stree"
+                clearable
+                placeholder="详细街道地址"
+                style="width: 100%;"
+                size="medium"
+              />
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item
+          label="所属分区"
+          :rules="[
+            {
+              required: true,
+              message: '请选择分区',
+              trigger: 'blur'
+            }
+          ]"
+          prop="subarea"
         >
-          <el-link :underline="false" :disabled="!editPermission" type="primary"
-            >上传新封面</el-link
+          <el-select
+            v-model="form.subarea"
+            style="width: 100%;"
+            placeholder="请选择分区"
           >
-        </el-upload>
-      </el-form-item>
-      <el-form-item v-if="projectId" prop="" label="创建日期">
-        <span style="color: #606266;">
-          {{ dateFormat(form.createDate) }}
-        </span>
-      </el-form-item>
-      <el-form-item v-if="projectId" prop="" label="到期日期">
-        <span v-if="!form.expireDate">-</span>
-        <div v-else style="color: #606266;">
-          {{ dateFormat(form.expireDate) }}
-          <span
-            v-if="showExpireMsg(form.expireDate)"
-            style="color: #F5222D;margin-left: 10px;"
+            <el-option
+              v-for="item in subareaOptions"
+              :key="item.SubareaId"
+              :label="item.SubareaName"
+              :value="item.SubareaId"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="关联网关"
+          v-if="gatewayOptions.length"
+          :rules="[
+            {
+              required: true,
+              message: '请选择',
+              trigger: 'blur'
+            }
+          ]"
+          prop="gatewayId"
+        >
+          <el-select
+            v-model="form.gatewayId"
+            style="width: 100%;"
+            placeholder="请选择"
           >
-            <c-svg name="attention"></c-svg>
-            项目已到期，随时可能无法使用，请尽快联系客户经理获取支持
-          </span>
-        </div>
-      </el-form-item>
-    </el-form>
-    <div v-if="form.industry && !projectId" style="margin-left: 80px">
-      <div style="color: #888;margin-bottom: 10px;">监控子系统</div>
-      <el-row :gutter="10">
-        <el-col
-          v-for="system in systemList"
-          :key="system.id"
-          :span="4"
-          style="margin-bottom: 10px;"
-        >
-          <el-tag size="small" type="info">{{ system.mname }}</el-tag>
-        </el-col>
-      </el-row>
-      <div style="color: #888;margin: 10px 0;">应用</div>
-      <div class="auto-wrap-JSDFSSJKDFHNS23">
-        <div
-          v-for="application in applicationList"
-          :key="application.id"
-          :span="4"
-        >
+            <el-option
+              v-for="item in gatewayOptions"
+              :key="item.id"
+              :label="item.NAME"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="describe" label="项目简介">
+          <el-input
+            v-model="form.describe"
+            :rows="6"
+            type="textarea"
+            placeholder=""
+            size="medium"
+          />
+        </el-form-item>
+        <el-form-item prop="industry" label="行业类型">
+          <el-select
+            v-model="form.industry"
+            @change="handleChangeIndustry"
+            placeholder="请选择"
+            clearable
+            filterable
+            style="width: 100%;"
+          >
+            <el-option
+              v-for="item in industryOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="level" label="项目等级">
+          <el-select
+            v-model="form.level"
+            placeholder="请选择"
+            clearable
+            filterable
+            style="width: 100%;"
+          >
+            <el-option
+              v-for="item in levelOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="tag" label="项目标签">
+          <div style="margin-bottom: 10px" v-if="tagList.length < 5">
+            <el-input
+              class="input-new-tag"
+              v-if="inputVisible"
+              v-model="inputValue"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="handleTagInputConfirm"
+              @blur="handleTagInputConfirm"
+            >
+            </el-input>
+            <el-button
+              v-else
+              class="button-new-tag"
+              size="small"
+              @click="showTagInput"
+            >
+              + 标签
+            </el-button>
+          </div>
           <el-tag
-            style="margin-bottom: 10px;"
-            size="small"
-            type="info"
+            v-for="(item, index) in tagList"
+            :key="index"
+            closable
             effect="plain"
+            :disable-transitions="false"
+            @close="handleDeleteTag(index)"
+            style="margin-right: 5px;margin-bottom: 5px"
           >
-            <c-svg :name="application.icon"></c-svg>
-            {{ application.name }}
+            {{ item }}
           </el-tag>
-        </div>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button
+          size="medium"
+          type="primary"
+          @click.native="submit"
+          :loading="submitLoading"
+        >
+          确 定
+        </el-button>
       </div>
-    </div>
-    <div
-      v-if="editPermission"
-      style="width:100%; text-align:center;margin-top: 25px;"
-    >
-      <el-button
-        type="primary"
-        :loading="submitLoading"
-        :disabled="!editPermission"
-        @click.native="submit('form')"
-      >
-        {{ projectId ? '确 定' : '添 加' }}
-      </el-button>
-    </div>
 
-    <CropDialog
-      :appendToBody="true"
-      ref="cropDialog"
-      @change="handleImgChange"
-    />
-    <GetPositionDialog
-      @change="handleSetPoistion"
-      :appendToBody="true"
-      ref="getPositionDialog"
-    />
-  </div>
+      <GetPositionDialog
+        @change="handleSetPoistion"
+        :appendToBody="true"
+        ref="getPositionDialog"
+      />
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -363,17 +295,21 @@ const applicationOptions = [
 
 export default {
   components: {
-    CropDialog: () => import('./CropDialog'),
     GetPositionDialog
   },
   props: {
+    appendToBody: {
+      type: Boolean,
+      default: function() {
+        return false
+      }
+    },
     companyIdProp: {
       type: Number,
       default: function() {
         return 0
       }
     },
-    projectId: Number,
     subareaId: Number,
     subareaOptionsProp: {
       type: Array,
@@ -385,12 +321,6 @@ export default {
       type: Array,
       default: function() {
         return []
-      }
-    },
-    editPermission: {
-      type: Boolean,
-      default: function() {
-        return true
       }
     },
     isRefresh: {
@@ -422,6 +352,7 @@ export default {
       })
     }
     return {
+      dialogVisible: false,
       submitLoading: false,
       tagList: ['标签一', '标签二', '标签三'],
       inputVisible: false,
@@ -496,6 +427,9 @@ export default {
   computed: {
     companyId() {
       return (this.$store.state.app.company || {}).id
+    },
+    projectId() {
+      return (this.$store.state.app.project || {}).id
     }
   },
   watch: {
@@ -589,6 +523,14 @@ export default {
       this.inputVisible = false
       this.inputValue = ''
     },
+    openDialog() {
+      this.dialogVisible = true
+      this.$refs.form && this.$refs.form.clearValidate()
+    },
+    handleClose() {
+      this.dialogVisible = false
+      this.submitLoading = false
+    },
     dateFormat(date) {
       return dayjs(date).format('LL')
     },
@@ -626,10 +568,6 @@ export default {
           this.form.region = res.map(v => v.value)
         }
       }
-    },
-    handleImgChange({ formData, imgUrl }) {
-      this.form.imgurl = imgUrl
-      this.form.imgFormData = formData
     },
     handleChangeIndustry(val) {
       this.fetchSystemList(val)
@@ -802,8 +740,7 @@ function find(array, value) {
 </script>
 
 <style lang="scss">
-.project-form {
-  margin-right: 15px;
+.project-edit-dialog {
   .el-form {
     width: calc(100% - 90px);
   }

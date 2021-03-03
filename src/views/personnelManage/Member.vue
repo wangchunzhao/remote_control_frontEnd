@@ -103,42 +103,56 @@
         >
           添加成员
         </el-button>
-        <el-tooltip class="item" effect="light" placement="top">
-          <div slot="content">
-            <div v-if="currentNode && currentNode.Remark === '项目'">
-              下载项目成员导入表<a
-                href="javascript:;"
-                style="color:#409EFF"
-                @click="downloadExcelTemplate('project')"
-              >
-                下载<c-svg name="download"
-              /></a>
-            </div>
-            <div v-else>
-              批量导入企业成员样表<a
-                href="javascript:;"
-                style="color:#409EFF"
-                @click="downloadExcelTemplate('company')"
-              >
-                下载<c-svg name="download"
-              /></a>
-            </div>
-          </div>
-          <el-upload
-            :before-upload="beforeUpload"
-            style="display: inline-block;margin: 0 10px;"
-            action="#2333"
-            accept=".xlsx"
+        <el-dropdown
+          size="small"
+          style="margin: 0 10px"
+          @command="handleDropDown"
+        >
+          <el-button style="padding: 9px 15px">
+            批量设置<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu
+            slot="dropdown"
+            v-permission="[13]"
+            :disabled="uploadLoading"
           >
-            <el-button
-              :loading="uploadLoading"
-              v-permission="[13]"
-              size="small"
-            >
-              批量导入
-            </el-button>
-          </el-upload>
-        </el-tooltip>
+            <el-dropdown-item command="upLoad">
+              <el-tooltip class="item" effect="light" placement="top">
+                <div slot="content">
+                  <div v-if="currentNode && currentNode.Remark === '项目'">
+                    下载项目成员导入表<a
+                      href="javascript:;"
+                      style="color:#409EFF"
+                      @click="downloadExcelTemplate('project')"
+                    >
+                      下载<c-svg name="download"
+                    /></a>
+                  </div>
+                  <div v-else>
+                    批量导入企业成员样表<a
+                      href="javascript:;"
+                      style="color:#409EFF"
+                      @click="downloadExcelTemplate('company')"
+                    >
+                      下载<c-svg name="download"
+                    /></a>
+                  </div>
+                </div>
+                <el-upload
+                  :before-upload="beforeUpload"
+                  style="display: inline-block;"
+                  action="#2333"
+                  accept=".xlsx"
+                >
+                  导入成员
+                </el-upload>
+              </el-tooltip>
+            </el-dropdown-item>
+            <el-dropdown-item command="dataPermission">
+              数据权限
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
 
         <el-button
           v-permission="[14]"
@@ -327,12 +341,66 @@
           label="设备权限"
         >
           <template slot-scope="{ row }">
+            <!--            <el-cascader-->
+            <!--              v-if="row.editAble"-->
+            <!--              v-model="row.defaultChecked"-->
+            <!--              :options="row.deviceTree"-->
+            <!--              :props="{-->
+            <!--                checkStrictly: true,-->
+            <!--                multiple: true,-->
+            <!--                emitPath: false,-->
+            <!--                children: 'Children',-->
+            <!--                label: 'Value',-->
+            <!--                value: 'Key'-->
+            <!--              }"-->
+            <!--              collapse-tags-->
+            <!--              clearable-->
+            <!--            ></el-cascader>-->
             <el-button
               v-if="row.editAble"
               @click.native="openDevicePermissionDialog(row)"
               type="text"
               >点击编辑</el-button
             >
+            <el-tooltip
+              class="item"
+              effect="dark"
+              v-else
+              :content="row.UserModelNames"
+              placement="top"
+            >
+              <div slot="content" style="max-width: 400px;line-height: 20px;">
+                {{ row.UserModelNames }}
+              </div>
+              <div class="ellipsis">
+                {{ row.UserModelNames }}
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="currentNode && currentNode.Remark === '项目'"
+          prop="Flag"
+          min-width="180"
+          show-overflow-tooltip
+          label="报警数据权限"
+        >
+          <template slot-scope="{ row }">
+            <el-select
+              v-if="row.editAble"
+              v-model="row.dataPermission"
+              placeholder="请选择"
+              multiple
+              clearable
+              style="width: 100%;"
+            >
+              <el-option
+                v-for="item in dataPermissionOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
             <el-tooltip
               class="item"
               effect="dark"
@@ -431,6 +499,10 @@
       @refresh="fetchTableData"
       ref="devicePermissionDialog"
     />
+    <DataPermissionEditDialog
+      @refresh="fetchTableData"
+      ref="dataPermissionEditDialog"
+    ></DataPermissionEditDialog>
   </div>
 </template>
 
@@ -455,6 +527,9 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import DevicePermissionDialog from './DevicePermissionDialog'
 import { addInvitation } from '@/api/invitation'
 import RolePermissionPopover from '@/components/RolePermissionPopover'
+import DataPermissionEditDialog from '@/components/DataPermissionEditDialog'
+import { getSubsystemAndModelTreeDropdownList } from '@/api/point'
+import { getUserModel } from '@/api/model'
 
 export default {
   components: {
@@ -463,7 +538,8 @@ export default {
     InviteQrcodeDialog,
     DevicePermissionDialog,
     Treeselect,
-    RolePermissionPopover
+    RolePermissionPopover,
+    DataPermissionEditDialog
   },
   data() {
     return {
@@ -507,7 +583,8 @@ export default {
           children: node.Children
         }
       },
-      currentUserId: this.$store.state.app.userInfo.uid
+      currentUserId: this.$store.state.app.userInfo.uid,
+      dataPermissionOptions: []
     }
   },
   watch: {
@@ -545,6 +622,15 @@ export default {
     this.fetchProjectRoleOptions()
   },
   methods: {
+    handleDropDown(type) {
+      if (type === 'dataPermission') {
+        if (!this.multipleSelection.length) {
+          this.$message('请至少选择一项')
+          return
+        }
+        this.$refs.dataPermissionEditDialog.openDialog([])
+      }
+    },
     // 点击成员类型
     handleChangeUserType(val) {
       this.userType = val
@@ -939,6 +1025,35 @@ export default {
           })
       } else {
         row.editAble = true
+        getSubsystemAndModelTreeDropdownList({
+          projectId: this.currentNode.ProjectId
+        })
+          .then(res => {
+            if (res.data.Code === 200) {
+              row.deviceTree = res.data.Data
+            } else {
+              row.deviceTree = []
+              this.$message.error('数据获取失败')
+            }
+          })
+          .finally(() => {
+            this.loading = false
+          })
+        getUserModel({
+          projectId: this.currentNode.ProjectId,
+          userId: row.UId
+        })
+          .then(res => {
+            if (res.data.Code === 200) {
+              row.defaultChecked = res.data.Data
+            } else {
+              row.defaultChecked = []
+              this.$message.error('数据获取失败')
+            }
+          })
+          .catch(err => {
+            console.error(err)
+          })
       }
     },
     fetchTableData: debounce(
@@ -990,6 +1105,8 @@ export default {
               data.Data.Data.forEach(item => {
                 item.editAble = false
                 item.loading = false
+                item.deviceTree = []
+                item.defaultChecked = []
               })
               this.tableData = data.Data.Data
 

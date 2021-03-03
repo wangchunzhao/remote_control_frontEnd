@@ -789,14 +789,14 @@ const personnelManage = {
   name: 'personnelManage',
   singleMenu: true,
   redirect: '/personnelManage/member',
-  meta: { title: '公司成员', icon: 'team1', companyPermissionId: [11] },
+  meta: { title: '成员管理', icon: 'team1', companyPermissionId: [11] },
   children: [
     {
       path: 'member',
       component: _import('personnelManage/Member'),
       name: 'member',
       hidden: true,
-      meta: { title: '公司成员', companyPermissionId: [12] }
+      meta: { title: '成员管理', companyPermissionId: [12] }
     }
   ]
 }

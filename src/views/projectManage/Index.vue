@@ -75,9 +75,17 @@
       </div>
       <el-card shadow="never">
         <div class="card-title-wrap">
-          <span class="card-title">{{
-            currentNode && currentNode.SubareaName
-          }}</span>
+          <span class="card-title">
+            {{ currentNode && currentNode.SubareaName }}
+          </span>
+          <el-button
+            @click="$refs.projectEditDialog.openDialog()"
+            v-permission="[50]"
+            size="mini"
+            style="margin-left:15px"
+          >
+            编辑
+          </el-button>
         </div>
         <el-tabs v-model="tabActive">
           <el-tab-pane name="first" style="padding: 5px 20px 20px 20px;">
@@ -119,17 +127,20 @@
         </el-tabs>
       </el-card>
     </div>
+    <ProjectEditDialog ref="projectEditDialog"></ProjectEditDialog>
   </div>
 </template>
 
 <script>
 import ProjectList from './component/ProjectList'
 import PartitionManage from './component/PartitionManage'
+import ProjectEditDialog from '@/components/ProjectEditDialog'
 import { deleteSubarea, editSubarea, addSubarea } from '@/api/subarea'
 
 export default {
   components: {
     PartitionManage,
+    ProjectEditDialog,
     ProjectList
   },
   data() {

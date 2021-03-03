@@ -20,6 +20,15 @@
         迁入项目
       </el-button>
       <el-button
+        :disabled="node && node.Remark === '项目'"
+        size="small"
+        plain
+        v-permission="[7]"
+        @click.native="handleBatchSet"
+      >
+        批量设置
+      </el-button>
+      <el-button
         size="small"
         :loading="exportLoading"
         plain
@@ -41,8 +50,10 @@
       :data="tableData"
       @sort-change="sortChange"
       @filter-change="filterChange"
+      @selection-change="val => (multipleSelection = val)"
       style="margin-top: 20px;"
     >
+      <el-table-column type="selection" width="50" />
       <el-table-column prop="ProjectName" label="项目" />
       <el-table-column
         column-key="Industry"
@@ -160,6 +171,10 @@
     </el-dialog>
     <MoveInDialog :node="node" ref="moveInDialog" @refresh="fetchProjectList" />
     <MoveOutDialog ref="moveOutDialog" @refresh="fetchProjectList" />
+    <ProjectBatchSetDialog
+      ref="projectBatchSetDialog"
+      @refresh="fetchProjectList"
+    ></ProjectBatchSetDialog>
   </div>
 </template>
 
@@ -168,6 +183,7 @@ import regionOptions from '@/assets/json/region.json'
 import MoveInDialog from './MoveInDialog'
 import MoveOutDialog from './MoveOutDialog'
 import ProjectEditForm from '@/components/ProjectEditForm'
+import ProjectBatchSetDialog from '@/components/ProjectBatchSetDialog'
 import { getProjectList, deleteProject, exportProjectPage } from '@/api/subarea'
 import { getMemberList } from '@/api/userSubarea'
 import debounce from 'lodash/debounce'
@@ -177,7 +193,8 @@ export default {
   components: {
     MoveInDialog,
     MoveOutDialog,
-    ProjectEditForm
+    ProjectEditForm,
+    ProjectBatchSetDialog
   },
   props: {
     node: {
@@ -204,6 +221,7 @@ export default {
       exportLoading: false,
       tableLoading: false,
       tableData: [],
+      multipleSelection: [],
       pagination: {
         currentPage: 1,
         size: 10,
@@ -264,6 +282,15 @@ export default {
     }
   },
   methods: {
+    handleBatchSet() {
+      if (!this.multipleSelection.length) {
+        this.$message('请至少选择一项')
+        return
+      }
+      this.$refs.projectBatchSetDialog.openDialog(
+        this.multipleSelection.map(item => item.ProjectId)
+      )
+    },
     projectEditComplete() {
       this.fetchProjectList()
       this.$refs.projectEditForm.resetForm()
