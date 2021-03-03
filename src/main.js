@@ -171,8 +171,13 @@ Vue.prototype.projectAddressForMat = address => {
   str = str.replace(new RegExp('市', 'g'), '市-')
   str = str.replace(new RegExp('区', 'g'), '区-')
   str = str.replace(new RegExp('-辖区', 'g'), '辖区')
+  str = str.replace(new RegExp('-市-', 'g'), '-市')
   str = str.replace(new RegExp('---', 'g'), '-')
   str = str.replace(new RegExp('--', 'g'), '-')
+  str = str.replace(new RegExp('上海市-上海市-', 'g'), '上海市-')
+  str = str.replace(new RegExp('北京市-北京市-', 'g'), '北京市-')
+  str = str.replace(new RegExp('天津市-天津市-', 'g'), '天津市-')
+  str = str.replace(new RegExp('重庆市-重庆市-', 'g'), '重庆市-')
   return str
 }
 
