@@ -1,4 +1,7 @@
 export const bgColor = {
+  0: {
+    color: '#fff'
+  },
   T1: {
     color: '#8B9CC1'
   },

@@ -48,6 +48,12 @@ export default {
       }
     }
   },
+  watch: {
+    options: {
+      deep: true,
+      immediate: true
+    }
+  },
   data() {
     return {
       dialogVisible: false,

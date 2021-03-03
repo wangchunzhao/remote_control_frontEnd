@@ -23,6 +23,9 @@
           ></el-input>
         </div>
       </div>
+      <div class="dialog-top-remind">
+        按住「shift」键可进行批量框选
+      </div>
       <!--      表哥区-->
       <div class="table-box">
         <div
@@ -39,6 +42,7 @@
         <el-table
           v-loading="tableLoading"
           :data="timeIntervalList"
+          :key="timeIntervalKey"
           stripe
           fit
           height="888px"
@@ -186,6 +190,7 @@ export default {
             item['7'] = ''
           }
         })
+        this.timeIntervalKey++
       }
     }
   },
@@ -194,6 +199,7 @@ export default {
       dialogVisible: false,
       submitLoading: false,
       tableLoading: false,
+      timeIntervalKey: 1,
       type: '', //时段分类
       typeOptions: [],
       chooseList: [], //框选列表
@@ -505,7 +511,6 @@ export default {
 <style lang="scss">
 .timeIntervalSetDialog {
   .dialog-top {
-    margin-bottom: 20px;
     display: flex;
   }
   .dialog-top-part {
@@ -515,6 +520,16 @@ export default {
   }
   .dialog-top-part-title {
     margin-right: 5px;
+  }
+  .dialog-top-remind {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.45);
+    line-height: 20px;
   }
   .table-select-item {
     border-radius: 4px;
