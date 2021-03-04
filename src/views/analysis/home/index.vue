@@ -284,7 +284,7 @@
                     />
                   </div>
                   <div class="part-bottom-item-value">
-                    {{ overviewData.MonthAlarmIncrease }}%
+                    {{ overviewData.MonthEnergyIncrease }}%
                   </div>
                 </div>
               </div>
