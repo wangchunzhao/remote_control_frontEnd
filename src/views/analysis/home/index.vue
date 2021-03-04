@@ -1020,7 +1020,7 @@ export default {
   .part-item-hover-box {
     position: absolute;
     top: 30px;
-    right: 20px;
+    right: 0px;
   }
   .part-item-hover-item {
     font-size: 14px;

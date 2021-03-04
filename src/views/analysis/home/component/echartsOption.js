@@ -37,6 +37,7 @@ export const totalNumStoreEchartOptions = {
     {
       name: '%', // 系列名称
       type: 'bar', // 柱状、条形图
+      silent: true,
       barWidth: '100%', // 柱条的宽度,默认自适应
       data: [0], // 系列中数据内容数组
       color: '#1890FF',
@@ -46,6 +47,7 @@ export const totalNumStoreEchartOptions = {
     {
       name: '进度条背景',
       type: 'bar',
+      silent: true,
       barGap: '-100%', // 不同系列的柱间距离，为百分比。
       // 在同一坐标系上，此属性会被多个 'bar' 系列共享。
       // 此属性应设置于此坐标系中最后一个 'bar' 系列上才会生效，
@@ -96,6 +98,7 @@ export const totalNumDeviceEchartOptions = {
     {
       name: '%', // 系列名称
       type: 'bar', // 柱状、条形图
+      silent: true,
       barWidth: '100%', // 柱条的宽度,默认自适应
       data: [0], // 系列中数据内容数组
       color: '#14D27C',
@@ -105,6 +108,7 @@ export const totalNumDeviceEchartOptions = {
     {
       name: '进度条背景',
       type: 'bar',
+      silent: true,
       barGap: '-100%', // 不同系列的柱间距离，为百分比。
       // 在同一坐标系上，此属性会被多个 'bar' 系列共享。
       // 此属性应设置于此坐标系中最后一个 'bar' 系列上才会生效，
