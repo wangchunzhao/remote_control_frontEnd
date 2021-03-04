@@ -24,7 +24,7 @@
     </page-header>
     <el-tabs class="page-tabs" v-model="activeName">
       <el-tab-pane label="基本概览" name="first">
-        <Tab1></Tab1>
+        <Tab1 v-if="activeName === 'first'"></Tab1>
       </el-tab-pane>
       <el-tab-pane label="图表分析" name="second">
         <Tab2 v-if="activeName === 'second'"></Tab2>
