@@ -12,23 +12,51 @@
         </div>
       </div>
       <div style="display: flex;align-items: center;margin-bottom: 25px">
-        <div style="flex: 1;margin-right: 10px">
-          <el-card shadow="never">
+        <div
+          style="flex: 1;margin-right: 10px"
+          @mouseenter="() => (storeCardShow = true)"
+          @mouseleave="() => (storeCardShow = false)"
+        >
+          <el-card shadow="hover">
             <div class="part-item">
               <div class="part-top">
                 <div class="part-title">总门店数</div>
               </div>
               <div class="part-center">
-                <div class="part-value">{{ overviewData.ProjectNum }}</div>
+                <div class="part-value">
+                  {{ overviewData.ProjectNum ? overviewData.ProjectNum : 0 }}
+                </div>
               </div>
               <div class="part-step">
                 <div id="totalNumStoreEchart" class="part-value-step"></div>
               </div>
+              <div v-show="storeCardShow" class="part-item-hover-box">
+                <div class="part-item-hover-item">
+                  在线：
+                  {{
+                    overviewData.OnlineProjectNum
+                      ? overviewData.OnlineProjectNum
+                      : 0
+                  }}
+                </div>
+                <div class="part-item-hover-item">
+                  离线：
+                  {{
+                    overviewData.ProjectNum
+                      ? overviewData.ProjectNum - overviewData.OnlineProjectNum
+                      : 0
+                  }}
+                </div>
+              </div>
             </div>
           </el-card>
         </div>
-        <div style="flex: 1;margin:0 10px">
-          <el-card shadow="never">
+        <div
+          style="flex: 1;margin:0 10px"
+          @mouseenter="() => (deviceCardShow = true)"
+          @mouseleave="() => (deviceCardShow = false)"
+        >
+          <el-card shadow="hover">
             <div class="part-item">
               <div class="part-top">
                 <div class="part-title">总设备数</div>
@@ -42,10 +70,30 @@
                 </el-button>
               </div>
               <div class="part-center">
-                <div class="part-value">{{ overviewData.DeviceNum }}</div>
+                <div class="part-value">
+                  {{ overviewData.DeviceNum ? overviewData.DeviceNum : 0 }}
+                </div>
               </div>
               <div class="part-step">
                 <div id="totalNumDeviceEchart" class="part-value-step"></div>
+              </div>
+              <div v-show="deviceCardShow" class="part-item-hover-box">
+                <div class="part-item-hover-item">
+                  在线：
+                  {{
+                    overviewData.OnlineDeviceNum
+                      ? overviewData.OnlineDeviceNum
+                      : 0
+                  }}
+                </div>
+                <div class="part-item-hover-item">
+                  离线：
+                  {{
+                    overviewData.DeviceNum
+                      ? overviewData.DeviceNum - overviewData.OnlineDeviceNum
+                      : 0
+                  }}
+                </div>
               </div>
             </div>
           </el-card>
@@ -57,7 +105,9 @@
                 <div class="part-title">总报警数</div>
               </div>
               <div class="part-center">
-                <div class="part-value">{{ overviewData.AlarmNum }}</div>
+                <div class="part-value">
+                  {{ overviewData.AlarmNum ? overviewData.AlarmNum : 0 }}
+                </div>
               </div>
               <div class="part-line"></div>
               <div class="part-bottom">
@@ -158,7 +208,7 @@
                   {{
                     overviewData.EnergySum !== undefined
                       ? (overviewData.EnergySum / 10000).toFixed(1)
-                      : ''
+                      : 0
                   }}
                 </div>
                 <div class="part-unit">万度</div>
@@ -248,7 +298,9 @@
                 <div class="part-title">总维修数</div>
               </div>
               <div class="part-center">
-                <div class="part-value">{{ overviewData.RepairSum }}</div>
+                <div class="part-value">
+                  {{ overviewData.RepairSum ? overviewData.RepairSum : 0 }}
+                </div>
               </div>
               <div class="part-line"></div>
               <div class="part-bottom">
@@ -612,6 +664,8 @@ export default {
       totalNumDeviceChart: null,
 
       overviewLoading: false,
+      storeCardShow: false,
+      deviceCardShow: false,
       overviewData: {},
 
       chart1_2Loading: true,
@@ -961,6 +1015,19 @@ export default {
   }
   .part-item {
     height: 95px;
+    position: relative;
+  }
+  .part-item-hover-box {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+  }
+  .part-item-hover-item {
+    font-size: 14px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.45);
+    line-height: 20px;
   }
   .part-title-box {
     margin: 25px 0 11px 0;
