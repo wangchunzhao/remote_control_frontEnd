@@ -15,7 +15,7 @@
           @click.native="() => (model = 'table')"
           :underline="false"
           :type="model === 'table' ? 'primary' : undefined"
-          style="margin-left: 10px;color: #BFBFBF;"
+          style="margin-left: 10px"
         >
           <c-svg name="table1" style="font-size: 17px;" />
         </el-link>

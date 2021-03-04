@@ -17,7 +17,7 @@
           :type="model === 'table' ? 'primary' : undefined"
           style="margin-left: 10px;"
         >
-          <c-svg name="table1" style="font-size: 17px;color: #BFBFBF;" />
+          <c-svg name="table1" style="font-size: 17px" />
         </el-link>
         <el-cascader
           :options="structTree"
