@@ -93,34 +93,8 @@ export default {
             show: false
           }
         },
-        yAxis: {
-          type: 'value',
-          name: '用电量/kWh',
-          nameTextStyle: {
-            color: '#808080'
-          },
-          axisTick: {
-            show: false
-          },
-          axisLabel: {
-            color: 'rgba(0, 0, 0, 0.45)'
-          },
-          axisLine: {
-            show: false
-          }
-        },
-        series: [
-          // {
-          //   name: '邮件营销',
-          //   type: 'line',
-          //   symbol: 'none',
-          //   areaStyle: {},
-          //   // emphasis: {
-          //   //   focus: 'series'
-          //   // },
-          //   data: [120, 132, 101, 134, 90, 230, 210]
-          // },
-        ]
+        yAxis: [],
+        series: []
       }
     }
   },
@@ -145,8 +119,8 @@ export default {
   },
   methods: {
     toggleDialog(form) {
-      Object.assign((this.form = form))
       this.dialogVisible = true
+      Object.assign((this.form = form))
       this.fetchChartSeries()
     },
     updateDialog(form) {
@@ -154,20 +128,18 @@ export default {
       this.fetchChartSeries()
     },
     fetchChartSeries() {
-      if (!this.dialogVisible) {
-        return
-      }
       this.chart &&
         this.chart.showLoading({
           color: '#1890ff'
         })
       let data = JSON.parse(JSON.stringify(this.form))
       data.PointIdList = this.info.data
+      let chartOptions = this.chartOptions
       getMoreProjectPointBrokenLine(data)
         .then(res => {
           if (res.data.Code === 200) {
             let data = res.data
-            this.chartOptions.xAxis.data = data.Data.TimeList
+            chartOptions.xAxis.data = data.Data.TimeList
               ? data.Data.TimeList.map(v => {
                   if (this.form.DateType === 'Day') {
                     v = dayjs(v).format('HH:mm')
@@ -184,7 +156,34 @@ export default {
             data.Data.DataList.forEach(v => {
               v.symbol = 'none'
             })
-            this.chartOptions.series = data.Data.DataList
+            let yAxis = []
+            let DataList = data.Data.DataList
+            DataList.map((item, index) => {
+              item.yAxisIndex = index + ''
+              yAxis.push({
+                position: index === 0 ? 'left' : 'right',
+                offset: index === 1 ? -10 : index > 1 ? (index - 1) * -80 : 0,
+                type: 'value',
+                name: `${item.ExtendData.PointName}${
+                  item.ExtendData.Unit ? '/' + item.ExtendData.Unit : ''
+                }`,
+                nameTextStyle: {
+                  color: '#808080'
+                },
+                axisTick: {
+                  show: false
+                },
+                axisLabel: {
+                  color: 'rgba(0, 0, 0, 0.45)'
+                },
+                axisLine: {
+                  show: false
+                }
+              })
+            })
+
+            chartOptions.series = DataList
+            chartOptions.yAxis = yAxis
           } else {
             this.$message.error('获取折线图失败')
           }
@@ -194,7 +193,8 @@ export default {
           this.$message.error('获取折线图失败')
         })
         .finally(() => {
-          this.chart.setOption(this.chartOptions)
+          this.chartOptions = chartOptions
+          this.chart.setOption(chartOptions, true)
           this.chart && this.chart.hideLoading()
           this.$emit('requestChart', {
             chart: this.chart,
