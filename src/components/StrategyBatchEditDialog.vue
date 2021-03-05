@@ -279,7 +279,7 @@ export default {
       noticeForm: {
         normal: ['微信', 'App'],
         important: ['微信', 'App'],
-        emergency: ['微信', 'App'],
+        emergency: ['弹屏', '微信', 'App'],
         recovery: false,
         repeatCheck: false,
         repeatTime: undefined

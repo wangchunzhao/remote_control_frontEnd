@@ -924,11 +924,10 @@
               <span class="box-light-title">一般报警：</span>
               <el-form-item label-width="0">
                 <el-checkbox-group v-model="noticeForm.normal">
-                  <el-checkbox label="App" disabled />
-                  <el-checkbox label="微信" disabled />
+                  <el-checkbox label="弹屏" />
+                  <el-checkbox label="App" />
+                  <el-checkbox label="微信" />
                   <el-checkbox label="短信" />
-                  <el-checkbox label="语音电话" />
-                  <!-- <el-checkbox label="人工客服" /> -->
                 </el-checkbox-group>
               </el-form-item>
             </div>
@@ -936,11 +935,10 @@
               <span class="box-light-title">重要报警：</span>
               <el-form-item label-width="0">
                 <el-checkbox-group v-model="noticeForm.important">
-                  <el-checkbox label="App" disabled />
-                  <el-checkbox label="微信" disabled />
+                  <el-checkbox label="弹屏" />
+                  <el-checkbox label="App" />
+                  <el-checkbox label="微信" />
                   <el-checkbox label="短信" />
-                  <el-checkbox label="语音电话" />
-                  <!-- <el-checkbox label="人工客服" /> -->
                 </el-checkbox-group>
               </el-form-item>
             </div>
@@ -948,11 +946,10 @@
               <span class="box-light-title">紧急报警：</span>
               <el-form-item label-width="0">
                 <el-checkbox-group v-model="noticeForm.emergency">
-                  <el-checkbox label="App" disabled />
-                  <el-checkbox label="微信" disabled />
+                  <el-checkbox label="弹屏" />
+                  <el-checkbox label="App" />
+                  <el-checkbox label="微信" />
                   <el-checkbox label="短信" />
-                  <el-checkbox label="语音电话" />
-                  <!-- <el-checkbox label="人工客服" /> -->
                 </el-checkbox-group>
               </el-form-item>
             </div>
@@ -1344,7 +1341,7 @@ export default {
       noticeForm: {
         normal: ['微信', 'App'],
         important: ['微信', 'App'],
-        emergency: ['微信', 'App'],
+        emergency: ['弹屏', '微信', 'App'],
         recovery: false,
         repeatCheck: false,
         repeatTime: undefined
