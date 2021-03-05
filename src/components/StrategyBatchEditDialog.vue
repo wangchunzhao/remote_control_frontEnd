@@ -27,7 +27,7 @@
               <el-tooltip
                 class="item"
                 effect="dark"
-                content="使用短信、语音电话方式通知需要支付相关通信费用"
+                content="使用短信方式通知需要支付相关通信费用"
                 placement="right"
               >
                 <c-svg name="attention" style="font-size: 16px;" />
