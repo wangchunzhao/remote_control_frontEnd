@@ -34,7 +34,7 @@
       ref="timeIntervalSetDialog"
       :projectId="projectId"
     ></TimeIntervalSetDialog>
-    <GroupBranchSetDialog ref="groupBranchSetDialog"> </GroupBranchSetDialog>
+    <GroupBranchSetDialog ref="groupBranchSetDialog"></GroupBranchSetDialog>
   </div>
 </template>
 

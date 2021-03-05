@@ -24,11 +24,11 @@
         联系人
         <user-select :data="userList" @change="selectUser">
           <el-button
-              type="primary"
-              size="mini"
-              circle
-              icon="el-icon-plus"
-              style="margin-left: 10px;"
+            type="primary"
+            size="mini"
+            circle
+            icon="el-icon-plus"
+            style="margin-left: 10px;"
           />
         </user-select>
       </div>

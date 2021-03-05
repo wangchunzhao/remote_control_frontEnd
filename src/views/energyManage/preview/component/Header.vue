@@ -2,23 +2,37 @@
   <div class="energy_manage-preview-header">
     <div class="item">
       <div class="label">今日用电(kWh)</div>
-      <div class="value">{{ data.todayElectricityUse }}</div>
+      <div class="value">
+        {{ data.todayElectricityUse ? data.todayElectricityUse : 0 }}
+      </div>
     </div>
     <div class="item">
       <div class="label">本周用电(kWh)</div>
-      <div class="value">{{ data.currentWeekElectricityUse }}</div>
+      <div class="value">
+        {{
+          data.currentWeekElectricityUse ? data.currentWeekElectricityUse : 0
+        }}
+      </div>
     </div>
     <div class="item">
       <div class="label">上周用电(kWh)</div>
-      <div class="value">{{ data.lastWeekElectricityUse }}</div>
+      <div class="value">
+        {{ data.lastWeekElectricityUse ? data.lastWeekElectricityUse : 0 }}
+      </div>
     </div>
     <div class="item">
       <div class="label">本月用电量(kWh)</div>
-      <div class="value">{{ data.currentMonthElectricityUse }}</div>
+      <div class="value">
+        {{
+          data.currentMonthElectricityUse ? data.currentMonthElectricityUse : 0
+        }}
+      </div>
     </div>
     <div class="item">
       <div class="label">上月用电量(kWh)</div>
-      <div class="value">{{ data.lastMonthElectricityUse }}</div>
+      <div class="value">
+        {{ data.lastMonthElectricityUse ? data.lastMonthElectricityUse : 0 }}
+      </div>
     </div>
   </div>
 </template>

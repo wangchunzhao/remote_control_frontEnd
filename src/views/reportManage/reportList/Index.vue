@@ -124,7 +124,7 @@
 
 <script>
 import debounce from 'lodash/debounce'
-import ContactsSetDialog from '@/components/ContactsSetDialog/Index'
+import ContactsSetDialog from '@/components/ContactsSetDialog'
 
 export default {
   components: {

@@ -9,6 +9,9 @@
       >
         新增
       </el-button>
+      <el-button size="small" v-permission="[109]" @click.native="handleBatch">
+        批量设置
+      </el-button>
       <el-input
         v-model.trim="filterForm.text"
         size="small"
@@ -27,7 +30,9 @@
       style="width: 100%;margin-top: 20px;"
       @sort-change="sortChange"
       @filter-change="filterChange"
+      @selection-change="val => (multipleSelection = val)"
     >
+      <el-table-column type="selection" width="50" />
       <el-table-column
         prop="strategyName"
         sortable="custom"
@@ -292,6 +297,9 @@
         @size-change="handleSizeChange"
       />
     </div>
+    <StrategyBatchEditDialog
+      ref="strategyBatchEditDialog"
+    ></StrategyBatchEditDialog>
   </div>
 </template>
 
@@ -304,11 +312,15 @@ import {
   getAlarmStrategyNum,
   queryAlarmStrategy
 } from '@/api/alarmStrategyNew'
+import StrategyBatchEditDialog from '@components/StrategyBatchEditDialog'
 import { checkPermission } from '@/utils/permissions'
 import debounce from 'lodash/debounce'
 import { storageName } from '@/utils/index'
 
 export default {
+  components: {
+    StrategyBatchEditDialog
+  },
   data() {
     return {
       filterForm: {
@@ -319,6 +331,7 @@ export default {
         pointTypeIds: [],
         status: []
       },
+      multipleSelection: [],
       projectOptions: [],
       pointTypeOptions: [],
       statusOptions: [],
@@ -355,6 +368,15 @@ export default {
     this.fetchOptions()
   },
   methods: {
+    handleBatch() {
+      if (!this.multipleSelection.length) {
+        this.$message('请至少选择一项')
+        return
+      }
+      this.$refs.strategyBatchEditDialog.openDialog(
+        this.multipleSelection.map(item => item.ID)
+      )
+    },
     handleClickCopy(row) {
       queryAlarmStrategy({
         ID: row.ID
