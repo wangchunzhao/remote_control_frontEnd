@@ -222,18 +222,19 @@
               />
             </div>
             <div class="notice-row">
-              <span class="box-light-title">报警持续</span>
+              <div class="box-light-title">报警持续</div>
               <el-form-item label-width="0" prop="repeatTime">
                 <el-input
                   v-model.trim="noticeForm.repeatTime"
                   :disabled="!noticeForm.repeatCheck"
                   placeholder="请输入"
-                  style="width: 70px;"
+                  style="width: 80px;"
+                  size="small"
                 />
               </el-form-item>
-              <span style="margin-top: 10px;margin-left:10px;color:#656565;"
-                >分钟无响应，产生新消息通知</span
-              >
+              <div style="margin-left:10px;color:#656565;">
+                分钟无响应，产生新消息通知
+              </div>
             </div>
           </div>
         </div>
