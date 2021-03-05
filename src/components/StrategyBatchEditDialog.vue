@@ -269,8 +269,8 @@ export default {
   },
   data() {
     return {
-      dialogVisible: true,
-      showMoreOption: true,
+      dialogVisible: false,
+      showMoreOption: false,
       idList: [],
       userList: [],
       userFilterList: [],
