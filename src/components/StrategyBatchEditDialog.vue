@@ -111,7 +111,7 @@
                 v-model="item.text"
                 filterable
                 placeholder="请输入名称"
-                style="width: 245px"
+                style="width: 225px"
                 size="small"
                 :filter-method="inputSelectFilter"
               >
@@ -136,7 +136,7 @@
               <el-link :underline="false" @click="handleDelete(index)">
                 <c-svg
                   name="delete"
-                  style="font-size: 18px;color: #F56C6C;margin-left: 15px"
+                  style="font-size: 18px;color: #F56C6C;margin-left: 35px"
                 ></c-svg>
               </el-link>
             </div>
@@ -146,7 +146,7 @@
                 v-model="item.levels"
                 filterable
                 placeholder="请输入名称"
-                style="width: 245px"
+                style="width: 225px"
                 size="small"
               >
                 <el-option label="一般" :value="3" />
@@ -163,7 +163,7 @@
                 :clearable="false"
                 placeholder="开始时间"
                 size="small"
-                style="width: 115px;"
+                style="width: 105px;"
               />
               <div>至</div>
               <el-time-picker
@@ -172,7 +172,7 @@
                 :clearable="false"
                 placeholder="结束时间"
                 size="small"
-                style="width: 115px;"
+                style="width: 105px;"
               />
             </div>
           </div>
@@ -455,5 +455,12 @@ export default {
 }
 .user-phone {
   margin-left: 15px;
+}
+</style>
+<style lang="scss">
+.contact-user {
+  .el-input--suffix .el-input__inner {
+    padding-right: 0;
+  }
 }
 </style>
