@@ -418,7 +418,6 @@ export default {
         deviceLabel //设备标签
       } = this.form
       let PropertyList = JSON.parse(JSON.stringify(ModelTreeStaticPropertyList))
-      console.log(ModelTreeStaticPropertyList, 'ModelTreeStaticPropertyList')
       // 静态属性列表处理
       // 删除自定义字段、空值
       for (let i = 0; i < PropertyList.length; i++) {
