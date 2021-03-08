@@ -28,14 +28,15 @@
       </div>
       <!--      表哥区-->
       <div class="table-box">
-        <div
-          class="canvas-box"
-          id="timeIntervalSetDialogCanvasBox"
-          v-show="keyDown"
-          @mousemove.self="mouseMove"
-          @mousedown="mouseDown"
-          @mouseup="mouseUp"
-        >
+        <div class="canvas-big-box">
+          <div
+            class="canvas-box"
+            id="timeIntervalSetDialogCanvasBox"
+            v-show="keyDown"
+            @mousemove.self="mouseMove"
+            @mousedown.self="mouseDown"
+            @mouseup.self="mouseUp"
+          ></div>
           <div class="choose-area-box"></div>
         </div>
 
@@ -580,18 +581,23 @@ export default {
   .table-box {
     position: relative;
   }
-  .canvas-box {
-    z-index: 2;
+  .canvas-big-box {
     position: absolute;
     left: 95px;
     top: 48px;
-    //background: blue;
-    //opacity: 0.2;
     width: 665px;
     height: 840px;
   }
-  .choose-area-box {
+  .canvas-box {
     z-index: 3;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+  .choose-area-box {
+    z-index: 2;
     position: absolute;
     background: red;
     opacity: 0.4;
