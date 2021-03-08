@@ -430,7 +430,6 @@ export default {
           i--
         }
       }
-      console.log(PropertyList, 'PropertyList')
       let form = {}
       form.ProjectId = projectId //设备列表
       form.BigTypeId = deviceType[0] // 设备类型
@@ -448,23 +447,23 @@ export default {
           SN: this.form.SN
         }
       ]
-      // this.loading = true
-      // addOrUpdateModelTree(form)
-      //   .then(res => {
-      //     const data = res.data
-      //     if (data.Code === 200) {
-      //       this.$message.success('修改信息成功')
-      //       this.fetchTableData()
-      //     } else {
-      //       this.$message.error('修改信息失败')
-      //       this.loading = false
-      //     }
-      //   })
-      //   .catch(err => {
-      //     console.error(err)
-      //     this.$message.error('修改信息失败')
-      //     this.loading = false
-      //   })
+      this.loading = true
+      addOrUpdateModelTree(form)
+        .then(res => {
+          const data = res.data
+          if (data.Code === 200) {
+            this.$message.success('修改信息成功')
+            this.fetchTableData()
+          } else {
+            this.$message.error('修改信息失败')
+            this.loading = false
+          }
+        })
+        .catch(err => {
+          console.error(err)
+          this.$message.error('修改信息失败')
+          this.loading = false
+        })
     },
     //获取设备信息
     fetchTableData: debounce(
