@@ -52,7 +52,7 @@ export default {
         this.$message.error('请输入策略名称')
         return
       }
-      this.$emit('refresh', 'add')
+      this.$emit('addPane', this.name)
       this.handleClose()
     }
   }

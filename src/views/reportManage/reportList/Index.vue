@@ -61,7 +61,8 @@
             批量下载
           </el-button>
           <el-button
-            @click="$refs.contactsSetDialog.openDialog()"
+            v-if="currentNode && currentNode.Remark === '项目'"
+            @click="$refs.contactsSetDialog.openDialog(currentNode.ProjectId)"
             size="mini"
             style="margin-left: 5px"
           >
