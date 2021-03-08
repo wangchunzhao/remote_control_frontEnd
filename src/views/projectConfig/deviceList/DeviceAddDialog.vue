@@ -33,7 +33,7 @@
       :model="form"
       :rules="rules"
       ref="form"
-      label-width="100px"
+      label-width="130px"
       style="margin-right: 60px;"
       size="small"
     >
@@ -61,7 +61,7 @@
           >
             <el-input
               clearable
-              style="width: 193px"
+              style="width: 180px"
               v-model="item.name"
               placeholder="请输入设备名称"
             ></el-input>
@@ -71,7 +71,7 @@
           <el-form-item label="SN号：" :prop="'devices.' + index + '.name'">
             <el-input
               clearable
-              style="width: 193px"
+              style="width: 180px"
               v-model="item.SN"
               placeholder="请输入SN号"
             ></el-input>
@@ -134,8 +134,13 @@
                       form.ModelTreeStaticPropertyList[index].Value
                   }
                 "
-                placeholder="请输入"
-                style="width: 193px"
+                :placeholder="
+                  item.ModelTreeStaticPropertyName &&
+                  item.ModelTreeStaticPropertyName.indexOf('上下限') >= 0
+                    ? '以英文符(~)分隔'
+                    : '请输入'
+                "
+                style="width: 180px"
               ></el-input>
               <el-select
                 v-else
@@ -181,7 +186,7 @@
               <el-input
                 v-model="form.brand"
                 placeholder="请输入"
-                style="width: 193px"
+                style="width: 180px"
               ></el-input>
             </el-form-item>
           </el-col>
@@ -190,7 +195,7 @@
               <el-input
                 v-model="form.model"
                 placeholder="请输入"
-                style="width: 193px"
+                style="width: 180px"
               ></el-input>
             </el-form-item>
           </el-col>
@@ -199,7 +204,7 @@
               <el-date-picker
                 v-model="form.dateTime"
                 type="date"
-                style="width: 193px"
+                style="width: 180px"
                 value-format="yyyy-MM-dd"
                 :picker-options="{
                   disabledDate: time => {
@@ -216,7 +221,7 @@
               <el-input
                 v-model="form.deviceLabel"
                 placeholder="多个标签以英文符(;)分隔"
-                style="width: 193px"
+                style="width: 180px"
               ></el-input>
             </el-form-item>
           </el-col>

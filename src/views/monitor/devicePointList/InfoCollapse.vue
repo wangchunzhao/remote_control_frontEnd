@@ -30,7 +30,7 @@
             :model="form"
             :rules="rules"
             ref="form"
-            label-width="100px"
+            label-width="130px"
             size="small"
           >
             <el-row v-show="infoEdit">
@@ -44,7 +44,7 @@
                   <el-input
                     v-model="form.ModelTreeName"
                     placeholder="请输入"
-                    style="width: 193px"
+                    style="width: 170px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -151,8 +151,13 @@
                           form.ModelTreeStaticPropertyList[index].Value
                       }
                     "
-                    placeholder="请输入"
-                    style="width: 193px"
+                    :placeholder="
+                      item.ModelTreeStaticPropertyName &&
+                      item.ModelTreeStaticPropertyName.indexOf('上下限') >= 0
+                        ? '以英文符(~)分隔'
+                        : '请输入'
+                    "
+                    style="width: 170px"
                   ></el-input>
                   <el-select
                     v-else
@@ -199,7 +204,7 @@
                   <el-input
                     v-model="form.SN"
                     placeholder="请输入"
-                    style="width: 193px"
+                    style="width: 170px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -208,7 +213,7 @@
                   <el-input
                     v-model="form.brand"
                     placeholder="请输入"
-                    style="width: 193px"
+                    style="width: 170px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -217,7 +222,7 @@
                   <el-input
                     v-model="form.model"
                     placeholder="请输入"
-                    style="width: 193px"
+                    style="width: 170px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -226,7 +231,7 @@
                   <el-date-picker
                     v-model="form.dateTime"
                     type="date"
-                    style="width: 193px"
+                    style="width: 170px"
                     :picker-options="{
                       disabledDate: time => {
                         return time > new Date()
@@ -242,7 +247,7 @@
                   <el-input
                     v-model="form.deviceLabel"
                     placeholder="多个标签以英文符(;)分隔"
-                    style="width: 193px"
+                    style="width: 170px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -413,6 +418,7 @@ export default {
         deviceLabel //设备标签
       } = this.form
       let PropertyList = JSON.parse(JSON.stringify(ModelTreeStaticPropertyList))
+      console.log(ModelTreeStaticPropertyList, 'ModelTreeStaticPropertyList')
       // 静态属性列表处理
       // 删除自定义字段、空值
       for (let i = 0; i < PropertyList.length; i++) {
@@ -424,6 +430,7 @@ export default {
           i--
         }
       }
+      console.log(PropertyList, 'PropertyList')
       let form = {}
       form.ProjectId = projectId //设备列表
       form.BigTypeId = deviceType[0] // 设备类型
@@ -441,23 +448,23 @@ export default {
           SN: this.form.SN
         }
       ]
-      this.loading = true
-      addOrUpdateModelTree(form)
-        .then(res => {
-          const data = res.data
-          if (data.Code === 200) {
-            this.$message.success('修改信息成功')
-            this.fetchTableData()
-          } else {
-            this.$message.error('修改信息失败')
-            this.loading = false
-          }
-        })
-        .catch(err => {
-          console.error(err)
-          this.$message.error('修改信息失败')
-          this.loading = false
-        })
+      // this.loading = true
+      // addOrUpdateModelTree(form)
+      //   .then(res => {
+      //     const data = res.data
+      //     if (data.Code === 200) {
+      //       this.$message.success('修改信息成功')
+      //       this.fetchTableData()
+      //     } else {
+      //       this.$message.error('修改信息失败')
+      //       this.loading = false
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.error(err)
+      //     this.$message.error('修改信息失败')
+      //     this.loading = false
+      //   })
     },
     //获取设备信息
     fetchTableData: debounce(
