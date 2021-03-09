@@ -159,10 +159,13 @@ export default {
             let yAxis = []
             let yAxisNameArr = []
             let DataList = data.Data.DataList
+            // Y轴坐标处理
             DataList.map(item => {
+              // 判断已有Y轴中是否存在相同类型
               let pointTypeArr = yAxisNameArr.filter(
                 item1 => item1 === item.ExtendData.PointTypeName
               )
+              // 没有相同类型
               if (!pointTypeArr.length) {
                 yAxisNameArr.push(item.ExtendData.PointTypeName)
                 item.yAxisIndex = yAxisNameArr.length - 1 + ''
@@ -191,9 +194,17 @@ export default {
                     show: false
                   }
                 })
+              } else {
+                // 有相同类型，指定该类型坐标轴
+                for (let i = 0; i < yAxisNameArr.length; i++) {
+                  if (yAxisNameArr[i] === item.ExtendData.PointTypeName) {
+                    item.yAxisIndex = i + ''
+                    break
+                  }
+                }
               }
             })
-
+            console.log(DataList, 'DataList');
             chartOptions.series = DataList
             chartOptions.yAxis = yAxis
           } else {
