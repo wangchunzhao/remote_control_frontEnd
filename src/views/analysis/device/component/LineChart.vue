@@ -170,9 +170,9 @@ export default {
                   position: yAxisNameArr.length === 1 ? 'left' : 'right',
                   offset:
                     yAxisNameArr.length === 2
-                      ? -10
+                      ? -5
                       : yAxisNameArr.length > 2
-                      ? (yAxisNameArr.length - 1) * -80
+                      ? (yAxisNameArr.length - 2) * -80
                       : 0,
                   type: 'value',
                   name: `${item.ExtendData.PointTypeName}${
