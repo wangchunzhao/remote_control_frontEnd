@@ -204,7 +204,6 @@ export default {
                 }
               }
             })
-            console.log(DataList, 'DataList');
             chartOptions.series = DataList
             chartOptions.yAxis = yAxis
           } else {
