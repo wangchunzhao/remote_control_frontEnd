@@ -138,7 +138,8 @@
                   <el-input
                     v-if="
                       item.ModelTreeStaticPropertyItems.length &&
-                        item.ModelTreeStaticPropertyItems[0].IsCustom === 1
+                        item.ModelTreeStaticPropertyItems[0].IsCustom === 1 &&
+                        form.ModelTreeStaticPropertyList[index]
                     "
                     v-model="form.ModelTreeStaticPropertyList[index].Value"
                     @change="
@@ -147,7 +148,7 @@
                           item.ModelTreeStaticPropertyItems[0].ModelTreeStaticPropertyItemId
                         form.ModelTreeStaticPropertyList[index].KeyValue =
                           form.ModelTreeStaticPropertyList[index].Key +
-                          '~' +
+                          '$' +
                           form.ModelTreeStaticPropertyList[index].Value
                       }
                     "
@@ -160,7 +161,7 @@
                     style="width: 170px"
                   ></el-input>
                   <el-select
-                    v-else
+                    v-else-if="form.ModelTreeStaticPropertyList[index]"
                     v-model="form.ModelTreeStaticPropertyList[index].KeyValue"
                     filterable
                     placeholder="请选择"
@@ -170,13 +171,13 @@
                           .ModelTreeStaticPropertyList[index].KeyValue
                           ? form.ModelTreeStaticPropertyList[
                               index
-                            ].KeyValue.split('~')[0] - 0
+                            ].KeyValue.split('$')[0] - 0
                           : ''
                         form.ModelTreeStaticPropertyList[index].Value = form
                           .ModelTreeStaticPropertyList[index].KeyValue
                           ? form.ModelTreeStaticPropertyList[
                               index
-                            ].KeyValue.split('~')[1]
+                            ].KeyValue.split('$')[1]
                           : ''
                       }
                     "
@@ -185,13 +186,13 @@
                       v-for="item1 in item.ModelTreeStaticPropertyItems"
                       :key="
                         item1.ModelTreeStaticPropertyItemId +
-                          '~' +
+                          '$' +
                           item1.ModelTreeStaticPropertyItemName
                       "
                       :label="item1.ModelTreeStaticPropertyItemName"
                       :value="
                         item1.ModelTreeStaticPropertyItemId +
-                          '~' +
+                          '$' +
                           item1.ModelTreeStaticPropertyItemName
                       "
                     ></el-option>
@@ -484,7 +485,7 @@ export default {
                   Value: item.ModelTreeStaticPropertyItemName,
                   KeyValue:
                     item.ModelTreeStaticPropertyItemId +
-                    '~' +
+                    '$' +
                     item.ModelTreeStaticPropertyItemName
                 })
               })
