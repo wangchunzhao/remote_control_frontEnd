@@ -24,20 +24,26 @@
         </div>
       </div>
       <div class="dialog-top-remind">
-        按住「shift」键可进行批量框选
+        <el-alert
+          title=" 按住「shift」键可进行批量框选"
+          type="info"
+          show-icon
+          :closable="false"
+        />
       </div>
       <!--      表哥区-->
       <div class="table-box">
-        <div class="canvas-big-box">
+        <div class="canvas-big-box" v-show="keyDown">
           <div
             class="canvas-box"
             id="timeIntervalSetDialogCanvasBox"
-            v-show="keyDown"
             @mousemove.self="mouseMove"
             @mousedown.self="mouseDown"
             @mouseup.self="mouseUp"
           ></div>
-          <div class="choose-area-box"></div>
+          <div class="choose-area-big-box">
+            <div class="choose-area-box"></div>
+          </div>
         </div>
 
         <el-table
@@ -276,7 +282,9 @@ export default {
     mouseDown(e) {
       this.resetChooseItem()
       this.isDown = true
-      let chooseBoxDom = document.getElementsByClassName('choose-area-box')[0]
+      let chooseBoxDom = document.getElementsByClassName(
+        'choose-area-big-box'
+      )[0]
       chooseBoxDom.style.left = e.offsetX + 'px'
       chooseBoxDom.style.top = e.offsetY + 'px'
       this.chooseBoxDom = chooseBoxDom
@@ -327,6 +335,8 @@ export default {
       if (this.chooseBoxDom) {
         this.chooseBoxDom.style.width = '0px'
         this.chooseBoxDom.style.height = '0px'
+        this.chooseBoxDom.style.left = '-99999px'
+        this.chooseBoxDom.style.top = '-99999px'
       }
       this.chooseBoxDom = null
       this.startX = 0
@@ -525,12 +535,7 @@ export default {
   .dialog-top-remind {
     margin-top: 5px;
     margin-bottom: 20px;
-    text-align: left;
-    font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: rgba(0, 0, 0, 0.45);
-    line-height: 20px;
+    width: 250px;
   }
   .table-select-item {
     border-radius: 4px;
@@ -596,11 +601,29 @@ export default {
     top: 0;
     bottom: 0;
   }
-  .choose-area-box {
+  .choose-area-big-box {
     z-index: 2;
     position: absolute;
-    background: red;
-    opacity: 0.4;
+    left: -9999px;
+    top: -9999px;
+    border: solid 1px #0079ff;
+    display: flex;
+  }
+  .choose-area-box {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    background: #0079ff;
+    opacity: 0.3;
+  }
+
+  .el-alert {
+    background-color: #e6f7ff;
+    border: 1px solid rgba(145, 213, 255, 1);
+    color: rgba(0, 0, 0, 0.65);
+  }
+  .el-alert__icon {
+    color: #1890ff;
   }
 }
 </style>
