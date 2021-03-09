@@ -164,12 +164,16 @@ Vue.prototype.sortChinese = (arr, dataLeven) => {
  * @example 320000,320100,320105;江苏省/南京市/建邺区;兴隆大街177号->江苏省-南京市-建邺区-兴隆大街177号
  */
 Vue.prototype.projectAddressForMat = address => {
-  let str = address.substring(address.indexOf(';') + 1)
+  let arr = address.split(';')
+  let str = ''
+  if (arr.length) {
+    str = arr[1]
+  }
   str = str.replace(new RegExp('/', 'g'), '-')
   str = str.replace(new RegExp(';', 'g'), '-')
   str = str.replace(new RegExp('省', 'g'), '省-')
   str = str.replace(new RegExp('市', 'g'), '市-')
-  str = str.replace(new RegExp('区', 'g'), '区-')
+  str = str.replace(new RegExp('区', 'g'), arr.length > 2 ? '区-' : '区')
   str = str.replace(new RegExp('-辖区', 'g'), '辖区')
   str = str.replace(new RegExp('-市-', 'g'), '-市')
   str = str.replace(new RegExp('---', 'g'), '-')
@@ -178,7 +182,7 @@ Vue.prototype.projectAddressForMat = address => {
   str = str.replace(new RegExp('北京市-北京市-', 'g'), '北京市-')
   str = str.replace(new RegExp('天津市-天津市-', 'g'), '天津市-')
   str = str.replace(new RegExp('重庆市-重庆市-', 'g'), '重庆市-')
-  return str
+  return str + (arr.length > 2 ? arr[2] : '')
 }
 
 /**

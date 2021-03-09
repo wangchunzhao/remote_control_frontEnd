@@ -432,17 +432,6 @@ const monitor = {
   },
   children: [
     {
-      path: 'dashboard',
-      component: _import('monitor/dashboard/Index'),
-      name: 'monitorDashboard',
-      meta: {
-        title: '仪表盘',
-        icon: 'jiankongcopy',
-        projectPermissionId: [27],
-        industry: [2, 3, 4]
-      }
-    },
-    {
       path: 'transportMonitor',
       component: _import('monitor/transportMonitor/Index'),
       name: 'transportMonitor',
@@ -1307,7 +1296,7 @@ const report = {
       component: _import('reportManage/releaseList/Index'),
       name: 'releaseList',
       meta: { title: '诊断发布', projectPermissionId: [49] }
-    },
+    }
   ]
 }
 // #endregion 项目配置 end
