@@ -44,7 +44,7 @@
                   <el-input
                     v-model="form.ModelTreeName"
                     placeholder="请输入"
-                    style="width: 170px"
+                    style="width: 193px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -76,6 +76,7 @@
                       label: 'TypeName',
                       children: 'subset'
                     }"
+                    style="width: 193px"
                   />
                 </el-form-item>
               </el-col>
@@ -93,6 +94,7 @@
                       label: 'mname',
                       value: 'mtid'
                     }"
+                    style="width: 193px"
                   ></el-cascader>
                 </el-form-item>
               </el-col>
@@ -163,7 +165,7 @@
                         }
                       "
                       placeholder="以英文符(~)分隔"
-                      style="width: 170px"
+                      style="width: 193px"
                     ></el-input>
                   </el-tooltip>
                   <el-input
@@ -184,13 +186,14 @@
                       }
                     "
                     placeholder="请输入"
-                    style="width: 170px"
+                    style="width: 193px"
                   ></el-input>
                   <el-select
                     v-else-if="form.ModelTreeStaticPropertyList[index]"
                     v-model="form.ModelTreeStaticPropertyList[index].KeyValue"
                     filterable
                     placeholder="请选择"
+                    style="width: 193px"
                     @change="
                       val => {
                         form.ModelTreeStaticPropertyList[index].Key = form
@@ -231,7 +234,7 @@
                   <el-input
                     v-model="form.SN"
                     placeholder="请输入"
-                    style="width: 170px"
+                    style="width: 193px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -240,7 +243,7 @@
                   <el-input
                     v-model="form.brand"
                     placeholder="请输入"
-                    style="width: 170px"
+                    style="width: 193px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -249,7 +252,7 @@
                   <el-input
                     v-model="form.model"
                     placeholder="请输入"
-                    style="width: 170px"
+                    style="width: 193px"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -258,7 +261,7 @@
                   <el-date-picker
                     v-model="form.dateTime"
                     type="date"
-                    style="width: 170px"
+                    style="width: 193px"
                     :picker-options="{
                       disabledDate: time => {
                         return time > new Date()
@@ -274,7 +277,7 @@
                   <el-input
                     v-model="form.deviceLabel"
                     placeholder="多个标签以英文符(;)分隔"
-                    style="width: 170px"
+                    style="width: 193px"
                   ></el-input>
                 </el-form-item>
               </el-col>
