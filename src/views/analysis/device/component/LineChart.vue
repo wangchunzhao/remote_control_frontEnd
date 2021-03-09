@@ -157,29 +157,41 @@ export default {
               v.symbol = 'none'
             })
             let yAxis = []
+            let yAxisNameArr = []
             let DataList = data.Data.DataList
-            DataList.map((item, index) => {
-              item.yAxisIndex = index + ''
-              yAxis.push({
-                position: index === 0 ? 'left' : 'right',
-                offset: index === 1 ? -10 : index > 1 ? (index - 1) * -80 : 0,
-                type: 'value',
-                name: `${item.ExtendData.PointName}${
-                  item.ExtendData.Unit ? '/' + item.ExtendData.Unit : ''
-                }`,
-                nameTextStyle: {
-                  color: '#808080'
-                },
-                axisTick: {
-                  show: false
-                },
-                axisLabel: {
-                  color: 'rgba(0, 0, 0, 0.45)'
-                },
-                axisLine: {
-                  show: false
-                }
-              })
+            DataList.map(item => {
+              let pointTypeArr = yAxisNameArr.filter(
+                item1 => item1 === item.ExtendData.PointTypeName
+              )
+              if (!pointTypeArr.length) {
+                yAxisNameArr.push(item.ExtendData.PointTypeName)
+                item.yAxisIndex = yAxisNameArr.length - 1 + ''
+                yAxis.push({
+                  position: yAxisNameArr.length === 1 ? 'left' : 'right',
+                  offset:
+                    yAxisNameArr.length === 2
+                      ? -10
+                      : yAxisNameArr.length > 2
+                      ? (yAxisNameArr.length - 1) * -80
+                      : 0,
+                  type: 'value',
+                  name: `${item.ExtendData.PointTypeName}${
+                    item.ExtendData.Unit ? '/' + item.ExtendData.Unit : ''
+                  }`,
+                  nameTextStyle: {
+                    color: '#808080'
+                  },
+                  axisTick: {
+                    show: false
+                  },
+                  axisLabel: {
+                    color: 'rgba(0, 0, 0, 0.45)'
+                  },
+                  axisLine: {
+                    show: false
+                  }
+                })
+              }
             })
 
             chartOptions.series = DataList
