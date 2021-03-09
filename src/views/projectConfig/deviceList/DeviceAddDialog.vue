@@ -118,8 +118,39 @@
             :span="12"
           >
             <el-form-item :label="item.ModelTreeStaticPropertyName + '：'">
-              <el-input
+              <el-tooltip
+                class="item"
+                effect="dark"
+                placement="top"
                 v-if="
+                  item.ModelTreeStaticPropertyItems.length &&
+                    item.ModelTreeStaticPropertyItems[0].IsCustom === 1 &&
+                    form.ModelTreeStaticPropertyList[index] &&
+                    item.ModelTreeStaticPropertyName &&
+                    item.ModelTreeStaticPropertyName.indexOf('上下限') >= 0
+                "
+              >
+                <div slot="content" style="width: 150px;font-size: 14px">
+                  参数示例：<br />以英文符『~』分隔<br />上下限：X~X<br />仅上限：X~<br />仅下限：~X
+                </div>
+                <el-input
+                  v-model="form.ModelTreeStaticPropertyList[index].Value"
+                  @change="
+                    () => {
+                      form.ModelTreeStaticPropertyList[index].Key =
+                        item.ModelTreeStaticPropertyItems[0].ModelTreeStaticPropertyItemId
+                      form.ModelTreeStaticPropertyList[index].KeyValue =
+                        form.ModelTreeStaticPropertyList[index].Key +
+                        '$' +
+                        form.ModelTreeStaticPropertyList[index].Value
+                    }
+                  "
+                  placeholder="以英文符(~)分隔"
+                  style="width: 180px"
+                ></el-input>
+              </el-tooltip>
+              <el-input
+                v-else-if="
                   item.ModelTreeStaticPropertyItems.length &&
                     item.ModelTreeStaticPropertyItems[0].IsCustom === 1 &&
                     form.ModelTreeStaticPropertyList[index]
@@ -135,12 +166,7 @@
                       form.ModelTreeStaticPropertyList[index].Value
                   }
                 "
-                :placeholder="
-                  item.ModelTreeStaticPropertyName &&
-                  item.ModelTreeStaticPropertyName.indexOf('上下限') >= 0
-                    ? '以英文符(~)分隔'
-                    : '请输入'
-                "
+                placeholder="请输入"
                 style="width: 180px"
               ></el-input>
               <el-select
