@@ -16,7 +16,7 @@
           <div class="dialog-top-part-title">时段分类</div>
           <el-input
             type="number"
-            :disabled="keyDown"
+            :disabled="keyDown || tableLoading || submitLoading"
             v-model="type"
             size="mini"
             style="width: 80px"
@@ -110,7 +110,7 @@
         size="medium"
         type="primary"
         @click.native="submit"
-        :loading="submitLoading"
+        :loading="submitLoading || tableLoading"
       >
         确 定
       </el-button>

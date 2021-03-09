@@ -9,7 +9,7 @@
         <div
           class="can-click-item"
           @click="
-            checkJumpRoutingPermission({ name: 'energyManage_Preview' }, [120])
+            checkJumpRoutingPermission({ name: 'energyManageIndex' }, [120])
           "
         >
           <div class="top">
@@ -63,7 +63,7 @@
       <el-col :span="6" class="overview-box border">
         <div
           class="can-click-item"
-          @click="checkJumpRoutingPermission({ name: 'gatewayIndex' }, ['*'])"
+          @click="checkJumpRoutingPermission({ name: 'gatewayIndex' }, [81])"
         >
           <div class="top">
             当前在线网关

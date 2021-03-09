@@ -168,7 +168,7 @@ export default {
               // 没有相同类型
               if (!pointTypeArr.length) {
                 yAxisNameArr.push(item.ExtendData.PointTypeName)
-                item.yAxisIndex = yAxisNameArr.length - 1 + ''
+                item.yAxisIndex = yAxisNameArr.length - 1
                 yAxis.push({
                   position: yAxisNameArr.length === 1 ? 'left' : 'right',
                   offset:
@@ -198,7 +198,7 @@ export default {
                 // 有相同类型，指定该类型坐标轴
                 for (let i = 0; i < yAxisNameArr.length; i++) {
                   if (yAxisNameArr[i] === item.ExtendData.PointTypeName) {
-                    item.yAxisIndex = i + ''
+                    item.yAxisIndex = i
                     break
                   }
                 }
