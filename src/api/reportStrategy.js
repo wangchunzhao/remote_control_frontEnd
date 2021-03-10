@@ -23,3 +23,13 @@ export const getReportStrategyPage = data => {
   )
 }
 // #endregion 获取报告策略页 end
+
+// #region 删除报告策略 start
+export const deleteReportStrategy = ({ reportStrategyId }) => {
+  return fetch.get(HC_BASE_URI + '/api/ReportStrategy/DeleteReportStrategy', {
+    params: {
+      reportStrategyId
+    }
+  })
+}
+// #endregion 删除报告策略 end

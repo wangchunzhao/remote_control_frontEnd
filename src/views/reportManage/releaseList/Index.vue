@@ -1,18 +1,18 @@
 <template>
   <div class="content-box">
     <div class="table-tool-box">
-      <el-button size="small" type="primary" @click="releaseFun">
+      <el-button size="small" type="primary" @click="batchReleaseFun">
         批量发布
       </el-button>
       <div style="float: right;display: flex;align-items: center">
         <el-switch
-          v-model="filterForm.type"
+          v-model="filterForm.DiagnosisStatus"
           active-text="仅显示待诊断"
           style="margin-left: 20px;"
         >
         </el-switch>
         <el-switch
-          v-model="filterForm.type"
+          v-model="filterForm.IsRelease"
           active-text="仅显示待发布"
           style="margin-left: 20px;"
         >
@@ -35,34 +35,37 @@
       ref="memberTable"
       style="width: 100%;margin-top: 20px;"
       @sort-change="sortChange"
-      @filter-change="filterChange"
       @selection-change="val => (multipleSelection = val)"
     >
       <el-table-column type="selection" width="50" />
-      <el-table-column min-width="150" prop="Nickname" label="项目名称" />
-      <el-table-column min-width="150" prop="Nickname" label="报告名称" />
-      <el-table-column prop="Acttime" label="生成时间" min-width="120">
+      <el-table-column min-width="150" prop="ProjectName" label="项目名称" />
+      <el-table-column min-width="150" prop="ReportName" label="报告名称" />
+      <el-table-column prop="Created" label="生成时间" min-width="120">
         <template slot-scope="{ row }">
-          {{ _dateFormat(row.Acttime, 'YYYY-MM-DD HH:mm') }}
+          {{ _dateFormat(row.Created, 'YYYY-MM-DD HH:mm') }}
         </template>
       </el-table-column>
       <el-table-column
-        prop="Acttime"
+        prop="ReleaseTime"
         label="发布时间"
         min-width="120"
         sortable="custom"
       >
         <template slot-scope="{ row }">
-          {{ _dateFormat(row.Acttime, 'YYYY-MM-DD HH:mm') }}
+          {{ _dateFormat(row.ReleaseTime, 'YYYY-MM-DD HH:mm') }}
         </template>
       </el-table-column>
-      <el-table-column min-width="80" prop="Nickname" label="报告策略" />
+      <el-table-column
+        min-width="80"
+        prop="ReportStrategyName"
+        label="报告策略"
+      />
       <el-table-column label="操作" width="100">
         <template slot-scope="{ row }">
-          <el-button type="text" @click.native="handleEdit(row.Id)">
+          <el-button type="text" @click.native="handleEdit(row.ReportId)">
             编辑
           </el-button>
-          <el-button type="text" @click.native="releaseFun(row.Id)">
+          <el-button type="text" @click.native="releaseFun([row.ReportId])">
             发布
           </el-button>
         </template>
@@ -84,6 +87,10 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce'
+import { getReportPage } from '@/api/report'
+import { getToken } from '@/utils/auth'
+
 export default {
   name: 'Index',
   data() {
@@ -92,8 +99,8 @@ export default {
       tableData: [],
       multipleSelection: [],
       filterForm: {
-        text: '',
-        type: false,
+        IsRelease: false,
+        DiagnosisStatus: false,
         sortProp: undefined,
         isAsc: undefined
       },
@@ -104,26 +111,46 @@ export default {
       }
     }
   },
-  methods: {
-    handleEdit(id) {},
-    releaseFun() {},
-    // 表格排序
-    sortChange(val) {
-      if (val.prop === 'Nickname') {
-        this.filterForm.sortProp = 0
-      }
-      this.filterForm.isAsc = val.order === 'ascending'
+  computed: {
+    companyId() {
+      return this.$store.state.app.company.id
+    }
+  },
+  watch: {
+    'filterForm.text'() {
       this.fetchTableData()
     },
-    // 表格筛选
-    filterChange(filter) {
-      if (filter.Flag) {
-        this.filterForm.status = filter.Flag[0]
-      } else if (filter.CompanyRoleName) {
-        this.filterForm.companyRoleId = filter.CompanyRoleName[0]
-      } else if (filter.ProjectRoleName) {
-        this.filterForm.projectRoleId = filter.ProjectRoleName[0]
+    'filterForm.IsRelease'() {
+      this.fetchTableData()
+    },
+    'filterForm.DiagnosisStatus'() {
+      this.fetchTableData()
+    }
+  },
+  mounted() {
+    this.fetchTableData()
+  },
+  methods: {
+    // 编辑
+    handleEdit(id) {
+      window.open(
+        `${global.REPORT_TEMPLATE_PROJECT_URL}/#/?id=${id}&token=${getToken()}`
+      )
+    },
+    // 批量发布
+    batchReleaseFun() {
+      if (!this.multipleSelection.length) {
+        this.$message.error('请至少选择一项')
+        return
       }
+      this.releaseFun(this.multipleSelection.map(item => item.ReportId))
+    },
+    // 发布
+    releaseFun(ReportIdList) {},
+    // 表格排序
+    sortChange(val) {
+      this.filterForm.isAsc = val.order === 'ascending'
+      this.filterForm.sortProp = val.order ? val.prop : undefined
       this.pagination.currentPage = 1
       this.fetchTableData()
     },
@@ -135,7 +162,65 @@ export default {
     // 表格换页
     handleCurrentChange() {
       this.fetchTableData()
-    }
+    },
+    // 获取表格数据
+    fetchTableData: debounce(
+      function() {
+        this.tableLoading = true
+        const { currentPage, size } = this.pagination
+        const {
+          sortProp,
+          isAsc,
+          IsRelease,
+          DiagnosisStatus,
+          text
+        } = this.filterForm
+        let data = {
+          CompanyId: this.companyId,
+          ProjectName: text,
+          DiagnosisStatus: DiagnosisStatus ? 'ToDiagnose' : undefined,
+          IsRelease: IsRelease ? 0 : undefined,
+          SortType: sortProp,
+          IsAsc: isAsc,
+          PageIndex: currentPage,
+          PageSize: size
+        }
+        getReportPage(data)
+          .then(res => {
+            if (
+              this.pagination.currentPage !== currentPage ||
+              this.pagination.size !== size
+            ) {
+              return false
+            }
+            const data = res.data
+            if (data.Code === 200) {
+              if (data.Data === null) {
+                this.tableData = []
+                return false
+              }
+              this.tableData = data.Data.Data
+              this.pagination.total = data.Data.TotalCount
+            } else {
+              this.tableData = []
+              this.pagination.total = 0
+              this.$message.error(res.data.Message)
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            this.$message.error('报告列表获取失败')
+            this.pagination.total = 0
+          })
+          .finally(() => {
+            this.tableLoading = false
+          })
+      },
+      1000,
+      {
+        leading: true
+      }
+    )
   }
 }
 </script>

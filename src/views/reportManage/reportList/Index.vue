@@ -77,30 +77,33 @@
             ref="memberTable"
             style="width: 100%;margin-top: 20px;"
             @sort-change="sortChange"
-            @filter-change="filterChange"
             @selection-change="val => (multipleSelection = val)"
           >
             <el-table-column type="selection" width="50" />
-            <el-table-column min-width="150" prop="Nickname" label="报告名称">
+            <el-table-column min-width="150" prop="ReportName" label="报告名称">
               <template slot-scope="{ row }">
                 <el-link
                   :underline="false"
-                  @click="downloadReport([row.id])"
+                  @click="downloadReport([row.ReportId])"
                   :disabled="downLoading"
                 >
-                  {{ row.name }}
+                  {{ row.ReportName }}
                 </el-link>
               </template>
             </el-table-column>
-            <el-table-column prop="Acttime" label="发布时间" min-width="120">
+            <el-table-column
+              prop="ReleaseTime"
+              label="发布时间"
+              min-width="120"
+            >
               <template slot-scope="{ row }">
-                {{ _dateFormat(row.Acttime, 'YYYY-MM-DD HH:mm') }}
+                {{ _dateFormat(row.ReleaseTime, 'YYYY-MM-DD HH:mm') }}
               </template>
             </el-table-column>
             <el-table-column
               sortable="custom"
               min-width="80"
-              prop="Nickname"
+              prop="DownloadCount"
               label="下载次数"
             />
           </el-table>
@@ -126,6 +129,7 @@
 <script>
 import debounce from 'lodash/debounce'
 import ContactsSetDialog from '@/components/ContactsSetDialog'
+import { getReportPage } from '@/api/report'
 
 export default {
   components: {
@@ -138,6 +142,7 @@ export default {
       downLoading: false,
       treeLoading: false,
       treeFilter: '',
+      ProjectIdList: [],
       structTree: [],
       tableData: [],
       currentNode: null,
@@ -181,24 +186,11 @@ export default {
   },
   methods: {
     // 下载报告
-    downloadReport(idList) {},
+    downloadReport(id) {},
     // 表格排序
     sortChange(val) {
-      if (val.prop === 'Nickname') {
-        this.filterForm.sortProp = 0
-      }
       this.filterForm.isAsc = val.order === 'ascending'
-      this.fetchTableData()
-    },
-    // 表格筛选
-    filterChange(filter) {
-      if (filter.Flag) {
-        this.filterForm.status = filter.Flag[0]
-      } else if (filter.CompanyRoleName) {
-        this.filterForm.companyRoleId = filter.CompanyRoleName[0]
-      } else if (filter.ProjectRoleName) {
-        this.filterForm.projectRoleId = filter.ProjectRoleName[0]
-      }
+      this.filterForm.sortProp = val.order ? val.prop : undefined
       this.pagination.currentPage = 1
       this.fetchTableData()
     },
@@ -230,6 +222,7 @@ export default {
         block: 'end',
         behavior: 'smooth'
       })
+      this.handleSizeChange()
     },
     // 筛选项目结构
     filterNode(value, data) {
@@ -239,83 +232,70 @@ export default {
     // 获取表格数据
     fetchTableData: debounce(
       function() {
-        // this.tableLoading = true
-        // const { currentPage, size } = this.pagination
-        // const currentNode = this.currentNode
-        //     ? { ...this.currentNode }
-        //     : undefined
-        // const {
-        //   text,
-        //   sortProp,
-        //   isAsc,
-        //   status,
-        //   companyRoleId,
-        //   projectRoleId
-        // } = this.filterForm
-        // getMemberList({
-        //   CompanyId: this.company.id,
-        //   UserType: this.userType ? this.userType.value : undefined,
-        //   SubareaId: this.currentNode ? this.currentNode.SubareaId : undefined,
-        //   UserNameOrMobile: text,
-        //   CompanyRoleId: companyRoleId,
-        //   ProjectRoleId:
-        //       this.currentNode && this.currentNode.Remark === '项目'
-        //           ? projectRoleId
-        //           : undefined,
-        //   ActiveStatus: status,
-        //   SortType: sortProp,
-        //   IsAsc: isAsc,
-        //   pageIndex: currentPage,
-        //   pageSize: size
-        // })
-        //     .then(res => {
-        //       if (
-        //           this.pagination.currentPage !== currentPage ||
-        //           this.pagination.size !== size ||
-        //           text !== this.filterForm.text ||
-        //           JSON.stringify(currentNode) !== JSON.stringify(this.currentNode)
-        //       ) {
-        //         return false
-        //       }
-        //       const data = res.data
-        //       if (data.Code === 200) {
-        //         if (data.Data === null) {
-        //           this.tableData = []
-        //           return false
-        //         }
-        //         data.Data.Data.forEach(item => {
-        //           item.editAble = false
-        //           item.loading = false
-        //         })
-        //         this.tableData = data.Data.Data
-        //
-        //         this.pagination.total = data.Data.TotalCount
-        //       } else {
-        //         this.tableData = []
-        //         this.$message.error(res.data.Message)
-        //       }
-        //     })
-        //     .catch(err => {
-        //       console.error(err)
-        //       this.$message.error('用户列表获取失败')
-        //     })
-        //     .finally(() => {
-        //       if (
-        //           this.pagination.currentPage !== currentPage ||
-        //           this.pagination.size !== size ||
-        //           text !== this.filterForm.text ||
-        //           JSON.stringify(currentNode) !== JSON.stringify(this.currentNode)
-        //       ) {
-        //         return false
-        //       }
-        this.tableLoading = false
-        //     })
+        this.tableLoading = true
+        const { currentPage, size } = this.pagination
+        const currentNode = this.currentNode
+          ? { ...this.currentNode }
+          : undefined
+        const { sortProp, isAsc } = this.filterForm
+        this.ProjectIdList = []
+        this.getTreeProjectIdList(currentNode)
+        let data = {
+          CompanyId: currentNode.CompanyId,
+          ProjectIdList: this.ProjectIdList,
+          DiagnosisStatus: 'Diagnosed',
+          IsRelease: 1,
+          SortType: sortProp,
+          IsAsc: isAsc,
+          PageIndex: currentPage,
+          PageSize: size
+        }
+        getReportPage(data)
+          .then(res => {
+            if (
+              this.pagination.currentPage !== currentPage ||
+              this.pagination.size !== size
+            ) {
+              return false
+            }
+            const data = res.data
+            if (data.Code === 200) {
+              if (data.Data === null) {
+                this.tableData = []
+                return false
+              }
+              this.tableData = data.Data.Data
+              this.pagination.total = data.Data.TotalCount
+            } else {
+              this.tableData = []
+              this.pagination.total = 0
+              this.$message.error(res.data.Message)
+            }
+          })
+          .catch(err => {
+            console.error(err)
+            this.$message.error('报告列表获取失败')
+            this.pagination.total = 0
+          })
+          .finally(() => {
+            this.tableLoading = false
+          })
       },
       1000,
       {
         leading: true
       }
     ),
+    // 获取树节点下的项目ID集合
+    getTreeProjectIdList(obj) {
+      if (obj.Remark === '项目') {
+        this.ProjectIdList.push(obj.ProjectId)
+      } else if (obj.Children && obj.Children.length) {
+        obj.Children.map(item => {
+          this.getTreeProjectIdList(item)
+        })
+      }
+    },
     // 删除空的Children
     walk(arr) {
       arr.forEach(item => {

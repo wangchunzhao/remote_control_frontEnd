@@ -154,6 +154,11 @@
           {{ row.Acttime && _dateFormat(row.Acttime, 'YYYY-MM-DD HH:mm') }}
         </template>
       </el-table-column>
+      <el-table-column min-width="90" label="当前状态">
+        <template slot-scope="{ row }">
+          已恢复
+        </template>
+      </el-table-column>
       <el-table-column label="最大超限" width="90">
         <template slot-scope="{ row }">
           <el-button

@@ -111,6 +111,7 @@ export default {
     },
     // 删除策略
     deletePane(id) {
+
       this.tableData = this.tableData.filter(
         item => item.ReportStrategyId !== id
       )

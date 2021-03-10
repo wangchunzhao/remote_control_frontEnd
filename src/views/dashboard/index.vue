@@ -28,7 +28,10 @@
         <div class="right-wrap-line"></div>
         <div class="right-wrap-item">
           <div style="font-size: 14px;color: rgba(0, 0, 0, 0.45);">
-            企业内排名
+            <el-tooltip class="item" effect="dark" content="根据当月报警数量排名" placement="bottom">
+              <i class="el-icon-warning" style="margin-right: 5px"></i>
+            </el-tooltip>
+           企业内排名
           </div>
           <div class="project-total">
             {{ overview.ProjectRank ? overview.ProjectRank : '-' }}/

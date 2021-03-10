@@ -162,7 +162,7 @@
           "
         >
           <div class="top">
-            冷库开启数
+            冷库末端开启数
             <el-link class="arrow" :underline="false" type="primary">
               <i class="el-icon-right" />
             </el-link>
