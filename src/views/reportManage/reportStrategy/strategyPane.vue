@@ -167,7 +167,7 @@
 </template>
 
 <script>
-import { setReportStrategy } from '@/api/reportStrategy'
+import { setReportStrategy, deleteReportStrategy } from '@/api/reportStrategy'
 export default {
   name: 'strategyPane',
   props: {
@@ -330,7 +330,25 @@ export default {
           if (this.form.ReportStrategyId === 'add') {
             this.$emit('deletePane', this.form.ReportStrategyId)
           } else {
-            this.$emit('deletePane', this.form.ReportStrategyId)
+            this.submitLoading = true
+            deleteReportStrategy({
+              reportStrategyId: this.form.ReportStrategyId
+            })
+              .then(res => {
+                if (res.data.Code === 200 && res.data.Data) {
+                  this.$message.success('删除成功')
+                  this.$emit('deletePane', this.form.ReportStrategyId)
+                } else {
+                  this.$message.error('删除失败')
+                }
+              })
+              .catch(err => {
+                console.error(err)
+                this.$message.error('删除失败')
+              })
+              .finally(() => {
+                this.submitLoading = false
+              })
           }
         })
         .catch(() => {})
